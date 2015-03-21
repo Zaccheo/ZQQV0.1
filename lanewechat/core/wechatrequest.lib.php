@@ -257,8 +257,10 @@ class WechatRequest{
 	   		   $content[] = array("Title"=>"我的比赛", "Description"=>"", "PicUrl"=>"http://www.xishuma.com/fb55/imgs/weixinmenu/mymatch.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/match/myMatch.php");
                break;
 		   case "PERSON_INFO"://点击[我的信息]
-		   	   $userType = UserManage::getGroupByOpenId($request['fromusername']);
-			   $content[] = array("Title"=>"我的信息", "Description"=>$userType, "PicUrl"=>"http://discuz.comli.com/weixin/weather/icon/cartoon.jpg", "Url" =>"http://www.xishuma.com/fb55/ucenter/userInfo.php");
+		   	   //权限控制，当管理员组下面的用户进来时，弹出菜单是管理场馆菜单，其他普通用户弹出一般操作菜单。
+		   	   $groupObj = UserManage::getGroupByOpenId($request['fromusername']);
+		   	   $groupid = $groupObj->groupid;
+			   $content[] = array("Title"=>"我的信息", "Description"=>"", "PicUrl"=>"http://discuz.comli.com/weixin/weather/icon/cartoon.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/ucenter/userInfo.php?utype=".$groupid);
 	   		   $content[] = array("Title"=>"战力积分", "Description"=>"", "PicUrl"=>"http://d.hiphotos.bdimg.com/wisegame/pic/item/f3529822720e0cf3ac9f1ada0846f21fbe09aaa3.jpg", "Url" =>"http://www.xishuma.com/test");
 		       break;
            default:
