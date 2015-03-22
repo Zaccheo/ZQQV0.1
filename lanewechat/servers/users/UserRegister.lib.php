@@ -12,9 +12,6 @@ use LaneWeChat\Servers\Dbutils\Db;
 	*/
 class UserRegister{
     public static function unsubscribe($openId){
-        //日期格式化
-        date_default_timezone_set('PRC');
-        
         if(empty($openId)){
             return 300;//,请使用微信客户端打开该页面!;
         }else{
