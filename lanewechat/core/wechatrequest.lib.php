@@ -1,5 +1,6 @@
 <?php
 namespace LaneWeChat\Core;
+use LaneWeChat\servers\users\UserRegister;
 /**
  * 处理请求
  * Created by Lane.
@@ -25,13 +26,14 @@ class WechatRequest{
                 switch ($request['event']) {
                     //关注
                     case 'subscribe':
-                        //二维码关注
-                        if(isset($request['eventkey']) && isset($request['ticket'])){
-                            $data = self::eventQrsceneSubscribe($request);
-                        //普通关注
-                        }else{
-                            $data = self::eventSubscribe($request);
-                        }
+//                         //二维码关注
+//                         if(isset($request['eventkey']) && isset($request['ticket'])){
+//                             $data = self::eventQrsceneSubscribe($request);
+//                         //普通关注
+//                         }else{
+//                             $data = self::eventSubscribe($request);
+//                         }
+                        $data = self::eventSubscribe($request);
                         break;
                     //扫描二维码
                     case 'scan':
@@ -193,6 +195,10 @@ class WechatRequest{
      * @return array
      */
     public static function eventSubscribe(&$request){
+        //获取用户的微信信息，并添加到用户信息数据库表中.
+        $user = UserManage::getUserInfo($request['fromusername']);
+        UserRegister::register($user['openid'],$user['nickname'],$user['headimgurl']);
+       
         $content = '欢迎您关注我们的微信，将为您竭诚服务';
         return ResponsePassive::text($request['fromusername'], $request['tousername'], $content);
     }
@@ -203,6 +209,9 @@ class WechatRequest{
      * @return array
      */
     public static function eventUnsubscribe(&$request){
+        
+        UserRegister::unsubscribe($request['fromusername']);
+        
         $content = '为什么不理我了？';
         return ResponsePassive::text($request['fromusername'], $request['tousername'], $content);
     }
