@@ -106,39 +106,10 @@
 			<h2 class="h2-title" style="float:left;">
 				留言
 			</h2>
-			<ul class="topic-list" style="float:left;width: 100%;">
-				<li>
-					<div class="tpc-headbox">
-						<img src="../../imgs/55.jpg">
-					</div>
-					<div class="tpc-main">
-						<h5 class="h5-title">
-							夏木_乾
-						</h5>
-						<p class="tp-time">
-							2小时前
-						</p>
-						<p id="topicContent">
-							公司德比，有的好看！
-						</p>
-					</div>
-				</li>
-				<li>
-					<div class="tpc-headbox">
-						<img src="../../imgs/55.jpg">
-					</div>
-					<div class="tpc-main">
-						<h5 class="h5-title">
-							夏木_乾
-						</h5>
-						<p class="tp-time">
-							2小时前
-						</p>
-						<p id="topicContent">
-							公司德比，有的好看！
-						</p>
-					</div>
-				</li>
+			<ul id="comments-listboard" class="topic-list" style="float:left;width: 100%;">
+				<!--
+                	留言板
+                -->
 			</ul>
 			<!-- 球队信息留言板 end-->
 		</div>
@@ -249,6 +220,26 @@ $(function() {
 					visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="../../imgs/teamAvatar.jpg">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.unname + '(' + item.points + '分)' + '</h5><p>' + '战力' + buildStar(item.uforces) + '</p><p>' + '信用' + buildStar(item.credits) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
 				});
 				$("#visitTeamList").html(visitTeamHtml);
+				
+				//留言评论
+				var commentHtml = "";
+				$.each(detailObj.commentlist, function(index,item) {    
+					commentHtml+= '<li>'
+					+'<div class="tpc-headbox">'
+						+'<img src="../../imgs/55.jpg">'
+					+'</div>'
+					+'<div class="tpc-main">'
+						+'<h5 class="h5-title">'+item.unname+'</h5>'
+						+'<p class="tp-time">'
+							+item.createtime
+						+'</p>'
+						+'<p id="topicContent">'
+							+item.comments
+						+'</p>'
+					+'</div>'
+				+'</li>';                                                  
+				});
+				$("#comments-listboard").html(commentHtml);
 			}
 		});
 	//点击增减参加人数
