@@ -55,13 +55,13 @@
 					<div class="swiper-wrapper" id="categoryWrap">
 						<div class="swiper-slide">
 							<ul class="category-ul mt15 clearfix">
-								<li><a href="#" class="category-a category4"><span>停车场</span></a>
+								<li><a href="#" class="category-a category4"><span>约赛</span></a>
 								</li>
-								<li><a href="#" class="category-a category4"><span>更衣室</span></a>
+								<li><a href="#" class="category-a category4"><span>约场</span></a>
 								</li>
-								<li><a href="#" class="category-a category4"><span>茶水室</span></a>
+								<li><a href="#" class="category-a category4"><span>加入</span></a>
 								</li>
-								<li><a href="#" class="category-a category4"><span>租器具</span></a>
+								<li><a href="#" class="category-a category4"><span>关于</span></a>
 								</li>
 							</ul>
 						</div>
@@ -270,10 +270,6 @@
 								</div>
 							</li>
 						</ul>
-						<br>
-						<div class="clearfix" id="viewmore">
-							<a href="javascript:;" class="btn btn-showmore" id="showmore">查看更多</a>
-						</div>
 					</div>
 				</div>
 		<div>

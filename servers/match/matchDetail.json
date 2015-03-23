@@ -1,0 +1,85 @@
+{
+	"code": 200,
+	"msg": "消息测试通过",
+	"data": {
+		"id": 1,
+		"actname": "国家德比1",
+		"creatuser":"夏木_乾",
+		"date": "2015-03-20",
+		"week": "星期四",
+		"time": "15:00",
+		"forces": "4.0",
+		"scales":"5",
+		"hosts": [
+			{
+				"uid": "1",
+				"unname": "豇豆",
+				"avatar": "../../imgs/teamAvatar.jpg",
+				"points": "1000",
+				"uforces": "4.0",
+				"credits": "5.0"
+			}, {
+				"uid": "2",
+				"unname": "夏木_乾",
+				"avatar": "../../imgs/teamAvatar.jpg",
+				"points": "900",
+				"uforces": "4.0",
+				"credits": "1.0"
+			}, {
+				"uid": "3",
+				"unname": "水货",
+				"avatar": "../../imgs/teamAvatar.jpg",
+				"points": "780",
+				"uforces": "3.0",
+				"credits": "5.0"
+			}
+		],
+		"visits": [
+			{
+				"uid": "812",
+				"unname": "陈哥",
+				"avatar": "../../imgs/teamAvatar.jpg",
+				"points": "1000",
+				"uforces": "4.0",
+				"credits": "5.0"
+			}, {
+				"uid": "901",
+				"unname": "贝壳板栗",
+				"avatar": "../../imgs/teamAvatar.jpg",
+				"points": "900",
+				"uforces": "4.0",
+				"credits": "5.0"
+			}, {
+				"uid": "343",
+				"unname": "中华英雄",
+				"avatar": "../../imgs/teamAvatar.jpg",
+				"points": "780",
+				"uforces": "3.0",
+				"credits": "5.0"
+			}
+		],
+		"commentlist": [
+			{
+				"uid": "550",
+				"unname": "夏木_乾",
+				"createtime": "2015-03-17 15:00:00",
+				"comments": "公司的内部比赛，很期待哦！"
+			}, {
+				"uid": "550",
+				"unname": "夏木_乾",
+				"createtime": "2015-03-17 15:00:00",
+				"comments": "公司的内部比赛，很期待哦！"
+			}, {
+				"uid": "550",
+				"unname": "夏木_乾",
+				"createtime": "2015-03-17 15:00:00",
+				"comments": "公司的内部比赛，很期待哦！"
+			}, {
+				"uid": "550",
+				"unname": "夏木_乾",
+				"createtime": "2015-03-17 15:00:00",
+				"comments": "公司的内部比赛，很期待哦！"
+			}
+		]
+	}
+}

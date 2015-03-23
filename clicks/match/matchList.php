@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>加入球赛</title>
@@ -10,7 +9,6 @@
 		<meta name="format-detection" content="telephone=no">
 		<link rel="stylesheet" href="../../css/common.css" />
 		<link rel="stylesheet" href="../../css/index.css" />
-
 		<style type="text/css">
 			input:-webkit-autofill,
 			input:-webkit-autofill:hover,
@@ -20,7 +18,6 @@
 			}
 		</style>
 	</head>
-
 	<body>
 		<header class="header">
 			<h2><span>开放球赛列表</span></h2>
@@ -47,19 +44,7 @@
 				</ul>
 			</div>
 			<div class="tab-con">
-				<ul class="orders-list myzc-ul">
-					<li id="li1">
-						<a href="orderDetail.html" class="gridbox">
-							<div class="orders-pic">
-								<img class="pitchsavatar" src="../../imgs/orderAvatar.jpg" alt="">
-							</div>
-							<div class="grid-1">
-								<h2 class="h2-title">国家德比</h2>
-								<p>2015-03-20(星期四) 15:00</p>
-								<p>战力<i style="color:red;">★★★★</i><i>★</i>&nbsp;&nbsp;主队6/5&nbsp;&nbsp;客队3/5</p>
-							</div>
-						</a>
-					</li>
+				<ul id="openMatchList" class="orders-list myzc-ul">
 					<li id="li2">
 						<a href="orderDetail.html" class="gridbox">
 							<div class="orders-pic">
@@ -119,7 +104,6 @@
 				<p class="f-text2"></p>
 			</div>
 		</div>
-
 		<script src="../../js/zepto.min.js" type="text/javascript"></script>
 		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
 		<script src="../../js/proTools.js" type="text/javascript"></script>
@@ -127,6 +111,23 @@
 		<script>
 			var msgScroll = new MarqueeBox({
 				obj: $("#scrollSpan")
+			});
+			
+			$(function(){
+				
+				 //异步加载
+				 $.get("../../servers/match/matchList.json",function(data){
+				 	if(data.code==200){
+				 		var matchHtml = "";
+				 		$.each(data.openList, function(index,item) { 
+				 			   matchHtml += '<li id="li_'+(index+1)+'"><a href="matchDetail.php?matchId='+item.id+'" class="gridbox">'
+							+'<div class="orders-pic"><img class="pitchsavatar" src="'+item.imgsrc+'" alt=""></div>'
+							+'<div class="grid-1"><h2 class="h2-title">'+item.title+'</h2><p>'+item.date+'('+item.week+') '+item.time+'</p>'
+							+'<p>战力<i style="color:red;">★★★★</i><i>★</i>&nbsp;&nbsp;主队'+item.hosts+'/'+item.scales+'&nbsp;&nbsp;客队'+item.visits+'/'+item.scales+'</p></div></a></li>';
+				 		});
+				 		$('#openMatchList').html(matchHtml);
+				 	}
+				 })
 			});
 		</script>
 	</body>
