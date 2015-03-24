@@ -13,12 +13,12 @@
 		<link rel="stylesheet" href="../../css/style.css" />
 		<link rel="stylesheet" href="../../css/index.css" />
 		<style type="text/css">
-		input:-webkit-autofill,
-		input:-webkit-autofill:hover,
-		input:-webkit-autofill:focus {
-			box-shadow: 0 0 0 60px #fff inset;
-			-webkit-text-fill-color: #333;
-		}
+			input:-webkit-autofill,
+			input:-webkit-autofill:hover,
+			input:-webkit-autofill:focus {
+				box-shadow: 0 0 0 60px #fff inset;
+				-webkit-text-fill-color: #333;
+			}
 		</style>
 	</head>
 	<body>
@@ -93,10 +93,10 @@
 					<input id="userTelNum" class="text-input" placeholder="电话号码" />
 				</div>
 				<div class="item item-btns">
-					<a href="javascript:;" onclick="joinMatch(0)" style="text-align:center;float:left;width:45%;background-color: #00516E;color:white;padding: 5px 0 5px 0;">
+					<a href="javascript:;" onclick="joinMatch(1)" style="text-align:center;float:left;width:45%;background-color: #00516E;color:white;padding: 5px 0 5px 0;">
 						我是主队员
 					</a>
-					<a href="javascript:;" onclick="joinMatch(1)" style="text-align:center;float:right;width:45%;background-color: #7F0A0C;color:white;padding: 5px 0 5px 0;">
+					<a href="javascript:;" onclick="joinMatch(2)" style="text-align:center;float:right;width:45%;background-color: #7F0A0C;color:white;padding: 5px 0 5px 0;">
 						我是客队员
 					</a>
 				</div>
@@ -143,105 +143,108 @@
 		<script src="../../js/home.js" type="text/javascript"></script>
 		<script>
 		var myComment = new Comment({
-	cmtBox: $("#cmtBox"),
-	hideAry: [$("#header")],
-	sendCallback: function() {
-		var content = $(".cmtTextArea").val();
-		if (content.length > 140) {
-			alertWarning('评论内容不能超过140个字', 'top');
-		} else {
-			var url = "";
-			$.ajax({
-				type: "post",
-				url: url,
-				dataType: "json",
-				data: {
-					topicId: 103734,
-					content: content,
-					parentId: 0
-				},
-				scriptCharset: "utf-8",
-				success: function(data) {
-					if (data != null && data.isSuccess && data.code == "000000") {
-						alertWarning('发表成功', 'top');
-						setTimeout(function() {
-							location.reload();
-						}, 200);
-					} else if (data != null && data.error == "NotLogin") {
-						var url = "";
-						url = "" + encodeURIComponent(url);
-						window.location.href = url;
-					} else if (data != null && (data.code == "000002" || data.code == "000003" || data.code == "000004")) {
-						alertWarning(data.info, 'top');
-					} else {
-						alertWarning('系统繁忙', 'top');
-					}
-				},
-				error: function(a) {
-					alertWarning('系统繁忙', 'top');
+			cmtBox: $("#cmtBox"),
+			hideAry: [$("#header")],
+			sendCallback: function() {
+				var content = $(".cmtTextArea").val();
+				if( content.length < 5){
+					alertWarning('兄弟，多说两句话撒！','top');
+				}else if (content.length > 140) {
+					alertWarning('评论内容不能超过140个字', 'top');
+				} else {
+					$.post("../../servers/common/comment.php",{"openId":"o5896s_Gge1x6UA_3bCsj9AK7kOI",
+							"moduleId": <?php echo $_GET['matchId'];?>,
+							"content": content,
+							"moduleFlag":1 //球赛活动1，单飞营2
+						},function(data){
+							if (data.code == 200) {
+								alertWarning('发表成功', 'top');
+								setTimeout(function() {
+									location.reload();
+								}, 200);
+							} else {
+								alertWarning('系统繁忙', 'top');
+							}
+					},"json");
 				}
-			});
-		}
-	},
-	warnning: function(_str) {
-		alertWarning('内容输入有误', 'top');
-	},
-	isLogin: true,
-	loginFn: function() {
-		var url = "";
-		url = "" + encodeURIComponent(url);
-		window.location.href = url;
-	}
-})
+			},
+			warnning: function(_str) {
+				alertWarning('内容输入有误', 'top');
+			},
+			isLogin: true,
+			loginFn: function() {
+				var url = "";
+				url = "" + encodeURIComponent(url);
+				window.location.href = url;
+			}
+		})
 $(function() {
-	$.get("../../servers/match/matchDetail.json",
+
+	//获取活动比赛信息
+	$.get("../../servers/match/MatchDetail.php?matchId="+<?php echo $_GET['matchId'];?>,
 		function(data) {
 			if (data.code == 200) {
 				var detailObj = data.data;
 				//头部
-				$("#headerTitle").html(detailObj.actname + "-" + detailObj.creatuser);
+				$("#headerTitle").html(detailObj.activityName + "-" + detailObj.nickName);
 				//比赛时间
-				$("#matchtime").html(detailObj.date + " " + detailObj.week + " " + detailObj.time);
+				$("#matchtime").html(detailObj.activityCreateTime + " " + detailObj.weekDay);
+
+				$("#userTelNum").val(detailObj.phoneNumber);
+				//处理成员数据，分装为主队和客队
+				var hostsmember = new Array();
+				var forceTotal = 0;//战力平均数
+				var visitsmember = new Array();
+				var count = 0;
+				$.each(detailObj.member,function(index,item){
+					if (item.host_or_guest==1){
+						hostsmember.push(item);
+					}else{
+						visitsmember.push(item);
+					}
+					forceTotal += parseInt(item.personalLevel);
+					count++;
+				});
 				//战力自评星型图,四舍五入
-				$("#forcesDivStar").html(buildStar(detailObj.forces));
+				$("#forcesDivStar").html(buildStar(forceTotal/count));
 				//调节高度
-				$("#teamDivHeight").css("line-height", max(detailObj.hosts.length, detailObj.visits.length) * 65 + "px");
+				$("#teamDivHeight").css("line-height", max(hostsmember.length, visitsmember.length) * 65 + "px");
 				//主队
 				var hostTeamHtml = '';
-				$("#currentHostNum").html(detailObj.hosts.length + "/" + detailObj.scales);
-				$.each(detailObj.hosts, function(index, item) {
-					hostTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="../../imgs/teamAvatar.jpg">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.unname + '(' + item.points + '分)' + '</h5><p>' + '战力' + buildStar(item.uforces) + '</p><p>' + '信用' + buildStar(item.credits) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
+				$("#currentHostNum").html(hostsmember.length);
+				$.each(hostsmember, function(index, item) {
+					hostTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '(100分)' + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
 				});
 				$("#hostTeamList").html(hostTeamHtml);
 				//客队
 				var visitTeamHtml = "";
-				$("#currentVisitNum").html(detailObj.visits.length + "/" + detailObj.scales);
-				$.each(detailObj.visits, function(index, item) {
-					visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="../../imgs/teamAvatar.jpg">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.unname + '(' + item.points + '分)' + '</h5><p>' + '战力' + buildStar(item.uforces) + '</p><p>' + '信用' + buildStar(item.credits) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
+				$("#currentVisitNum").html(visitsmember.length);
+				$.each(visitsmember, function(index, item) {
+					visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '(100分)' + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
 				});
 				$("#visitTeamList").html(visitTeamHtml);
 				
 				//留言评论
 				var commentHtml = "";
-				$.each(detailObj.commentlist, function(index,item) {    
+				$.each(detailObj.comments, function(index,item) {    
 					commentHtml+= '<li>'
 					+'<div class="tpc-headbox">'
-						+'<img src="../../imgs/55.jpg">'
+						+'<img src="'+item.headerImgUrl+'">'
 					+'</div>'
 					+'<div class="tpc-main">'
-						+'<h5 class="h5-title">'+item.unname+'</h5>'
+						+'<h5 class="h5-title">'+item.nickName+'</h5>'
 						+'<p class="tp-time">'
-							+item.createtime
+							+item.msgDateTime
 						+'</p>'
 						+'<p id="topicContent">'
-							+item.comments
+							+item.msgContent
 						+'</p>'
 					+'</div>'
 				+'</li>';                                                  
 				});
 				$("#comments-listboard").html(commentHtml);
 			}
-		});
+		},"json");
 	//点击增减参加人数
 	$(".pitchRowBtn").on("click", function() {
 		var n = $("#num").val();
@@ -257,22 +260,40 @@ $(function() {
 	});
 })
 
+
+//加入比赛
 function joinMatch(type) {
-	var $obj;
-	var hvname;
-	if (type == 0) {
-		var currNum = $("#currentHostNum").html();
-		$("#currentHostNum").html(parseInt(currNum) + 1);
-		$obj = $("#hostTeamList");
-		hvname = "host_" + (parseInt(currNum) + 1);
-	} else {
-		var currNum = $("#currentVisitNum").html();
-		$("#currentVisitNum").html(parseInt(currNum) + 1);
-		$obj = $("#visitTeamList");
-		hvname = "visit_" + (parseInt(currNum) + 1);
+	if($("#userTelNum").val() == ""){
+		alert("请输入电话号码！");
+	}else{
+		$.post("../../servers/match/JoinMatch.php",{
+				"openId":"o5896s_Gge1x6UA_3bCsj9AK7kOI",
+				"userTelNum":$("#userTelNum").val(),
+				"type":type,
+				"repreNum":$("#num").val(),
+				"activeId":<?php echo $_GET['matchId'];?>
+			},function(data){
+
+
+		},"json");
+
+
+		var $obj;
+		var hvname;
+		if (type == 1) {
+			var currNum = $("#currentHostNum").html();
+			$("#currentHostNum").html(parseInt(currNum) + 1);
+			$obj = $("#hostTeamList");
+			hvname = "host_" + (parseInt(currNum) + 1);
+		} else {
+			var currNum = $("#currentVisitNum").html();
+			$("#currentVisitNum").html(parseInt(currNum) + 1);
+			$obj = $("#visitTeamList");
+			hvname = "visit_" + (parseInt(currNum) + 1);
+		}
+		var addPlayerHtml = "<li id='" + hvname + "'>" + "<div class=\"li-l-box\">" + "<a href=\"javascript:;\" onclick=\"javascript:quitTeam('" + hvname + "')\">" + "<img src=\"../../imgs/deleteRole.png\" class=\"del-user\">" + "</a>" + "<img src=\"../../imgs/teamAvatar.jpg\">" + "</div>" + "<a href='#'><div class=\"li-r-box\">" + "<div class=\"li-r-con\">" + "<h5 class=\"teamInfo\">豇豆的队友</h5>" + "<p>战力 无数据</p>" + "<p>信用 无数据</p>" + "</div>" + "</div>" + "</a>" + "</li>";
+		$obj.append(addPlayerHtml);
 	}
-	var addPlayerHtml = "<li id='" + hvname + "'>" + "<div class=\"li-l-box\">" + "<a href=\"javascript:;\" onclick=\"javascript:quitTeam('" + hvname + "')\">" + "<img src=\"../../imgs/deleteRole.png\" class=\"del-user\">" + "</a>" + "<img src=\"../../imgs/teamAvatar.jpg\">" + "</div>" + "<a href='#'><div class=\"li-r-box\">" + "<div class=\"li-r-con\">" + "<h5 class=\"teamInfo\">豇豆的队友</h5>" + "<p>战力 无数据</p>" + "<p>信用 无数据</p>" + "</div>" + "</div>" + "</a>" + "</li>";
-	$obj.append(addPlayerHtml);
 }
 
 function quitTeam(hvname) {

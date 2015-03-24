@@ -125,7 +125,7 @@
 					$.get('../../servers/match/avalPitchs.json',function(data){
 						if(data.code == 200){
 							var selectPitchHtml = "";
-							$.each(data.pitchs, function(index,item) {    
+							$.each(data.pitchs, function(index,item) {  
 								selectPitchHtml+='<li><a href="../../servers/match/selectPitchs.php?pid='+item.id+'">'+item.date+'('+item.week+')'+item.time+'</a></li>';
 							});
 							$('#avaliablePitchs').html(selectPitchHtml);
@@ -196,33 +196,50 @@
 							$('#matchName').parent().css('border-color','brown');
 							alert("请掷骰子创建一个活动名字!");
 						}
-//						else if($('#selectPitch').val() == ""){
-//							$('#selectPitch').css('border-color','brown');
-//							alert("创建球赛必须选择一个场地!");
-//						}
-						else if($('#checkboxFiveInput').is(":checked")){
-							alert($('#mymatenum').val());
+						else if($('#selectPitch').val() == ""){
+							$('#selectPitch').css('border-color','brown');
+							alert("创建球赛必须选择一个场地!");
 						}else if($('#creatorTelNum').val() == ""){
+							$('#creatorTelNum').css('border-color','brown');
 							alert("请填写您的联系方式，方便管理员与您缺人信息!");
 						}else{
 							$.post("../../servers/match/MatchCreate.php",{
+								"openId":"o5896s_Gge1x6UA_3bCsj9AK7kOI",
 								"matchName":$('#matchName').val(),
 								"selectPitch":$('#selectPitch').val(),
 								"selectPitchId":$('#selectPitchId').val(),
 								"scaleByHand":$('#scaleByHand').val(),
 								"ifReval":$('#checkboxFiveInput').is(":checked"),
 								"mymatenum":$('#mymatenum').val(),
-								"myforces":$('.forceStarRed').size()},function(data){
-								
-							})
+								"creatorTel":$('#creatorTelNum').val(),
+								"myforces":$('.forceStarRed').size()},
+								function(data){
+								if(data.code == 200){
+									// $("#matchCreateBtn").
+									var secs =3; //倒计时的秒数 
+									var URL; 
+									for(var i=secs;i>=0;i--){ 
+										window.setTimeout(delayJump(i), (secs-i) * 1000);
+									}
+								}else{
+									alert(data.message);
+								}
+							},"json");
 						}
 					});
 				})
+
+			//延时跳转
+			function delayJump(num){
+				$("#matchCreateBtn").html(data.message+"将自动返回");
+				if(num == 0) { 
+					window.location="matchList.php?openId='o5896s_Gge1x6UA_3bCsj9AK7kOI'";
+				}
+			}
 			
 			function openSelectPitchs(url){
 				window.location.href=url;
 			}
-			
 			
 			//获取随机名字
 			function getRandomName() {
@@ -230,11 +247,6 @@
 				$("#matchName").val(data[index]);
 			}
 
-			function closemodalbtn() {
-				var Header = "<h2>创建球赛</h2>";
-				$(".header").html(Header);
-				$(".modal-box").css("display", "none");
-			}
 		</script>
 	</body>
 

@@ -45,54 +45,7 @@
 			</div>
 			<div class="tab-con">
 				<ul id="openMatchList" class="orders-list myzc-ul">
-					<li id="li2">
-						<a href="orderDetail.html" class="gridbox">
-							<div class="orders-pic">
-								<img class="pitchsavatar" src="../../imgs/orderAvatar.jpg" alt="">
-							</div>
-							<div class="grid-1">
-								<h2 class="h2-title">开春球赛</h2>
-								<p>2015-03-20(星期四) 15:00</p>
-								<p>战力<i style="color:red;">★★★★</i><i>★</i>&nbsp;&nbsp;主队6/5&nbsp;&nbsp;客队3/5</p>
-							</div>
-						</a>
-					</li>
-					<li id="li3">
-						<a href="orderDetail.html" class="gridbox">
-							<div class="orders-pic">
-								<img class="pitchsavatar" src="../../imgs/orderAvatar.jpg" alt="">
-							</div>
-							<div class="grid-1">
-								<h2 class="h2-title">国家德比</h2>
-								<p>2015-03-20(星期四) 15:00</p>
-								<p>战力<i style="color:red;">★★★★</i><i>★</i>&nbsp;&nbsp;主队6/5&nbsp;&nbsp;客队3/5</p>
-							</div>
-						</a>
-					</li>
-					<li id="li3">
-						<a href="orderDetail.html" class="gridbox">
-							<div class="orders-pic">
-								<img class="pitchsavatar" src="../../imgs/orderAvatar.jpg" alt="">
-							</div>
-							<div class="grid-1">
-								<h2 class="h2-title">国家德比</h2>
-								<p>2015-03-20(星期四) 15:00</p>
-								<p>战力<i style="color:red;">★★★★</i><i>★</i>&nbsp;&nbsp;主队6/5&nbsp;&nbsp;客队3/5</p>
-							</div>
-						</a>
-					</li>
-					<li id="li3">
-						<a href="orderDetail.html" class="gridbox">
-							<div class="orders-pic">
-								<img class="pitchsavatar" src="../../imgs/orderAvatar.jpg" alt="">
-							</div>
-							<div class="grid-1">
-								<h2 class="h2-title">国家德比</h2>
-								<p>2015-03-20(星期四) 15:00</p>
-								<p>战力<i style="color:red;">★★★★</i><i>★</i>&nbsp;&nbsp;主队6/5&nbsp;&nbsp;客队3/5</p>
-							</div>
-						</a>
-					</li>
+					<!--开放球赛列表-->
 				</ul>
 			</div>
 			<div class="mypanel f-text2">
@@ -109,26 +62,35 @@
 		<script src="../../js/proTools.js" type="text/javascript"></script>
 		<script src="../../js/home.js" type="text/javascript"></script>
 		<script>
+			//滚动消息控件
 			var msgScroll = new MarqueeBox({
 				obj: $("#scrollSpan")
 			});
 			
 			$(function(){
-				
-				 //异步加载
-				 $.get("../../servers/match/matchList.json",function(data){
+				 //异步加载公开比赛信息列表
+				 $.post("../../servers/match/MatchList.php",
+				 	{"zqq_token":"4389c044a602997c5489235fc0fdda65"},function(data){
 				 	if(data.code==200){
 				 		var matchHtml = "";
-				 		$.each(data.openList, function(index,item) { 
-				 			   matchHtml += '<li id="li_'+(index+1)+'"><a href="matchDetail.php?matchId='+item.id+'" class="gridbox">'
-							+'<div class="orders-pic"><img class="pitchsavatar" src="'+item.imgsrc+'" alt=""></div>'
-							+'<div class="grid-1"><h2 class="h2-title">'+item.title+'</h2><p>'+item.date+'('+item.week+') '+item.time+'</p>'
-							+'<p>战力<i style="color:red;">★★★★</i><i>★</i>&nbsp;&nbsp;主队'+item.hosts+'/'+item.scales+'&nbsp;&nbsp;客队'+item.visits+'/'+item.scales+'</p></div></a></li>';
+				 		$.each(data.data, function(index,item) { 
+				 			matchHtml += '<li id="li_'+(index+1)+'"><a href="matchDetail.php?matchId='+item.id_activities+'" class="gridbox">'
+							+'<div class="orders-pic"><img class="pitchsavatar" src="../../imgs/orderAvatar.jpg" alt=""></div>'
+							+'<div class="grid-1"><h2 class="h2-title">'+item.activityName+'</h2><p>'+item.activityCreateTime+'</p>'
+							+'<p>战力'+buildStar(item.personalLevel)+'&nbsp;&nbsp;主队5/5&nbsp;&nbsp;客队4/5</p></div></a></li>';
 				 		});
 				 		$('#openMatchList').html(matchHtml);
 				 	}
-				 })
+				 },"json");
 			});
+
+			function buildStar(forces) {
+				var starHtml = "";
+				for (var i = 0; i < Math.round(forces); i++) {
+					starHtml += "<i style='color:red;'>★</i>";
+				}
+				return starHtml;
+			}
 		</script>
 	</body>
 </html>

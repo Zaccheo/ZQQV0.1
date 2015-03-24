@@ -19,4 +19,11 @@ class Util{
 		$time = $time2 [0];
 		return $time;
 	}
+
+
+	//获取日期的星期数
+	public function getWeekDay(&$date){
+		$weekarray=array("日","一","二","三","四","五","六");
+ 		return "星期".$weekarray[date("w",date('Y-m-d',strtotime($date)))];
+	}
 }
