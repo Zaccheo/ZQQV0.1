@@ -151,6 +151,18 @@ class UserManage{
 	    	WeixinJSBridge.log(e.err_msg);
 	    });";
     }
-
+    /**
+     * 根据openId获取用户是否属于管理员组
+     * @param String $openId
+     * @return boolean，如果用户属于管理员组-groupid===100,返回true，否则返回false
+     */
+    public static function isUserAdministrator($openId){
+        $groupObj = self::getGroupByOpenId($openId);
+        $groupid = $groupObj['groupid'];
+        if($groupid===100){
+            return true;
+        }
+        return false;
+    }
 
 }
