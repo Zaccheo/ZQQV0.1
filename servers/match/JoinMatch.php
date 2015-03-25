@@ -14,6 +14,8 @@
 	$activeId = $_POST['activeId'];
 
 	$connect = Db::getInstance()->connect();
+
+	//查询用户信息
 	$userSql = "select phoneNumber,flag,personalLevel from `zqq_users_info` where userOpenId='".$openId."'";
 	$userInfo = mysql_fetch_assoc(mysql_query($userSql,$connect));
 

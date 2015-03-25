@@ -24,7 +24,7 @@
 	<body>
 		<header class="header">
 			<h2>
-				<span id="headerTitle">国家德比－豇豆</span>
+				<span id="headerTitle"></span>
 			</h2>
 		</header>
 		<div class="wrapbox">
@@ -39,9 +39,11 @@
 				</div>
 				<div class="order-item clearfix">
 					<div class="order-item-key">
-						战力自评：
+						平均战力：
 					</div>
-					<div id="forcesDivStar" class="order-item-value">
+					<div class="order-item-value">
+						主队：<span id="forcesHostStar">无</span>&nbsp;&nbsp;&nbsp;&nbsp;
+						客队：<span id="forcesVisitStar">无</span>
 					</div>
 				</div>
 			</div>
@@ -193,20 +195,29 @@ $(function() {
 				$("#userTelNum").val(detailObj.phoneNumber);
 				//处理成员数据，分装为主队和客队
 				var hostsmember = new Array();
-				var forceTotal = 0;//战力平均数
 				var visitsmember = new Array();
-				var count = 0;
+				var hostforceTotal = 0;//主队战力
+				var visitforceTotal = 0;//客队战力
+				var hostcount = 0;
+				var visitcount = 0;
 				$.each(detailObj.member,function(index,item){
 					if (item.host_or_guest==1){
 						hostsmember.push(item);
+						hostforceTotal += parseInt(item.personalLevel);
+						hostcount++;
 					}else{
 						visitsmember.push(item);
+						visitforceTotal += parseInt(item.personalLevel);
+						visitcount++;
 					}
-					forceTotal += parseInt(item.personalLevel);
-					count++;
 				});
+				if(hostcount > 0){
+					$("#forcesHostStar").html(buildStar(hostforceTotal/hostcount));//主队
+				}
+				if(visitcount > 0){
+					$("#forcesVisitStar").html(buildStar(visitforceTotal/visitcount));//客队
+				}
 				//战力自评星型图,四舍五入
-				$("#forcesDivStar").html(buildStar(forceTotal/count));
 				//调节高度
 				$("#teamDivHeight").css("line-height", max(hostsmember.length, visitsmember.length) * 65 + "px");
 				//主队
@@ -273,26 +284,26 @@ function joinMatch(type) {
 				"repreNum":$("#num").val(),
 				"activeId":<?php echo $_GET['matchId'];?>
 			},function(data){
-
-
+				if(data.code == 200){
+					location.reload();
+				}
 		},"json");
 
-
-		var $obj;
-		var hvname;
-		if (type == 1) {
-			var currNum = $("#currentHostNum").html();
-			$("#currentHostNum").html(parseInt(currNum) + 1);
-			$obj = $("#hostTeamList");
-			hvname = "host_" + (parseInt(currNum) + 1);
-		} else {
-			var currNum = $("#currentVisitNum").html();
-			$("#currentVisitNum").html(parseInt(currNum) + 1);
-			$obj = $("#visitTeamList");
-			hvname = "visit_" + (parseInt(currNum) + 1);
-		}
-		var addPlayerHtml = "<li id='" + hvname + "'>" + "<div class=\"li-l-box\">" + "<a href=\"javascript:;\" onclick=\"javascript:quitTeam('" + hvname + "')\">" + "<img src=\"../../imgs/deleteRole.png\" class=\"del-user\">" + "</a>" + "<img src=\"../../imgs/teamAvatar.jpg\">" + "</div>" + "<a href='#'><div class=\"li-r-box\">" + "<div class=\"li-r-con\">" + "<h5 class=\"teamInfo\">豇豆的队友</h5>" + "<p>战力 无数据</p>" + "<p>信用 无数据</p>" + "</div>" + "</div>" + "</a>" + "</li>";
-		$obj.append(addPlayerHtml);
+		// var $obj;
+		// var hvname;
+		// if (type == 1) {
+		// 	var currNum = $("#currentHostNum").html();
+		// 	$("#currentHostNum").html(parseInt(currNum) + 1);
+		// 	$obj = $("#hostTeamList");
+		// 	hvname = "host_" + (parseInt(currNum) + 1);
+		// } else {
+		// 	var currNum = $("#currentVisitNum").html();
+		// 	$("#currentVisitNum").html(parseInt(currNum) + 1);
+		// 	$obj = $("#visitTeamList");
+		// 	hvname = "visit_" + (parseInt(currNum) + 1);
+		// }
+		// var addPlayerHtml = "<li id='" + hvname + "'>" + "<div class=\"li-l-box\">" + "<a href=\"javascript:;\" onclick=\"javascript:quitTeam('" + hvname + "')\">" + "<img src=\"../../imgs/deleteRole.png\" class=\"del-user\">" + "</a>" + "<img src=\"../../imgs/teamAvatar.jpg\">" + "</div>" + "<a href='#'><div class=\"li-r-box\">" + "<div class=\"li-r-con\">" + "<h5 class=\"teamInfo\">豇豆的队友</h5>" + "<p>战力 无数据</p>" + "<p>信用 无数据</p>" + "</div>" + "</div>" + "</a>" + "</li>";
+		// $obj.append(addPlayerHtml);
 	}
 }
 
