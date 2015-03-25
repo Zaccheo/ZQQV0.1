@@ -89,6 +89,10 @@
 		<script type="text/javascript">
 			$(function() {
 				goToTop($("#goTop"));
+
+
+
+				
 			});
 		</script>
 	</body>

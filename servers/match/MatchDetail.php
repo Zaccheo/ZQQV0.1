@@ -27,7 +27,7 @@
 		$result['member'] = $memeberArr;//活动的成员信息
 
 		//意见信息列表查询
-		$commentsSql = "select a.*,b.nickName,b.headerImgUrl from `zqq_msg_board` a,`zqq_users_info` b where a.msgUserOpenId = b.userOpenId and msgModuleId = ".$matchId;//根据活动id查询评论
+		$commentsSql = "select a.*,b.nickName,b.headerImgUrl from `zqq_msg_board` a,`zqq_users_info` b where a.msgUserOpenId = b.userOpenId and id_activity = ".$matchId;//根据活动id查询评论
 		$commentsRst = mysql_query($commentsSql,$connect);
 		$commentsArr = array();
 		while ($commentsRow = mysql_fetch_assoc($commentsRst)) {
