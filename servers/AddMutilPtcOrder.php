@@ -37,38 +37,46 @@
 	$dates2BeAdded = $json->dates2BeAdded;
 	$pitchInfo = $json->pitchInfo;//球场预约定价信息列表
 	
-		$connect = Db::getInstance()->connect();
-		date_default_timezone_set('PRC');
-		$temp = getDates2BeOperated($connect,$dates2BeAdded,$ptcId);//筛选出需要操作的日期
-		//echo convert($temp);
-		//删除原有的数据
-		$flag = false;
-		if (delete($connect,$temp,$ptcId)==true){
-		    $flag = insert($connect,$temp,$ptcId,$pitchInfo);
-		}
-		if ($flag==true){
-		    echo Response::show(200,"添加成功！",array(),null);
-		}else{
-		    echo Response::show(201,"添加失败",array(),null);
-		}
+    $connect = Db::getInstance()->connect();
+	date_default_timezone_set('PRC');
+	$temp = getDates2BeOperated($connect,$dates2BeAdded,$ptcId);//筛选出需要操作的日期
+	//echo convert($temp);
+	//删除原有的数据
+	$flag = false;
+	if (delete($connect,$temp,$ptcId)==true){
+        //重组传入的数据参数，将开始时间和结束时间按照场分数数拆开
+        $pitchInfoProcess = rebuildPitchInfo($pitchInfo);
+		$flag = insert($connect,$temp,$ptcId,$pitchInfoProcess);
+	}
+	if ($flag==true){
+		echo Response::show(200,"添加成功！",array(),null);
+	}else{
+		echo Response::show(201,"添加失败",array(),null);
+	}
 		
 function delete($connect,$dates2BeAdded,$ptcId){
     $tmp = convert($dates2BeAdded);
     $query = "delete from `zqq_pitchs_order_info` where pitchInfoID=".$ptcId." and orderStatus=0 and zDate in(".$tmp.")";
     return mysql_query($query,$connect);
 } 
+
+//创建球场定价信息
 function insert($connect,$dates2BeAdded,$ptcId,$pitchInfo){
     $addptch = "insert into `zqq_pitchs_order_info` (zDate,startTime,endTime,charge,credits,pitchInfoID) values ";
-    $count1 = count($dates2BeAdded);
-    $count2 = count($pitchInfo);
-    for ($i=0;$i<$count1;$i++){
-        for ($j=0;$j<$count2;$j++){
-                $item = $pitchInfo[$j];
-                $tmpSQL =$addptch. "('".$dates2BeAdded[$i]."','".$item->startTime."','".$item->endTime."',".$item->charge.",".$item->credits.",".$ptcId.")";
-                if(mysql_query($tmpSQL,$connect)==false){
-                    return false;
-                }
+    // $count1 = ;
+    // $count2 = 
+    //echo Response::show(200,"测试！",$pitchInfo,null);;
+
+    for ($i=0;$i<count($dates2BeAdded);$i++){
+        for($j=0;$j<count($pitchInfo);$j++){
+            if($i > 0 || $j > 0){
+                $addptch .= ",";
+            }
+            $addptch .= '("'.$dates2BeAdded[$i].'","'.$pitchInfo[$j]['startTime'].'","'.$pitchInfo[$j]['endTime'].'",'.$pitchInfo[$j]['charge'].','.$pitchInfo[$j]['credits'].','.$ptcId.')';
         }
+    }
+    if(mysql_query($addptch,$connect)==false){
+        return false;
     }
     return true;
 }
@@ -105,3 +113,48 @@ function convert($dates2BeAdded){
     return $tmp;
 }
 
+
+//重组一次传入的球场信息，将数据处理拆开成按场次的数据包
+function rebuildPitchInfo($pitchInfo){
+    $rePitchInfo = array();
+    foreach ($pitchInfo as $value) {
+        $stime = $value->startTime;
+        $etime = $value->endTime;
+        $otime = $value->oneTime;
+        $stime = explode(":",$stime);//开始时间
+        $etime = explode(":",$etime);//结束时间
+        $shour = $stime[0];
+        $smin = $stime[1];
+        $ehour = $etime[0];
+        $emin = $etime[1];
+
+        $differHour = abs($shour-$ehour);
+        $differMin = abs($smin-$emin);
+        $differ = $differHour*60 + $differMin;
+        $lenth = $differ/$otime;//一天时间设置起始场次
+        $stidx = $value->startTime;
+        for($i=0;$i<$lenth;$i++){
+            $rpi = array();
+            $rpi['startTime']=$stidx;
+            $rpi['endTime']=timeCalcul($stidx,$otime);
+            $rpi['charge'] = $value->charge;
+            $rpi['credits'] = $value->credits;
+            $rePitchInfo[] = $rpi;
+            $stidx = timeCalcul($stidx,$otime);
+        }
+    }
+    return $rePitchInfo;
+}
+
+//时间计算，增加进位
+function timeCalcul($time,$submin){
+    //submin转换为小时制
+    $stime = explode(":",$time);//开始时间
+    $hour = $stime[0]+floor($submin/60);//小时
+    $min = $stime[1]+$submin%60;//分钟
+    if($min>=60){
+        $hour = $hour+1;
+        $min = $min-60;
+    }
+    return substr(strval($hour+100),1,2).":".substr(strval($min+100),1,2);
+}

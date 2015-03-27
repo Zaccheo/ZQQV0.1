@@ -17,12 +17,28 @@
 	if($result){
 		
 		$result['weekDay'] = "星期四";
-
-		$memeberSql = "select a.*,b.nickName,b.headerImgUrl,b.creditLevel from `zqq_activity_members` a,`zqq_users_info` b where a.activitymemberOpenId = b.userOpenId and a.id_activities = ".$matchId;//查询活动的成员信息
+		//查询活动队员数据
+		$memeberSql = "select a.host_or_guest,a.delegateNumber,a.personalLevel,b.nickName,b.headerImgUrl,b.creditLevel from `zqq_activity_members` a,`zqq_users_info` b where a.activitymemberOpenId = b.userOpenId and a.id_activities = ".$matchId;//查询活动的成员信息
 		$memeberRst = mysql_query($memeberSql,$connect);
 		$memeberArr = array();
+		$matesArr = array();
 		while ($memberRow = mysql_fetch_assoc($memeberRst)) {
 			$memeberArr[] = $memberRow;
+			//处理带队友情况,重复添加队友数据
+			$matesNum = (int)$memberRow['delegateNumber'];
+			if($matesNum > 0){
+				for($i=0;$i<$matesNum;$i++){
+					$newMate = array(
+						"delegateNumber"=> "0",
+						"headerImgUrl"=>"../../imgs/teamAvatar.jpg",
+						"host_or_guest"=> $memberRow['host_or_guest'],
+						"nickName"=>$memberRow['nickName']."的队友",
+						"creditLevel" => "",
+						"personalLevel"=>"0");
+					$matesArr[] = $newMate;
+					array_push($memeberArr, $newMate);
+				}	
+			}
 		}
 		$result['member'] = $memeberArr;//活动的成员信息
 

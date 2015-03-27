@@ -10,7 +10,7 @@
 	$type = $_POST["type"];
 	$openId = $_POST["openId"];
 	$userTelNum = $_POST['userTelNum'];
-	$repreNum = $_POST['repreNum'];
+	$repreNum = $_POST['repreNum'];//代表人数
 	$activeId = $_POST['activeId'];
 
 	$connect = Db::getInstance()->connect();

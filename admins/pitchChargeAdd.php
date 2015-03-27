@@ -16,11 +16,7 @@
 <title>添加球场定价信息</title>
 <script src="../js/zepto.js"></script>
 <script src="../js/happy.js"></script>
-<link
-	rel="stylesheet"
-	type="text/css"
-	href="../css/wei_bind.css"
->
+<link rel="stylesheet" type="text/css" href="../css/wei_bind.css">
 <!--组件依赖css begin-->
 <link rel="stylesheet" type="text/css" href="../imgs/gmu/widget/calendar/calendar.css" />
 <link rel="stylesheet" type="text/css" href="../imgs/gmu/widget/calendar/calendar.default.css" />
@@ -107,7 +103,7 @@ if (typeof WeixinJSBridge == "undefined"){
 	    happy:function(){
 		    var dates2BeAdded = getSelectedWeekDay();
 		    if(dates2BeAdded.length<1){
-		    	alert('请至少选择一个周几！');
+		    	alert('请至少选择一个周次！');
 		    	return;
 		    }
 		    if(isTimeCrossed()==true){
@@ -135,8 +131,8 @@ if (typeof WeixinJSBridge == "undefined"){
 		        addMutilPictInfos(JSON.stringify(tmpObj));
 			}
 	  }})
-	    }
-	    );
+	});
+	//校验时间是否冲突
     function isTimeCrossed(){
     	var trs = $("#resultID tbody tr");
     	var count = trs.length-1;
@@ -163,7 +159,11 @@ if (typeof WeixinJSBridge == "undefined"){
          data: {"param":pics},
          dataType:"json",
          success:function(data){
-             alert(data.message);
+            if(confirm(data.message)){
+            	location.reload();
+            }else{
+            	window.location='pitchManagement.php';
+            }
          },
          error:function(xhr,type){
              //TODO
@@ -267,13 +267,13 @@ function delImgClk(item){
 			</div>
 			<!-- 星期N -->
         <div id="weekDayDIV" class="weekDayCheckBox">
-            <input type="checkbox" data-value="1"><label>周一</label>
-            <input type="checkbox" data-value="2"><label>周二</label>
-            <input type="checkbox" data-value="3"><label>周三</label>
-            <input type="checkbox" data-value="4"><label>周四</label>
-            <input type="checkbox" data-value="5"><label>周五</label>
-            <input type="checkbox" data-value="6"><label>周六</label>
-            <input type="checkbox" data-value="0"><label>周日</label>
+            <input type="checkbox" checked="checked" data-value="1"><label>周一</label>
+            <input type="checkbox" checked="checked" data-value="2"><label>周二</label>
+            <input type="checkbox" checked="checked" data-value="3"><label>周三</label>
+            <input type="checkbox" checked="checked" data-value="4"><label>周四</label>
+            <input type="checkbox" checked="checked" data-value="5"><label>周五</label>
+            <input type="checkbox" checked="checked" data-value="6"><label>周六</label>
+            <input type="checkbox" checked="checked" data-value="0"><label>周日</label>
 		</div>
 		  <!-- 规模 -->
         <div id="pitchInfoDIV"
@@ -291,6 +291,7 @@ function delImgClk(item){
 		<tr>
 			<th>开始时间</th>
 			<th>结束时间</th>
+			<th>单场时间</th>
 			<th>金额</th>
 			<th>默认积分</th>
 			<th>+/-</th>
@@ -298,7 +299,7 @@ function delImgClk(item){
 	</thead>
 	<tbody>
 	<tr id="addBtnID">
-	<td colspan="4" align="center">点击右边的+添加新信息！</td>
+	<td colspan="5" align="center">点击右边的+添加新信息！</td>
 	<td align="center"><a href="javascript:addImgClk()"><img style="width:25px" src="../imgs/add2.png"></a></td></tr>
 	</tbody>
 </table>
@@ -311,15 +312,17 @@ function delImgClk(item){
 <script type="text/javascript">
 var TEMPID = 1;
 function reset(){
-    $("#st")[0].value="";
-    $("#et")[0].value="";
-    $("#charge")[0].value="";
-    $("#credit")[0].value="";
+    $("#st")[0].value="09:00";
+    $("#et")[0].value="22:30";
+    $("#ot")[0].value="90";
+    $("#charge")[0].value="100";
+    $("#credit")[0].value="1";
 }
-function add2Table(item){
+function add2Table(item){	
 	$temp = "<tr id=\"id_"+TEMPID+"\" data='"+JSON.stringify(item)+"'>";
 	   $temp +="<td>"+item.startTime+"</td>";
 	   $temp +="<td>"+item.endTime+"</td>";
+	   $temp +="<td>"+item.oneTime+"</td>";
 	   $temp +="<td>"+item.charge+"</td>";
 	   $temp +="<td>"+item.credits+"</td>";
 	   $temp +="<td align=\"center\"><a href=\"javascript:delImgClk('id_"+TEMPID+"')\"><img style=\"width:25px\" src=\"../imgs/del4.png\"></a></td>";
@@ -327,8 +330,45 @@ function add2Table(item){
 	$("#addBtnID").before($temp);
 	TEMPID++;
 }
+
+// function rebuildPitchInfo(item){
+// 	item.startTime;
+// 	item.endTime;
+// 	item.oneTime;
+// 	item.charge;
+// 	item.credits;
+// 	var obj = new Object();
+//         obj.startTime=$("#st")[0].value;
+//         obj.endTime=$("#et")[0].value;
+//         obj.oneTime=$("#ot")[0].value;
+//         obj.charge=$("#charge")[0].value;
+//         obj.credits=$("#credit")[0].value;
+// }
+
+//动态处理用户输入的时间参数，保证整除场次
+// function dynamicTime(){
+// 	//开始时间
+// 	$("#st").on("change",function(){
+// 		var differ = hourCut($(this).val(),$("et").val());
+// 		if(differ % $("ot").val() === 0){
+
+// 		}
+// 	});
+// 	//结束时间
+// 	$("#et").on("change",function(){
+// 		//alert($(this).val());
+// 		//$(this).val();
+// 	});
+// 	//每场分钟数
+// 	$("#ot").on("change",function(){
+
+// 	});
+// //hourCut(hourtime1,hourtime2);
+// }
+
 //添加新记录
 $(document).ready(function () {
+	
     $('#opForm').isHappy({
        classes:{
     	   field:'unhappy',
@@ -336,7 +376,7 @@ $(document).ready(function () {
        },
       fields: {
         '#st': {
-        	errorTarget:'#stDIV',
+          errorTarget:'#stDIV',
           required: true,
           message: '该字段为必须！'
           
@@ -347,7 +387,16 @@ $(document).ready(function () {
           message: '该字段为必须,且需大于开始时间！',
           test:function(e){
               return e>$('#st')[0].value;
+          },
+        '#ot': {
+          errorTarget:'#otDIV',
+          required: true,
+          message: '该字段为必须,且需小于开始和结束时间！',
+          test:function(e){
+          	  //var differ = hourCut($('#st')[0].value,$('#et')[0].value);
+              return /[0-9]/.test(e);
           }
+      	}
       },
       '#charge': {
         	errorTarget:'#chargeDIV',
@@ -369,21 +418,36 @@ $(document).ready(function () {
     
     submitButton:'#addBtn',
     happy:function(){
+    	
         var obj = new Object();
         obj.startTime=$("#st")[0].value;
         obj.endTime=$("#et")[0].value;
+        obj.oneTime=$("#ot")[0].value;
         obj.charge=$("#charge")[0].value;
         obj.credits=$("#credit")[0].value;
-
+        
     	add2Table(obj);
     	back();
     }
   })
-    }
-    );
+
+
+	// dynamicTime();
+});
 function back(){
 	$("#mainDIV")[0].style.display="";
 	$("#opDIV")[0].style.display="none";
+}
+
+//计算时间差，输入小时，输出分钟
+function hourCut(hourtime1,hourtime2){
+	var hour1 = hourtime1.split(":")[0];
+	var min1 = hourtime1.split(":")[1];
+	var hour2 = hourtime2.split(":")[0];
+	var min2 = hourtime2.split(":")[1];
+	var differHour = Math.abs(parseInt(hour1)-parseInt(hour2));
+	var differMin = Math.abs(parseInt(min1)-parseInt(min2));
+	return differHour*60+differMin;
 }
 
 </script>
@@ -399,6 +463,7 @@ function back(){
 				type="time"
 				required="required"
 				placeholder="请输入场次结束时间"
+				value="09:00" 
 			>
 		</div>
   <!-- 结束时间-->
@@ -412,8 +477,22 @@ function back(){
 				type="time"
 				required="required"
 				placeholder="请输入场次结束时间"
+				value="22:30" 
 			>
 		</div>
+		<!--单场时间设置-->
+		<div id="otDIV" 
+		class="mod_input qb_mb10 qb_flex">
+			<label>单场时间：</label>
+			<input name="ot" 
+				class="flex_box" 
+				id="ot" 
+				type="number" 
+				required="required" 
+			 	placeholder="请输入单场比赛时间"
+			 	value="90">分钟
+		</div>
+		
 		  <!-- 预约金额-->
         <div id="chargeDIV"
 			class="mod_input qb_mb10 qb_flex"
@@ -424,6 +503,7 @@ function back(){
 				type="number"
 				required="required"
 				placeholder="请输入定价金额"
+				value="100" 
 			>
 		</div>
 		<div id="creditDIV"
@@ -435,6 +515,7 @@ function back(){
 				type="number"
 				required="required"
 				placeholder="请输入默认积分"
+				value="1" 
 			>
 		</div>
 

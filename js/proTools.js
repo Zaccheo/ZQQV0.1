@@ -909,3 +909,19 @@ function GetRandomNum(Min, Max) {
 	var Rand = Math.random();
 	return (Min + Math.round(Rand * Range));
 }
+
+
+//传入日期，日期格式2015-01-01
+function getWeek(dateStr) {
+	var ar = new Array();
+	ar[0] = "星期日";
+	ar[1] = "星期一";
+	ar[2] = "星期二";
+	ar[3] = "星期三";
+	ar[4] = "星期四";
+	ar[5] = "星期五";
+	ar[6] = "星期六";
+	var dateDay = new Date(dateStr);
+	var day = dateDay.getDay();
+	return ar[day];
+}

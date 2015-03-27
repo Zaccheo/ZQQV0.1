@@ -133,9 +133,7 @@ p{font-size:12px;color:#666;line-height:1.5em;word-break:break-all}
 .fr{float:right}
 .text-red{color:#e5474a}
 .align-r{text-align:right}
-.icon{display:inline-block;background:url(i/zc_sprite.png) no-repeat;background-size:90px 195px}
 .more-r{width:14px;height:15px;background-position:-60px -90px;vertical-align:text-bottom}
-.icon-right{width:16px;height:12px;background-image:url(i/right.png);vertical-align:text-bottom}
 .icon-del{width:22px;height:22px;background-position:0 -90px;vertical-align:text-bottom}
 .icon-edit{width:22px;height:22px;background-position:-28px -89px;vertical-align:text-bottom}
 .header{height:2.81em;line-height:2.81em;background-color:#f7f7f9;position:relative;border-bottom:1px solid #d0cfcf;overflow:hidden}
@@ -206,54 +204,7 @@ button.btn,input[type="submit"].btn{border:none}
 .orders-list .goods-btnbox{margin-top:10px;padding-top:10px;border-top:1px solid #d7d7d7}
 .orders-list .goods-btnbox .btn{margin-left:10px;}
 .orders-list .goods-btnbox strong{margin-left:24px;line-height:30px}
-.orders-list .zc-datum{box-sizing:border-box;margin-top:10px;padding:10px 10px 0;border-top:1px dashed #d7d7d7}
-.orders-list .zc-progre{padding:16px 10px 10px;border-top:1px dashed #d7d7d7}
 .orders-pic{width:74px;height:74px;margin-right:8px}
-.sharebox{height:50px;border-top:1px solid #d7d7d7;background:#fff;position:fixed;left:0;bottom:0;z-index:10}
-.sharebox a{display:block;width:100%;height:100%;position:relative}
-.sharebox a:after{content:'';width:25px;height:20px;position:absolute;top:15px;left:50%;margin-left:-13px;background:url(i/zc_sprite.png) no-repeat left top;background-size:90px 195px}
-.sharebox .weixin:after{background-position:0 -165px}
-.sharebox .weibo:after{background-position:-30px -165px}
-.sharebox .qzone:after{background-position:-60px -165px}
-.progressbar{width:100%;height:8px;border-radius:4px;background:#ddd}
-.progressbar .progressing{height:100%;border-radius:4px;background:#a4cc43}
-.progress-box{overflow:hidden}
-.progress-box .progresnum{margin-top:4px}
-.progrestate,.progrestate-b{width:60px;height:20px;line-height:20px;font-size:12px;color:#fff;position:relative;border-radius:.25em;text-align:center}
-.progrestate{margin-left:10px}
-.progrestate:before{content:'';width:0;height:0;font-size:0;position:absolute;top:5px;left:-10px;border-style:solid;border-width:5px}
-.progrestate-b{margin-bottom:10px}
-.progrestate-b:after{content:'';width:0;height:0;font-size:0;position:absolute;bottom:-10px;left:50%;margin-left:-3px;border-style:solid;border-width:5px}
-.sta-ing .progressbar .progressing{background:#a4cc43}
-.sta-ing .progrestate-b{background:#a4cc43}
-.sta-ing .progrestate-b:after{border-color:#a4cc43 transparent transparent transparent}
-.sta-ing .progrestate{background:#a4cc43}
-.sta-ing .progrestate:before{border-color:transparent #a4cc43 transparent transparent}
-.sta-ing .progresnum{color:#a4cc43}
-.sta-succeed .progressbar .progressing{background:#ff933c}
-.sta-succeed .progrestate-b{background:#ff933c}
-.sta-succeed .progrestate-b:after{border-color:#ff933c transparent transparent transparent}
-.sta-succeed .progrestate{background:#ff933c}
-.sta-succeed .progrestate:before{border-color:transparent #ff933c transparent transparent}
-.sta-succeed .progresnum{color:#ff933c}
-.sta-end .progressbar .progressing{background:#bbb}
-.sta-end .progrestate-b{background:#bbb}
-.sta-end .progrestate-b:after{border-color:#bbb transparent transparent transparent}
-.sta-end .progrestate{background:#bbb}
-.sta-end .progrestate:before{border-color:transparent #bbb transparent transparent}
-.sta-end .progresnum{color:#bbb}
-.progrestate.s-ing{background:#a4cc43}
-.progrestate.s-ing:before{border-color:transparent #a4cc43 transparent transparent}
-.progrestate-b.s-ing{background:#a4cc43}
-.progrestate-b.s-ing:after{border-color:#a4cc43 transparent transparent transparent}
-.progrestate.s-error{background:#f05c52}
-.progrestate.s-error:before{border-color:transparent #f05c52 transparent transparent}
-.progrestate-b.s-error{background:#f05c52}
-.progrestate-b.s-error:after{border-color:#f05c52 transparent transparent transparent}
-.progrestate.s-end{background:#999}
-.progrestate.s-end:before{border-color:transparent #999 transparent transparent}
-.progrestate-b.s-end{background:#999}
-.progrestate-b.s-end:after{border-color:#999 transparent transparent transparent}
 .mypanel{padding:0 10px;margin:20px 0 5px;font-size:14px}
 .body-white{min-height:100%;background:white}
 .footer{margin:0 10px;border-top:1px solid #ccc;padding:10px 0;color:#666;text-align:center}
@@ -350,3 +301,8 @@ color: #fff;
 .teamInfo{
 	font-size:11px;color:#333;line-height:1.5em
 }
+.backleft{
+	float: left;overflow: hidden;
+}
+.backleft a{display: inline-block;}
+.backleft .icon-back{display: inline-block;margin-left:10px;vertical-align: middle;width: 30px;height: 30px;color:black;background-image: url('../imgs/arrow_left.png');background-size: cover;}

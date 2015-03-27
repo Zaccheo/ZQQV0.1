@@ -121,12 +121,15 @@
 			];
 			
 			$(function() {
-					//获取当前预约信息
-					$.get('../../servers/match/avalPitchs.json',function(data){
+					//组装openID，随时取用
+					window.localStorage.setItem('openId','o5896s_Gge1x6UA_3bCsj9AK7kOI');
+					//获取当前可预约的时间列表信息
+					$.getJSON('../../servers/pitch/pitchTimeSelect.php',function(data){
 						if(data.code == 200){
 							var selectPitchHtml = "";
-							$.each(data.pitchs, function(index,item) {  
-								selectPitchHtml+='<li><a href="../../servers/match/selectPitchs.php?pid='+item.id+'">'+item.date+'('+item.week+')'+item.time+'</a></li>';
+							$.each(data.data, function(index,item) {  
+								var pweek = getWeek(item.zDate);
+								selectPitchHtml+='<li><a href="../pitchsvr/selectPitchs.php?pid='+item.id+'&pdate='+item.zDate+'&pweek='+pweek+'">'+item.zDate+'('+pweek+')</a></li>';
 							});
 							$('#avaliablePitchs').html(selectPitchHtml);
 						}
@@ -149,7 +152,8 @@
 					if(window.localStorage && window.localStorage.getItem("selpitch")){
 						$("#selectPitch").val(window.localStorage.getItem("selpitch"));
 						$("#selectPitchId").val(window.localStorage.getItem("pitchOrderId"));
-						window.localStorage.clear();
+						window.localStorage.removeItem("selpitch");
+						window.localStorage.removeItem("pitchOrderId");
 					}
 					
 					//加减控件

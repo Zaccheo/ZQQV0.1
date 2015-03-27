@@ -224,14 +224,14 @@ $(function() {
 				var hostTeamHtml = '';
 				$("#currentHostNum").html(hostsmember.length);
 				$.each(hostsmember, function(index, item) {
-					hostTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '(100分)' + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
+					hostTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
 				});
 				$("#hostTeamList").html(hostTeamHtml);
 				//客队
 				var visitTeamHtml = "";
 				$("#currentVisitNum").html(visitsmember.length);
 				$.each(visitsmember, function(index, item) {
-					visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '(100分)' + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
+					visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
 				});
 				$("#visitTeamList").html(visitTeamHtml);
 				
@@ -323,10 +323,17 @@ function quitTeam(hvname) {
 
 function buildStar(forces) {
 	var starHtml = "";
-	for (var i = 0; i < Math.round(forces); i++) {
-		starHtml += "<i style='color:red;'>★</i>";
+	if(forces == ""){
+		return "：无数据";
+	}else{
+		for (var i = 0; i < Math.round(forces); i++) {
+			starHtml += "<i style='color:red;'>★</i>";
+		}
+		for(var j = 0; j < (5 - Math.round(forces)); j++){
+			starHtml += "<i>★</i>";
+		}
+		return starHtml;
 	}
-	return starHtml;
 }
 	
 //取大的数据
