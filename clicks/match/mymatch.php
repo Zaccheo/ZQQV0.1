@@ -90,7 +90,8 @@
 			$(function() {
 				goToTop($("#goTop"));
 
-
+				//组装openID，随时取用
+					window.localStorage.setItem('openId','<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>');
 
 				
 			});

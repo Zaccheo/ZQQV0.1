@@ -154,7 +154,7 @@
 				}else if (content.length > 140) {
 					alertWarning('评论内容不能超过140个字', 'top');
 				} else {
-					$.post("../../servers/common/comment.php",{"openId":"o5896s_Gge1x6UA_3bCsj9AK7kOI",
+					$.post("../../servers/common/comment.php",{"openId":"<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>",
 							"moduleId": <?php echo $_GET['matchId'];?>,
 							"content": content,
 							"moduleFlag":1 //球赛活动1，单飞营2
@@ -181,7 +181,8 @@
 			}
 		})
 $(function() {
-
+//组装openID，随时取用
+	window.localStorage.setItem('openId','<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>');
 	//获取活动比赛信息
 	$.get("../../servers/match/MatchDetail.php?matchId="+<?php echo $_GET['matchId'];?>,
 		function(data) {
@@ -278,7 +279,7 @@ function joinMatch(type) {
 		alert("请输入电话号码！");
 	}else{
 		$.post("../../servers/match/JoinMatch.php",{
-				"openId":"o5896s_Gge1x6UA_3bCsj9AK7kOI",
+				"openId":"<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>",
 				"userTelNum":$("#userTelNum").val(),
 				"type":type,
 				"repreNum":$("#num").val(),

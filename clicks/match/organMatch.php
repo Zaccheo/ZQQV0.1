@@ -122,7 +122,7 @@
 			
 			$(function() {
 					//组装openID，随时取用
-					window.localStorage.setItem('openId','o5896s_Gge1x6UA_3bCsj9AK7kOI');
+					window.localStorage.setItem('openId','<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>');
 					//获取当前可预约的时间列表信息
 					$.getJSON('../../servers/pitch/pitchTimeSelect.php',function(data){
 						if(data.code == 200){
