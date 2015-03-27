@@ -10,7 +10,16 @@
 		<title>我的球赛</title>
 		<link rel="stylesheet" href="../../css/common.css">
 		<link rel="stylesheet" href="../../css/index.css">
-		<script type="text/javascript" src="../../js/wxcheck.js" />
+		<script src="../../js/wxcheck.js" type="text/javascript"></script>
+		<script src="../../js/zepto.min.js" type="text/javascript"></script>
+		<script src="../../js/proTools.js" type="text/javascript"></script>
+		<!--组件依赖js end-->
+		<script type="text/javascript" src="../../js/core/gmu.js"></script>
+		<script type="text/javascript" src="../../js/core/event.js"></script>
+		<script type="text/javascript" src="../../js/core/widget.js"></script>
+		<script type="text/javascript" src="../../js/tabs/tabs.js"></script>
+		<script type="text/javascript" src="../../js/tabs/$swipe.js"></script>
+		<script type="text/javascript" src="../../js/tabs/$ajax.js"></script>
 	</head>
 	<body>
 		<header class="header">
@@ -78,15 +87,6 @@
 			<p class="f-text1">Copyright © 2014－2015四川誉合誉科技版权所有</p>
 			<p class="f-text2"></p>
 		</div>
-		<script src="../../js/zepto.min.js" type="text/javascript"></script>
-		<script src="../../js/proTools.js" type="text/javascript"></script>
-		<!--组件依赖js end-->
-		<script type="text/javascript" src="../../js/core/gmu.js"></script>
-		<script type="text/javascript" src="../../js/core/event.js"></script>
-		<script type="text/javascript" src="../../js/core/widget.js"></script>
-		<script type="text/javascript" src="../../js/tabs/tabs.js"></script>
-		<script type="text/javascript" src="../../js/tabs/$swipe.js"></script>
-		<script type="text/javascript" src="../../js/tabs/$ajax.js"></script>
 		<script type="text/javascript">
 			$(function() {
 				goToTop($("#goTop"));

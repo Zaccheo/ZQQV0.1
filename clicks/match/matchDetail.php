@@ -21,7 +21,12 @@
 			}
 		</style>
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
-		<script type="text/javascript" src="../../js/wxcheck.js" />
+		<script src="../../js/wxcheck.js" type="text/javascript" ></script>
+		<script src="../../js/zepto.min.js" type="text/javascript"></script>
+		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
+		<script src="../../js/proTools.js" type="text/javascript"></script>
+		<script src="../../js/home.js" type="text/javascript"></script>
+		
 	</head>
 	<body>
 		<header class="header">
@@ -141,10 +146,6 @@
 			</div>
 		</div>
 		<!-- main wrap end-->
-		<script src="../../js/zepto.min.js" type="text/javascript"></script>
-		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
-		<script src="../../js/proTools.js" type="text/javascript"></script>
-		<script src="../../js/home.js" type="text/javascript"></script>
 		<script>
 		var myComment = new Comment({
 			cmtBox: $("#cmtBox"),

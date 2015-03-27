@@ -18,5 +18,5 @@ var isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
 // }
 // document.addEventListener?document.addEventListener("WeixinJSBridgeReady",onReady,!1):document.attachEvent&&document.attachEvent("onWeixinJSBridgeReady",onReady);
 if (!isWeixin) {
-    window.location = "../error.php";
+    //window.location = "../error.php";
 }

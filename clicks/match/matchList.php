@@ -17,7 +17,11 @@
 			    -webkit-text-fill-color: #333;
 			}
 		</style>
-		<script type="text/javascript" src="../../js/wxcheck.js" />
+		<script src="../../js/wxcheck.js" type="text/javascript"></script>
+		<script src="../../js/zepto.min.js" type="text/javascript"></script>
+		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
+		<script src="../../js/proTools.js" type="text/javascript"></script>
+		<script src="../../js/home.js" type="text/javascript"></script>
 	</head>
 	<body>
 		<header class="header">
@@ -58,10 +62,6 @@
 				<p class="f-text2"></p>
 			</div>
 		</div>
-		<script src="../../js/zepto.min.js" type="text/javascript"></script>
-		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
-		<script src="../../js/proTools.js" type="text/javascript"></script>
-		<script src="../../js/home.js" type="text/javascript"></script>
 		<script>
 			<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
 			//滚动消息控件

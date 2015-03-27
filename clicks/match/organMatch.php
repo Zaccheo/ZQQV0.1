@@ -21,7 +21,10 @@
 			}
 		</style>
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : "";?>
-		<script type="text/javascript" src="../../js/wxcheck.js" />
+		<script type="text/javascript" src="../../js/wxcheck.js" ></script>
+		<script type="text/javascript" src="../../js/zepto.min.js"></script>
+		<script type="text/javascript" src="../../js/zepto.modal.min.js"></script>
+		<script type="text/javascript" src="../../js/proTools.js"></script>
 	</head>
 	<body>
 		<div class="wrapper">
@@ -99,9 +102,6 @@
 				[<a href="#" class="modal-close" >关闭</a>]
 			</div>
 		</div>
-		<script type="text/javascript" src="../../js/zepto.min.js"></script>
-		<script type="text/javascript" src="../../js/zepto.modal.min.js"></script>
-		<script type="text/javascript" src="../../js/proTools.js"></script>
 		<script>
 			var data = ["国家德比",
 				"皇家马德里",
