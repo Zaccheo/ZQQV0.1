@@ -262,7 +262,7 @@ class WechatRequest{
                break;
            case "COURT_ORDR"://点击[预约比赛]
                $content[] = array("Title"=>"组织比赛", "Description"=>"", "PicUrl"=>"http://www.xishuma.com/fb55/imgs/weixinmenu/organmatch.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/match/organMatch.php?openId=".$request['fromusername']);
-	   		   $content[] = array("Title"=>"参加比赛", "Description"=>"", "PicUrl"=>"http://www.xishuma.com/fb55/imgs/weixinmenu/findmatch.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/match/matchList.php");
+	   		   $content[] = array("Title"=>"参加比赛", "Description"=>"", "PicUrl"=>"http://www.xishuma.com/fb55/imgs/weixinmenu/findmatch.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/match/matchList.php?openId=".$request['fromusername']);
 	   		   $content[] = array("Title"=>"我的比赛", "Description"=>"", "PicUrl"=>"http://www.xishuma.com/fb55/imgs/weixinmenu/mymatch.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/match/myMatch.php?openId=".$request['fromusername']);
                break;
 		   case "PERSON_INFO"://点击[我的信息]

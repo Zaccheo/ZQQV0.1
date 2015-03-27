@@ -71,7 +71,6 @@
 			<p class="f-text2"></p>
 		</div>
 		<script src="../../js/zepto.min.js" type="text/javascript"></script>
-		<script src="../../js/pitchSelect.js" type="text/javascript"></script>
 		<script src="../../js/proTools.js" type="text/javascript"></script>
 		<!--组件依赖js end-->
 		<script type="text/javascript">
@@ -101,6 +100,59 @@
 						}
 				},"json");
 
+				//已选择的球场编号
+			var selectPitchs = {};
+			//创建触屏事件
+			var touchClick = ('createTouch' in document) ? 'tap':'click';
+			var dateStr = "";
+			//点击场次选择
+			var touchPitch = function(){
+				$('.J_courts').on(touchClick,'.court-detail',function(){
+					//已选择的球场编号
+					//var currentPitchs = {};
+					var el = $(this);
+					var curPid = el.attr('pitchid');//当前选择的预订场次
+					if(el.hasClass('disable')){
+						return;
+					}
+					//若已经被选中,点击一次则进行删除操作
+					if(selectPitchs[curPid]){
+						delete selectPitchs[curPid];
+						dateStr = "";
+						//alert("!");
+						el.removeClass('selected');
+						el.addClass('available');
+					}else{
+						//点击未选中的，则进行选中操作
+						selectPitchs[curPid] = parseInt(el.html());
+						dateStr =el.attr('zDate')+" "+getWeek(el.attr('zDate'))+" "+el.attr('startTime').substr(0, 5)+" "+el.attr('endTime').substr(0, 5);
+						el.removeClass('available');
+						$('.court-detail').each(function(){
+							$(this).removeClass('selected');
+							$(this).addClass('available');
+						});
+						el.addClass('selected');
+					}
+
+					});
+				};
+
+				//提交选中的场次
+				$(".pitch_submit").on(touchClick,function(){
+					if($.isEmptyObject(selectPitchs)){
+						alert("请选择一个场！");
+						return;
+					}
+					var pIDS = new Array();
+					$.each(selectPitchs,function(k,v){
+						pIDS.push(k);
+					});
+					window.localStorage.setItem("pitchOrderId",pIDS);
+					window.localStorage.setItem("selpitch",dateStr);
+					window.history.go(-1);
+				});
+
+				touchPitch();
 			});
 			
 		</script>

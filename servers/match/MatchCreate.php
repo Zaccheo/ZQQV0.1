@@ -37,7 +37,9 @@
 		$matchId = mysql_insert_id();
 		$creatMember = "insert into `zqq_activity_members` (activitymemberOpenId,host_or_guest,delegateNumber,personalLevel,id_activities) values";
 		$creatMember .= "('".$openId."',1,".$mymatenum.",".$myforces.",".$matchId.")";
+
 		mysql_query($creatMember,$connect);
+		mysql_query("update `zqq_pitchs_order_info` set orderStatus=1 where id=".$selectPitchId,$connect);
 		echo Response::show(200,"活动创建成功！",array(),null);
 	}else{
 		echo Response::show(203,"活动创建失败！",array(),null);

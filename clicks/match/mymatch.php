@@ -10,6 +10,7 @@
 		<title>我的球赛</title>
 		<link rel="stylesheet" href="../../css/common.css">
 		<link rel="stylesheet" href="../../css/index.css">
+		<script type="text/javascript" src="../../js/wxcheck.js" />
 	</head>
 	<body>
 		<header class="header">
