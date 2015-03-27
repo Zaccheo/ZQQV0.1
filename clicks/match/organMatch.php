@@ -20,6 +20,7 @@
 				-webkit-text-fill-color: #333;
 			}
 		</style>
+		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : "";?>
 	</head>
 	<body>
 		<div class="wrapper">
@@ -122,7 +123,7 @@
 			
 			$(function() {
 					//组装openID，随时取用
-					window.localStorage.setItem('openId','<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>');
+					window.localStorage.setItem('openId','<?php echo $openId;?>');
 					//获取当前可预约的时间列表信息
 					$.getJSON('../../servers/pitch/pitchTimeSelect.php',function(data){
 						if(data.code == 200){
@@ -208,7 +209,7 @@
 							alert("请填写您的联系方式，方便管理员与您缺人信息!");
 						}else{
 							$.post("../../servers/match/MatchCreate.php",{
-								"openId":"o5896s_Gge1x6UA_3bCsj9AK7kOI",
+								"openId":"<?php echo $openId;?>",
 								"matchName":$('#matchName').val(),
 								"selectPitch":$('#selectPitch').val(),
 								"selectPitchId":$('#selectPitchId').val(),
@@ -237,7 +238,7 @@
 			function delayJump(num){
 				$("#matchCreateBtn").html(data.message+"将自动返回");
 				if(num == 0) { 
-					window.location="matchList.php?openId='o5896s_Gge1x6UA_3bCsj9AK7kOI'";
+					window.location="matchList.php?openId='<?php echo $openId;?>'";
 				}
 			}
 			
