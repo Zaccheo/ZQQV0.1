@@ -236,7 +236,7 @@
 
 			//延时跳转
 			function delayJump(num){
-				$("#matchCreateBtn").html(data.message+"将自动返回");
+				$("#matchCreateBtn").html(num+"将自动返回");
 				if(num == 0) { 
 					window.location="matchList.php?openId='<?php echo $openId;?>'";
 				}
