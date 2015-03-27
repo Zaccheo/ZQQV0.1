@@ -17,6 +17,7 @@
 			    -webkit-text-fill-color: #333;
 			}
 		</style>
+		<script type="text/javascript" src="../../js/wxcheck.js" />
 	</head>
 	<body>
 		<header class="header">
@@ -62,6 +63,7 @@
 		<script src="../../js/proTools.js" type="text/javascript"></script>
 		<script src="../../js/home.js" type="text/javascript"></script>
 		<script>
+			<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
 			//滚动消息控件
 			var msgScroll = new MarqueeBox({
 				obj: $("#scrollSpan")
@@ -74,7 +76,7 @@
 				 	if(data.code==200){
 				 		var matchHtml = "";
 				 		$.each(data.data, function(index,item) { 
-				 			matchHtml += '<li id="li_'+(index+1)+'"><a href="matchDetail.php?matchId='+item.id_activities+'" class="gridbox">'
+				 			matchHtml += '<li id="li_'+(index+1)+'"><a href="matchDetail.php?matchId='+item.id_activities+'&openId=<?php echo $openId;?>" class="gridbox">'
 							+'<div class="orders-pic"><img class="pitchsavatar" src="../../imgs/orderAvatar.jpg" alt=""></div>'
 							+'<div class="grid-1"><h2 class="h2-title">'+item.activityName+'</h2><p>'+item.activityCreateTime+'</p>'
 							+'<p>战力'+buildStar(item.personalLevel)+'&nbsp;&nbsp;主队5/5&nbsp;&nbsp;客队4/5</p></div></a></li>';

@@ -173,8 +173,6 @@
 			$("#wrapper").css('height',10*25+10+"px");
 			$('#scroller').css('height',10*25+10+"px");
 			//单列宽度58px，高度25px，根据此数值计算列表项的容器宽高
-
-
 		</script>
 	</body>
 

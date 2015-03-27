@@ -21,6 +21,7 @@
 			}
 		</style>
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : "";?>
+		<script type="text/javascript" src="../../js/wxcheck.js" />
 	</head>
 	<body>
 		<div class="wrapper">

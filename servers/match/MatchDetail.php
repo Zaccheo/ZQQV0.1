@@ -8,15 +8,14 @@
 	require_once('../DB.php');
 	require_once('../Util.php');
 
-	$matchId = $_GET['matchId'];
+	$matchId = $_POST['matchId'];
+	$openId = $_POST['openId'];//当前登录人的openId，查询当前登录人的手机号码
 
 	$connect = Db::getInstance()->connect();
-	$sql = "select a.*,b.* from `zqq_activities` a,`zqq_users_info` b where a.activityCreatorOpenId = b.userOpenId and a.id_activities = ".$matchId;//查询活动
+	$sql = "select a.*,b.*,c.zDate,c.startTime,c.endTime from `zqq_activities` a,`zqq_users_info` b,`zqq_pitchs_order_info` c where a.activityCreatorOpenId = b.userOpenId and a.pitchOrderInfoID = c.id and a.id_activities = ".$matchId;//查询活动
 	//查询球赛活动信息
 	$result = mysql_fetch_assoc(mysql_query($sql, $connect));
 	if($result){
-		
-		$result['weekDay'] = "星期四";
 		//查询活动队员数据
 		$memeberSql = "select a.host_or_guest,a.delegateNumber,a.personalLevel,b.nickName,b.headerImgUrl,b.creditLevel from `zqq_activity_members` a,`zqq_users_info` b where a.activitymemberOpenId = b.userOpenId and a.id_activities = ".$matchId;//查询活动的成员信息
 		$memeberRst = mysql_query($memeberSql,$connect);
@@ -55,6 +54,11 @@
 			}
 		}
 		$result['comments'] = $commentsArr;//活动的意见信息
+
+		//当前登录人的电话号码
+		$telSerch = "select phoneNumber from `zqq_users_info` where userOpenId='".$openId."'";
+		$telNum = mysql_fetch_array(mysql_query($telSerch,$connect));
+		$result['curTelNum'] = $telNum['phoneNumber'];
 	}
 	echo Response::show(200,"获取成功!",$result,null);
 ?>

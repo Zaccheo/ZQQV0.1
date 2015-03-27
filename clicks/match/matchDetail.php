@@ -20,6 +20,8 @@
 				-webkit-text-fill-color: #333;
 			}
 		</style>
+		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
+		<script type="text/javascript" src="../../js/wxcheck.js" />
 	</head>
 	<body>
 		<header class="header">
@@ -154,7 +156,8 @@
 				}else if (content.length > 140) {
 					alertWarning('评论内容不能超过140个字', 'top');
 				} else {
-					$.post("../../servers/common/comment.php",{"openId":"<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>",
+					$.post("../../servers/common/comment.php",{
+							"openId":"<?php echo $openId;?>",
 							"moduleId": <?php echo $_GET['matchId'];?>,
 							"content": content,
 							"moduleFlag":1 //球赛活动1，单飞营2
@@ -181,19 +184,20 @@
 			}
 		})
 $(function() {
-//组装openID，随时取用
-	window.localStorage.setItem('openId','<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>');
 	//获取活动比赛信息
-	$.get("../../servers/match/MatchDetail.php?matchId="+<?php echo $_GET['matchId'];?>,
-		function(data) {
+	$.post("../../servers/match/MatchDetail.php",{
+			"matchId":<?php echo $_GET['matchId'];?>,
+			"openId":"<?php echo $openId;?>"
+	},function(data) {
 			if (data.code == 200) {
 				var detailObj = data.data;
 				//头部
 				$("#headerTitle").html(detailObj.activityName + "-" + detailObj.nickName);
 				//比赛时间
-				$("#matchtime").html(detailObj.activityCreateTime + " " + detailObj.weekDay);
+				$("#matchtime").html(detailObj.zDate + "(" + getWeek(detailObj.zDate)+")"+detailObj.startTime+"-"+detailObj.endTime);
 
-				$("#userTelNum").val(detailObj.phoneNumber);
+				//填充当前登录人的电话号码
+				$("#userTelNum").val(detailObj.curTelNum);
 				//处理成员数据，分装为主队和客队
 				var hostsmember = new Array();
 				var visitsmember = new Array();
@@ -279,7 +283,7 @@ function joinMatch(type) {
 		alert("请输入电话号码！");
 	}else{
 		$.post("../../servers/match/JoinMatch.php",{
-				"openId":"<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>",
+				"openId":"<?php echo $openId;?>",
 				"userTelNum":$("#userTelNum").val(),
 				"type":type,
 				"repreNum":$("#num").val(),
@@ -287,6 +291,8 @@ function joinMatch(type) {
 			},function(data){
 				if(data.code == 200){
 					location.reload();
+				}else{
+					alert(data.message);
 				}
 		},"json");
 

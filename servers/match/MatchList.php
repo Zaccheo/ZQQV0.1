@@ -10,7 +10,7 @@
 	$token = $_POST['zqq_token'];
 
 	$connect = Db::getInstance()->connect();
-	$sql = "select * from `zqq_activities` where activityStatus = 1";//查询活动已创建完成
+	$sql = "select * from `zqq_activities` where activityStatus = 1 order by activityCreateTime desc limit 10";//查询活动已创建完成
 	//查询到活动信息主体
 	$result = mysql_query($sql, $connect);
 	$results = array();

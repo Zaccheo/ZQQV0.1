@@ -24,7 +24,7 @@
 		$commentsql .= "id_solo_list";//单飞营模块主键
 	}
 	$commentsql .= ") values ";
-	$commentsql .= "('".$openId."','".date('Y-m-d H:i:s')."','".$content."','".$moduleFlag."','".$moduleId."')";
+	$commentsql .= "('".$openId."','".date('Y-m-d H:i:s')."','".$content."','".$moduleId."')";
 	//创建评论
 	if(mysql_query($commentsql, $connect)){
 		echo Response::show(200,"评论成功！",array(),null);
