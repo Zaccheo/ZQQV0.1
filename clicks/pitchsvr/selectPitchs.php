@@ -77,7 +77,7 @@
 
 			$(function() {
 				goToTop($("#goTop"));
-
+				
 				//加载可选场地数据	
 				$.post("../../servers/pitch/selectPitchs.php",{
 					"pid":<?php echo $_GET['pid'];?>
@@ -87,7 +87,13 @@
 							$.each(data.data.pitch,function(index,item){
 								court+='<div class="col"><div class="court-name" >'+index+'</div>';
 								$.each(item,function(idx,itm){
-									court+='<div id="pitch_'+itm.id+'" zDate="'+itm.zDate+'" startTime="'+itm.startTime+'" endTime="'+itm.endTime+'" pitchid="'+itm.id+'" class="court-detail available">'+itm.charge+'</div>';
+									var status = "";
+									if(itm.orderStatus == 0){
+										status = "available";
+									}else{
+										status = "disable";
+									}
+									court+='<div id="pitch_'+itm.id+'" zDate="'+itm.zDate+'" startTime="'+itm.startTime+'" endTime="'+itm.endTime+'" pitchid="'+itm.id+'" class="court-detail '+status+'">'+itm.charge+'</div>';
 								});
 								court += '</div>';
 							});
@@ -97,17 +103,20 @@
 								timeSlice += "<li>"+itm+"</li>";
 							});
 							$(".J_timeSlice").html(timeSlice);
+							//生成html元素后，再进行事件绑定
+							loadEvent();
 						}
 				},"json");
-
+			});
+			
+			function loadEvent(){
 				//已选择的球场编号
 			var selectPitchs = {};
 			//创建触屏事件
 			var touchClick = ('createTouch' in document) ? 'tap':'click';
 			var dateStr = "";
 			//点击场次选择
-			var touchPitch = function(){
-				$('.J_courts').on(touchClick,'.court-detail',function(){
+				$('.court-detail').on('click',function(){
 					//已选择的球场编号
 					//var currentPitchs = {};
 					var el = $(this);
@@ -133,12 +142,10 @@
 						});
 						el.addClass('selected');
 					}
-
-					});
-				};
-
+				});
+				
 				//提交选中的场次
-				$(".pitch_submit").on(touchClick,function(){
+				$(".pitch_submit").on('click',function(){
 					if($.isEmptyObject(selectPitchs)){
 						alert("请选择一个场！");
 						return;
@@ -151,11 +158,8 @@
 					window.localStorage.setItem("selpitch",dateStr);
 					window.history.go(-1);
 				});
-
-				touchPitch();
-			});
-			
-		</script>
+			}
+		</script>		
 		<script>
 			//处理宽度
 			var wi = (document.body.clientWidth - 45);
@@ -169,8 +173,6 @@
 			$("#wrapper").css('height',10*25+10+"px");
 			$('#scroller').css('height',10*25+10+"px");
 			//单列宽度58px，高度25px，根据此数值计算列表项的容器宽高
-
-
 		</script>
 	</body>
 
