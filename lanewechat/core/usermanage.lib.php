@@ -108,6 +108,28 @@ class UserManage{
         $queryUrl = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$accessToken.'&openid='.$openId;
         return Curl::callWebServer($queryUrl, '', 'GET');
     }
+    /**
+     * @descrpition 获取用户基本信息
+     * @param $openId 用户唯一OpenId
+     * @param $accessToken 通过网页授权获取的accessToken，该token和通过AccessToken::getAccessToken()获取的不一样
+     * @return JSON {
+     *               "subscribe": 1,    //用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息
+     *               "openid": "o6_bmjrPTlm6_2sgVt7hMZOPfL2M",
+     *               "nickname": "Band",
+     *               "sex": 1,          //用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
+     *               "language": "zh_CN",
+     *               "city": "广州",
+     *               "province": "广东",
+     *               "country": "中国",
+     *               "headimgurl":    "http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/0",
+     *               "subscribe_time": 1382694957
+     *               }
+     */
+    public static function getUserInfoByOauth2($accessToken,$openId){
+                    //https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN
+        $queryUrl = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$accessToken.'&openid='.$openId.'&lang=zh_CN';
+        return Curl::callWebServer($queryUrl, '', 'GET');
+    }
 
     /**
      * @descrpition 获取关注者列表
