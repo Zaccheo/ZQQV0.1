@@ -31,7 +31,7 @@
 							<ul class="admin-menu-ul mt15 mb15 clearfix">
 								<li><a href="javascript:;" onclick="alert('未开放功能！')" class="admin-menu-a category2"><span>处理单飞信息</span></a>
 								</li>
-								<li><a href="javascript:;" onclick="alert('未开放功能！')" class="admin-menu-a category2"><span>处理球员</span></a>
+								<li><a href="javascript:;" class="admin-menu-a category2"><span>会员管理</span></a>
 								</li>
 							</ul>
 						</div>

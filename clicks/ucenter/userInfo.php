@@ -1,6 +1,3 @@
-<?php
-	include_once("/lanewechat/servers/dbutils");
-?>
 <!DOCTYPE HTML>
 <html lang="zh-CN">
 <head>
