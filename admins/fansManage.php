@@ -25,13 +25,15 @@
 	</head>
 	<body>
 		<header class="header">
-			<h2><span>关注会员列表</span></h2>
+			<h2><span>关注会员(<span id="userCountNum"></span>)</span></h2>
 		</header>
+		<nav>
+			<input type="text" placeholder="请输入会员微信号/电话号/" id="searchKey"/>
+			<input type="button" class="search-btn">
+		</nav>
 		<div class="wrapbox">
-			<div class="tab-con">
-				<ul id="openMatchList" class="orders-list myzc-ul">
+			<div id="userList" class="tab-con">
 					<!--开放球赛列表-->
-				</ul>
 			</div>
 			<div class="mypanel f-text2">
 				<a href="./about_5plus5.php">5+5</a>
@@ -48,27 +50,61 @@
 			
 			$(function(){
 				 //异步加载公开比赛信息列表
-				 $.post("../servers/match/MatchList.php",
-				 	{"zqq_token":"4389c044a602997c5489235fc0fdda65"},function(data){
+				 loadUserLists(0,"");
+				 //查询用户
+				 searchFans();
+			});
+
+
+			function loadUserLists(page,keyword){
+				$.post("../servers/admins/FansList.php",
+				 	{"page":page,
+				 	 "keyword":keyword
+				 	},function(data){
 				 	if(data.code==200){
-				 		var matchHtml = "";
-				 		$.each(data.data, function(index,item) { 
-				 			matchHtml += '<li id="li_'+(index+1)+'"><a href="matchDetail.php?matchId='+item.id_activities+'&openId=<?php echo $openId;?>" class="gridbox">'
-							+'<div class="orders-pic"><img class="pitchsavatar" src="../imgs/orderAvatar.jpg" alt=""></div>'
-							+'<div class="grid-1"><h2 class="h2-title">'+item.activityName+'</h2><p>'+item.activityCreateTime+'</p>'
-							+'<p>战力'+buildStar(item.personalLevel)+'&nbsp;&nbsp;主队5/5&nbsp;&nbsp;客队4/5</p></div></a></li>';
+				 		var fansHtml = "";
+				 		fansHtml = '<ul  class="fans-list-ul">';
+				 		$.each(data.data.userData, function(index,item) { 
+				 			var phoneNumber = item.phoneNumber;
+				 			if(item.phoneNumber == null || item.phoneNumber == "null"){
+				 				phoneNumber = "";
+				 			}
+				 			fansHtml += '<li id="li_'+(item.id)+'" class="bottom-border gridbox">'
+							+'<div class="orders-pic"><img class="pitchsavatar" src="'+item.headerImgUrl+'" alt=""></div>'
+							+'<div class="grid-1"><h2 class="h2-title">'+item.nickName
+							+'<a href="fansDetail.php?fansId='+item.id+'" style="display:block;float:right;margin-right:10px">查看</a></h2><h3 class="h3-title">电话：<a href="tel:'+phoneNumber+'">'+phoneNumber+'</a></h3>'
+							+'<p>注册时间：'+shortDate(item.regTime)+'</p>'
+							+'<p>战力：'+buildStar(item.personalLevel)+'&nbsp;&nbsp;信用评级：'+item.creditLevel+'</p></div></li>';
 				 		});
-				 		$('#openMatchList').html(matchHtml);
+				 		fansHtml += '</ul>';
+				 		if(data.data.userCount > 10){
+				 			fansHtml += '<div class="clearfix" id="viewmore"><a href="javascript:;" class="btn btn-showmore" id="showmore">查看更多</a></div>'
+				 		}
+				 		$('#userCountNum').html(data.data.userCount);
+				 		$('#userList').html(fansHtml);
 				 	}
 				 },"json");
-			});
+			}
+
+			function searchFans(){
+				$(".search-btn").on("click",function(){
+					loadUserLists(0,$("#searchKey").val());
+				})
+			}
 
 			function buildStar(forces) {
 				var starHtml = "";
-				for (var i = 0; i < Math.round(forces); i++) {
-					starHtml += "<i style='color:red;'>★</i>";
+				if(forces == ""){
+					return "无数据";
+				}else{
+					for (var i = 0; i < Math.round(forces); i++) {
+						starHtml += "<i style='color:red;'>★</i>";
+					}
+					for(var j = 0; j < (5 - Math.round(forces)); j++){
+						starHtml += "<i>★</i>";
+					}
+					return starHtml;
 				}
-				return starHtml;
 			}
 		</script>
 	</body>

@@ -28,12 +28,6 @@
 								<li><a href="./pitchChargeModify.php" class="admin-menu-a category1"><span>修改球场定价</span></a>
 								</li>
 							</ul>
-							<ul class="admin-menu-ul mt15 mb15 clearfix">
-								<li><a href="javascript:;" onclick="alert('未开放功能！')" class="admin-menu-a category2"><span>处理单飞信息</span></a>
-								</li>
-								<li><a href="javascript:;" class="admin-menu-a category2"><span>会员管理</span></a>
-								</li>
-							</ul>
 						</div>
 					</div>
 				</div>
@@ -44,8 +38,14 @@
 				</p>
 			</div>
 		</div>
+		<script src="../js/zepto.min.js" type="text/javascript"></script>
 		<script>
-			 
+			 $(function(){
+
+			 	$("#fansManage").on("click",function(){
+			 		window.location="fansManage.php";
+			 	});
+			 });
 	
 		</script>
 	</body>

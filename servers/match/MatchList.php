@@ -10,7 +10,9 @@
 	$token = $_POST['zqq_token'];
 
 	$connect = Db::getInstance()->connect();
-	$sql = "select * from `zqq_activities` where activityStatus = 1 order by activityCreateTime desc limit 10";//查询活动已创建完成
+	$sql = "select a.*,b.zDate,b.startTime,b.endTime,c.capacity,d.nickName,d.headerImgUrl from `zqq_activities` a,`zqq_pitchs_order_info` b,`zqq_pitchs_info` c,`zqq_users_info` d";
+	$sql .= " where a.pitchOrderInfoID = b.id and b.pitchInfoID = c.id and a.activityCreatorOpenId = d.userOpenId and a.activityStatus = 1 and a.oppWanted = 1 ";
+	$sql .= "order by a.activityCreateTime desc limit 10";//查询活动已创建完成
 	//查询到活动信息主体
 	$result = mysql_query($sql, $connect);
 	$results = array();

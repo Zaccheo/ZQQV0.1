@@ -88,15 +88,15 @@
 			<p class="f-text2"></p>
 		</div>
 		<script type="text/javascript">
+			//组装openID，随时取用
+			window.localStorage.setItem('openId','<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>');
+
 			$(function() {
 				goToTop($("#goTop"));
 
-				//组装openID，随时取用
-					window.localStorage.setItem('openId','<?php echo isset($_GET['openId']) ? $_GET['openId'] : "";?>');
-
+				
 				
 			});
 		</script>
 	</body>
->>>>>>> Stashed changes
 </html>

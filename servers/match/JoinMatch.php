@@ -15,6 +15,10 @@
 
 	$connect = Db::getInstance()->connect();
 
+	if(empty($openId)){
+		echo Response::show(205,"加入失败，openI获取失败!",array(),null);
+		exit();
+	}
 	//查询用户信息
 	$userSql = "select phoneNumber,flag,personalLevel from `zqq_users_info` where userOpenId='".$openId."'";
 	$userInfo = mysql_fetch_assoc(mysql_query($userSql,$connect));

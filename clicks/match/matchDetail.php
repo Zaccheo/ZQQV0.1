@@ -20,13 +20,13 @@
 				-webkit-text-fill-color: #333;
 			}
 		</style>
-		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
+		
 		<script src="../../js/wxcheck.js" type="text/javascript" ></script>
 		<script src="../../js/zepto.min.js" type="text/javascript"></script>
 		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
 		<script src="../../js/proTools.js" type="text/javascript"></script>
 		<script src="../../js/home.js" type="text/javascript"></script>
-		
+		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
 	</head>
 	<body>
 		<header class="header">
@@ -87,9 +87,9 @@
 			</div>
 			<!-- end  主客队列表页-->
 			<!-- 参赛信息栏 -->
-			<div class="order-box clearfix">
-				<div class="order-item clearfix">
-					<label class="pitchRowLabel" style="display: block;float: left;font-size: 15px;">我带表:</label>
+			<div id="joinPanel" class="order-box clearfix">
+				<div class="pitch-tel-num clearfix">
+					<label class="pitchRowLabel" style="display: block;float: left;font-size: 15px;">我代表:</label>
 					<div class="pitchRowDiv" style="float: left;font-size: 15px;">
 						<input type="button" value="-" class="pitchRowBtn" />
 						<input id="num" class="pitchRowNum" value="0">
@@ -97,19 +97,20 @@
 						人参加 
 					</div>
 				</div>
-				<div class="order-item clearfix" style="font-size: 15px;">
+				<div class="pitch-tel-num-last clearfix" style="font-size: 15px;">
 					请填电话号码
 					<input id="userTelNum" class="text-input" placeholder="电话号码" />
 				</div>
 				<div class="item item-btns">
-					<a href="javascript:;" onclick="joinMatch(1)" style="text-align:center;float:left;width:45%;background-color: #00516E;color:white;padding: 5px 0 5px 0;">
+					<a href="javascript:;" onclick="joinMatch(1)" class="joinmatch-btn host-btn">
 						我是主队员
 					</a>
-					<a href="javascript:;" onclick="joinMatch(2)" style="text-align:center;float:right;width:45%;background-color: #7F0A0C;color:white;padding: 5px 0 5px 0;">
+					<a href="javascript:;" onclick="joinMatch(2)" class="joinmatch-btn visit-btn">
 						我是客队员
 					</a>
 				</div>
 			</div>
+			<div class="placeBlock-10 bg-gray"></div>
 			<!-- end 参赛信息栏 -->
 			<!-- 球队信息留言板 start-->
 			<h2 class="h2-title" style="float:left;">
@@ -146,7 +147,10 @@
 			</div>
 		</div>
 		<!-- main wrap end-->
+		
 		<script>
+		var openId = '<?php echo $openId;?>';
+
 		var myComment = new Comment({
 			cmtBox: $("#cmtBox"),
 			hideAry: [$("#header")],
@@ -158,7 +162,7 @@
 					alertWarning('评论内容不能超过140个字', 'top');
 				} else {
 					$.post("../../servers/common/comment.php",{
-							"openId":"<?php echo $openId;?>",
+							"openId":openId,
 							"moduleId": <?php echo $_GET['matchId'];?>,
 							"content": content,
 							"moduleFlag":1 //球赛活动1，单飞营2
@@ -168,7 +172,9 @@
 								setTimeout(function() {
 									location.reload();
 								}, 200);
-							} else {
+							} else if(data.code == 204){
+								alertWarning(data.message, 'top');
+							} else{
 								alertWarning('系统繁忙', 'top');
 							}
 					},"json");
@@ -188,14 +194,18 @@ $(function() {
 	//获取活动比赛信息
 	$.post("../../servers/match/MatchDetail.php",{
 			"matchId":<?php echo $_GET['matchId'];?>,
-			"openId":"<?php echo $openId;?>"
-	},function(data) {
+			"openId":openId
+			},function(data) {
 			if (data.code == 200) {
 				var detailObj = data.data;
+
+				if(detailObj.userOpenId == openId){
+					$("#joinPanel").hide();
+				}
 				//头部
 				$("#headerTitle").html(detailObj.activityName + "-" + detailObj.nickName);
 				//比赛时间
-				$("#matchtime").html(detailObj.zDate + "(" + getWeek(detailObj.zDate)+")"+detailObj.startTime+"-"+detailObj.endTime);
+				$("#matchtime").html(detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime))+"</p>";
 
 				//填充当前登录人的电话号码
 				$("#userTelNum").val(detailObj.curTelNum);
@@ -284,7 +294,7 @@ function joinMatch(type) {
 		alert("请输入电话号码！");
 	}else{
 		$.post("../../servers/match/JoinMatch.php",{
-				"openId":"<?php echo $openId;?>",
+				"openId":openId,
 				"userTelNum":$("#userTelNum").val(),
 				"type":type,
 				"repreNum":$("#num").val(),
@@ -296,22 +306,6 @@ function joinMatch(type) {
 					alert(data.message);
 				}
 		},"json");
-
-		// var $obj;
-		// var hvname;
-		// if (type == 1) {
-		// 	var currNum = $("#currentHostNum").html();
-		// 	$("#currentHostNum").html(parseInt(currNum) + 1);
-		// 	$obj = $("#hostTeamList");
-		// 	hvname = "host_" + (parseInt(currNum) + 1);
-		// } else {
-		// 	var currNum = $("#currentVisitNum").html();
-		// 	$("#currentVisitNum").html(parseInt(currNum) + 1);
-		// 	$obj = $("#visitTeamList");
-		// 	hvname = "visit_" + (parseInt(currNum) + 1);
-		// }
-		// var addPlayerHtml = "<li id='" + hvname + "'>" + "<div class=\"li-l-box\">" + "<a href=\"javascript:;\" onclick=\"javascript:quitTeam('" + hvname + "')\">" + "<img src=\"../../imgs/deleteRole.png\" class=\"del-user\">" + "</a>" + "<img src=\"../../imgs/teamAvatar.jpg\">" + "</div>" + "<a href='#'><div class=\"li-r-box\">" + "<div class=\"li-r-con\">" + "<h5 class=\"teamInfo\">豇豆的队友</h5>" + "<p>战力 无数据</p>" + "<p>信用 无数据</p>" + "</div>" + "</div>" + "</a>" + "</li>";
-		// $obj.append(addPlayerHtml);
 	}
 }
 
@@ -348,6 +342,7 @@ function buildStar(forces) {
 function max(a, b) {
 	return a >= b ? a : b;
 }
+
 </script>
 	</body>
 </html>

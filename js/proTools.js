@@ -925,3 +925,34 @@ function getWeek(dateStr) {
 	var day = dateDay.getDay();
 	return ar[day];
 }
+
+
+/*校验手机号码*/
+function checkTel(phoneNum){
+    var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;  
+    var isMob=/^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+    if(isMob.test(phoneNum)||isPhone.test(phoneNum)){
+    	return true;
+    }else{
+    	return false;
+    }
+}
+
+/*短日期处理，输入2015-03-10 10:00:00,输出2015-03-10*/
+function shortDate(dateTime) {
+	if(dateTime !="" && dateTime != null){
+		return dateTime.split(" ")[0];
+	}else{
+		return dateTime;
+	}
+}
+
+/*短时间处理，输入10:30:00,输出10:30*/
+function shortTime(dateTime) {
+	if(dateTime != "" && dateTime != null){
+		var dts = dateTime.split(":");
+		return dts[0]+":"+dts[1];
+	}else{
+		return dateTime;
+	}
+}

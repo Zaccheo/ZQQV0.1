@@ -12,6 +12,7 @@
 		<link rel="stylesheet" href="../../css/common.css">
 		<link rel="stylesheet" href="../../css/style.css">
 		<link rel="stylesheet" href="../../css/index.css" />
+		<link rel="stylesheet" href="../../css/checkBox.css">
 		<style type="text/css">
 			input:-webkit-autofill,
 			input:-webkit-autofill:hover,
@@ -20,10 +21,10 @@
 				-webkit-text-fill-color: #333;
 			}
 		</style>
-		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : "";?>
+		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : "o5896s_Gge1x6UA_3bCsj9AK7kOI";?>
 		<script type="text/javascript" src="../../js/wxcheck.js" ></script>
 		<script type="text/javascript" src="../../js/zepto.js"></script>
-		<script type="text/javascript" src="../../js/touch.js"></script>
+		<script type="text/javascript" src="../../js/fastclick.js"></script>
 		<script type="text/javascript" src="../../js/zepto.modal.min.js"></script>
 		<script type="text/javascript" src="../../js/proTools.js"></script>
 	</head>
@@ -37,7 +38,7 @@
 						<h5>请创建一个球赛活动名称</h5>
 						<div class="dice-btn">
 							<input placeholder="请填写名字或摇骰子随机产生" style="width:80%; height:30px;" type="text" id="matchName" />
-							<a id="dice" onclick="getRandomName()" class="dice-img"></a>
+							<a id="dice" class="dice-img"></a>
 						</div>
 					</div>
 					<div class="placeBlock-10 bg-gray"></div>
@@ -49,28 +50,29 @@
 						<h5>或手动输入一个时间段</h5>
 						<input class="text-input" id="scaleByHand" placeholder="手动填写" />
 					</div>
+					<div class="title-box">
+						<label>请留您的电话号码以确认预定信息</label>
+						<input type="text" class="text-input" placeholder="您的电话号码" id="creatorTelNum"/>
+					</div>
 					<div class="placeBlock-10 bg-gray"></div>
-					<div class="pitchListDiv">
-						<div class="checkboxFive">
-							<input type="checkbox" value="0" id="checkboxFiveInput" name="getRival" />
-							<label for="checkboxFiveInput"></label>
-						</div>
+					<div class="pitchInfoPanel">
+						<div class="roundedOne">
+					      <input type="checkbox" value="None" id="roundedOne" name="check" />
+					      <label for="roundedOne"></label>
+					    </div>
 						<input type="hidden" id="selectPitchId"/>
-						<span style="margin-left: 2px;">约对手</span>
+						<span style="margin-left: 10px;">约对手</span>
 						<label class="pitchRowLabel">我带</label>
 						<div class="pitchRowDiv">
 							<input type="button" value="-" class="pitchRowBtn" />
 							<input id="mymatenum" class="pitchRowNum" value="0">
-							<input type="button" id="btn-plus" value="+" class="pitchRowBtn" /> 人参加
+							<input type="button" id="btn-plus" value="+" class="pitchRowBtn" />
+							<label class="pitchRowLabel">人参加</label>
 						</div>
 					</div>
-					<div class="title-box">
-						<label>请留您的电话号码以确认预定信息</label>
-						<input type="text" class="text-input" id="creatorTelNum"/>
-					</div>
-					<div class="pitchListDiv">
+					<div id="forceEvaluate" class="pitchListDiv">
 						战力自评：
-						<ul class="pitchStarUl">
+						<ul id="forceStar">
 							<li>★</li>
 							<li>★</li>
 							<li>★</li>
@@ -120,10 +122,21 @@
 				"广州恒大",
 				"巴黎圣日耳曼",
 				"曼彻斯特联队",
-				"阿森纳"
+				"阿森纳",
+				"屌丝杯",
+				"小世界杯",
+				"国家德比",
+				"世纪大战",
+				"小雷米特杯",
+				"撸一杯",
+				"习大大杯",
+				"绿茵杯",
+				"足协杯",
+				"足联杯"
 			];
 			
 			$(function() {
+					new FastClick(document.body);
 					//组装openID，随时取用
 					window.localStorage.setItem('openId','<?php echo $openId;?>');
 					//获取当前可预约的时间列表信息
@@ -137,8 +150,14 @@
 							$('#avaliablePitchs').html(selectPitchHtml);
 						}
 					});
+
+					/*绑定筛子随机名字*/
+					$("#dice").click(function(){
+						getRandomName();
+					});	
+
 					/*选择预约场地，弹出窗*/
-					$('#selectPitch').on('tap', function() {
+					$('#selectPitch').on('click', function() {
 						var modalObj = $('#pitch-modal-data').modal({
 							overlayClose: true, // 当点击模态对话框外的区域时，是否自动关闭模态对话框
 							close: true, // 是否在模态对话框上显示关闭close元素
@@ -160,7 +179,7 @@
 					}
 					
 					//加减控件
-					$(".pitchRowBtn").on("tap", function() {
+					$(".pitchRowBtn").on("click", function() {
 						var n = $("#mymatenum").val();
 						var num = parseInt(n);
 						if (this.value == "-") {
@@ -174,22 +193,25 @@
 					});
 					$(".pitchRowLabel").hide();
 					$(".pitchRowDiv").hide();
+					$("#forceEvaluate").hide();
 					/*选择约对手选项*/
-					$('#checkboxFiveInput').live('change', function() { 
-						if ($('#checkboxFiveInput').is(":checked")) {
+					$('#roundedOne').live('change', function() { 
+						if ($('#roundedOne').is(":checked")) {
 							$(".pitchRowLabel").show();
-							$(".pitchRowDiv").show();    
+							$(".pitchRowDiv").show();  
+							$("#forceEvaluate").show();  
 						} else {      
 							$(".pitchRowLabel").hide();
-							$(".pitchRowDiv").hide();    
+							$(".pitchRowDiv").hide();
+							$("#forceEvaluate").hide();  
 						}
 					});
-					$(".pitchStarUl li").live("click", function() {
+					$("#forceStar li").live("click", function() {
 						if ($(this).hasClass('forceStarRed')) {
-							$(".pitchStarUl li").removeClass('forceStarRed');
+							$("#forceStar li").removeClass('forceStarRed');
 						} else {
 							var _thisI = $(this).index();
-							$(".pitchStarUl li").each(function() {
+							$("#forceStar li").each(function() {
 								if ($(this).index() <= _thisI) {
 									$(this).addClass('forceStarRed');
 								}
@@ -209,24 +231,28 @@
 						}else if($('#creatorTelNum').val() == ""){
 							$('#creatorTelNum').css('border-color','brown');
 							alert("请填写您的联系方式，方便管理员与您缺人信息!");
-						}else{
+						}
+						// else if(!checkTel($('#creatorTelNum').val())){
+						// 	$('#creatorTelNum').css('border-color','brown');
+						// 	alert("请填写正确的电话号码!");
+						// }
+						else{
 							$.post("../../servers/match/MatchCreate.php",{
 								"openId":"<?php echo $openId;?>",
 								"matchName":$('#matchName').val(),
 								"selectPitch":$('#selectPitch').val(),
 								"selectPitchId":$('#selectPitchId').val(),
 								"scaleByHand":$('#scaleByHand').val(),
-								"ifReval":$('#checkboxFiveInput').is(":checked"),
+								"ifReval":$('#roundedOne').is(":checked"),
 								"mymatenum":$('#mymatenum').val(),
 								"creatorTel":$('#creatorTelNum').val(),
 								"myforces":$('.forceStarRed').size()},
 								function(data){
 								if(data.code == 200){
-									// $("#matchCreateBtn").
 									var secs =3; //倒计时的秒数 
 									var URL; 
 									for(var i=secs;i>=0;i--){ 
-										window.setTimeout(delayJump(i), (secs-i) * 1000);
+										window.setTimeout(delayJump(i,data.data.matchId), (secs-i) * 1000);
 									}
 								}else{
 									alert(data.message);
@@ -237,10 +263,10 @@
 				})
 
 			//延时跳转
-			function delayJump(num){
+			function delayJump(num,matchId){
 				$("#matchCreateBtn").html(num+"将自动返回");
 				if(num == 0) { 
-					window.location="matchList.php?openId='<?php echo $openId;?>'";
+					window.location="matchDetail.php?matchId="+matchId+"&openId=<?php echo $openId;?>";
 				}
 			}
 			

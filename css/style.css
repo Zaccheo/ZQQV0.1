@@ -26,6 +26,8 @@
 .title-box h6{font-size:12px;line-height:20px;color:#666}
 .order-box{min-height:100%;padding-left:15px;font-size:12px;background:#fff}
 .order-box .order-item{border-bottom:1px solid #c5c5c5;padding:15px 15px 15px 0}
+.order-box .pitch-tel-num{border-bottom:1px solid #c5c5c5;padding:15px 0 0 0}
+.order-box .pitch-tel-num-last{padding:15px 15px 15px 0}
 .order-box .order-item-last{border:none}
 .order-box .order-item .order-item-key{float:left;width:25%;text-align:right;line-height:1.5em}
 .order-box .order-item .order-item-value{float:left;width:75%;line-height:1.5em}
@@ -267,8 +269,8 @@
 .pitchModal{position: absolute;top: 50px;left: 0;list-style: none;margin: 0;width: 100%;padding: 7px 0;background-color: #fff;z-index: 0;}
 .pitchModal li{overflow: auto;white-space: nowrap;height: 41px;background-repeat: no-repeat;background-position: 10px center;background-size: 30px;padding-left: 50px;}
 .pitchModal a{ text-align: left;text-decoration: none;display: block;line-height: 40px;border-bottom: 1px solid #c2c2c2;}
-.pitchListDiv{height: 20px;padding: 15px;font-size: 18px;background-color: #fff; border-bottom: 1px solid #DDD8CE;overflow: hidden;position: relative;display: -webkit-box;}
-.pitchRowLabel{margin:0 0 10px 2px;}
+.pitchListDiv{height: 28px;padding: 15px;font-size: 18px;background-color: #fff; border-bottom: 1px solid #DDD8CE;overflow: hidden;position: relative;display: -webkit-box;}
+.pitchRowLabel{margin:0 0 10px 2px;font-size: 16px;}
 .pitchRowDiv{margin-left:2px;text-align:center;}
 .pitchRowBtn{padding:0 5px;float:left;width:27px;height:21px;background-color:#155678;border-radius: 3px;color: white;text-shadow: 0 -2px 2px rgba(0, 0, 0, .8);}
 .pitchRowNum{border:1px solid;border-color:#d7d7d7;margin:0 5px;padding:0 5px;float:left;width: 20px;border-radius: 4px;}
@@ -282,6 +284,7 @@ input[type=checkbox] {visibility: hidden;}
 .pitchListDiv ul li{float: left;font-size: 20px;}
 .forceStarRed{color:red}
 
+.pitchInfoPanel{height: 40px;padding: 15px;font-size: 18px;background-color: #fff; border-bottom: 1px solid #DDD8CE;overflow: hidden;position: relative;display: -webkit-box;}
 .del-user{position:absolute;width: 18px;height: 18px;margin-left:26px;}
 
 .li-r-con-left{float: left;width: 35%;}

@@ -1,4 +1,3 @@
-
 <?php
 	/*
 	*通用的评论系统处理后台
@@ -24,12 +23,18 @@
 	}else{
 		$commentsql .= "id_solo_list";//单飞营模块主键
 	}
-	$commentsql .= ") values ";
-	$commentsql .= "('".$openId."','".date('Y-m-d H:i:s')."','".$content."','".$moduleId."')";
-	//创建评论
-	if(mysql_query($commentsql, $connect)){
-		echo Response::show(200,"评论成功！",array(),null);
+	if(empty($openId)){
+		echo Response::show(204,"评论失败，openId获取失败！",array(),null);
+		exit();
 	}else{
-		echo Response::show(203,"评论失败！",array(),null);
+		$commentsql .= ") values ";
+		$commentsql .= "('".$openId."','".date('Y-m-d H:i:s')."','".$content."','".$moduleId."')";
+		//创建评论
+		if(mysql_query($commentsql, $connect)){
+			echo Response::show(200,"评论成功！",array(),null);
+		}else{
+			echo Response::show(203,"评论失败！",array(),null);
+		}
 	}
+	
 ?>

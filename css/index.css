@@ -100,7 +100,6 @@
 100%{-ms-transform:translateX(-32px)}}
 @keyframes goRight{0%{transform:translateX(0px)}
 100%{transform:translateX(-32px)}}
-.myzc-ul{margin-top:10px}
 .myzc-ul li{box-sizing:border-box;padding:10px;background:#fff;}
 .progresnum{font-size:16px;color:#a4cc43;margin:0 0 8px}
 .mysupport-btn-holder{padding:0 20px}
@@ -325,3 +324,9 @@
 .admin-menu-a:after{display:inline-block;content:"";width:0;height:100%;vertical-align:middle}
 .admin-menu-a.category1{background-color:#155678}
 .admin-menu-a.category2{background-color:#7F0A0C}
+
+#userList li{box-sizing:border-box;padding:10px;background:#fff;border-bottom:1px solid #d0cfcf;}
+
+.joinmatch-btn{text-align:center;width:45%;color:white;padding: 10px 0;border-radius: 3px;text-shadow: 0 -2px 2px rgba(0, 0, 0, .8);}
+.joinmatch-btn.host-btn{float:left;background-color: #00516E;margin:10px 0;}
+.joinmatch-btn.visit-btn{float: right;background-color: #7F0A0C;margin:10px 10px 10px 0;}

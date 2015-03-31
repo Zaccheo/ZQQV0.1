@@ -268,12 +268,11 @@ class WechatRequest{
 		   case "PERSON_INFO"://点击[我的信息]
 		   	   //权限控制，当管理员组下面的用户进来时，弹出菜单是管理场馆菜单，其他普通用户弹出一般操作菜单。
 		   	   if(UserManage::isUserAdministrator($request['fromusername'])){
-		   	       $content[] = array("Title"=>"球场管理", "Description"=>"", "PicUrl"=>"http://discuz.comli.com/weixin/weather/icon/cartoon.jpg", "Url" =>"http://www.xishuma.com/fb55/admins/pitchManagement.php?openId=".$request['fromusername']);
-		   	       $content[] = array("Title"=>"订单结算", "Description"=>"", "PicUrl"=>"http://discuz.comli.com/weixin/weather/icon/cartoon.jpg", "Url" =>"http://www.xishuma.com/fb55/admins/orderSettlement.php?openId=".$request['fromusername']);
+		   	       $content[] = array("Title"=>"管理中心", "Description"=>"", "PicUrl"=>"http://discuz.comli.com/weixin/weather/icon/cartoon.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/admin/manageCenter.php?openId=".$request['fromusername']);
+		   	       $content[] = array("Title"=>"订单结算", "Description"=>"", "PicUrl"=>"http://discuz.comli.com/weixin/weather/icon/cartoon.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/admin/settlement.php?openId=".$request['fromusername']);
 		   	   }
-		   	   
 			   $content[] = array("Title"=>"我的信息", "Description"=>"", "PicUrl"=>"http://discuz.comli.com/weixin/weather/icon/cartoon.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/ucenter/userInfo.php?openId=".$request['fromusername']);
-	   		   $content[] = array("Title"=>"我的账户", "Description"=>"", "PicUrl"=>"http://d.hiphotos.bdimg.com/wisegame/pic/item/f3529822720e0cf3ac9f1ada0846f21fbe09aaa3.jpg", "Url" =>"http://www.xishuma.com/test");
+	   		   $content[] = array("Title"=>"我的战力", "Description"=>"", "PicUrl"=>"http://d.hiphotos.bdimg.com/wisegame/pic/item/f3529822720e0cf3ac9f1ada0846f21fbe09aaa3.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/ucenter/userForceInfo.php?openId=".$request['fromusername']);
 		       break;
            default:
                break;
