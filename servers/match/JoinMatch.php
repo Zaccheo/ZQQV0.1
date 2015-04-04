@@ -32,7 +32,7 @@
 		}
 	}
 	if($userInfo['flag'] == 2){
-		echo Response::show(206,"加入失败，账号不能使用!",array(),null);
+		echo Response::show(206,"加入失败，请确认是否已关注本公众号！",array(),null);
 	}else{
 		$joinSql = "insert into `zqq_activity_members` (activitymemberOpenId,host_or_guest,delegateNumber,personalLevel,id_activities)";//查询活动
 		$joinSql .= " values('".$openId."','".$type."','".$repreNum."','".$userInfo['personalLevel']."','".$activeId."')";

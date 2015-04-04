@@ -20,18 +20,15 @@
 				-webkit-text-fill-color: #333;
 			}
 		</style>
-		
-		<script src="../../js/wxcheck.js" type="text/javascript" ></script>
-		<script src="../../js/zepto.min.js" type="text/javascript"></script>
-		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
-		<script src="../../js/proTools.js" type="text/javascript"></script>
-		<script src="../../js/home.js" type="text/javascript"></script>
-		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
+		<?php 
+			$openId = isset($_GET['openId']) ? $_GET['openId'] : null;
+
+		?>
 	</head>
 	<body>
 		<header class="header">
 			<h2>
-				<span id="headerTitle"></span>
+				<span id="headerTitle"></span><span id="headerCreator"></span>
 			</h2>
 		</header>
 		<div class="wrapbox">
@@ -146,8 +143,29 @@
 				</p>
 			</div>
 		</div>
+		<script src="../../js/wxcheck.js" type="text/javascript" ></script>
+		<script src="../../js/zepto.min.js" type="text/javascript"></script>
+		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
+		<script src="../../js/proTools.js" type="text/javascript"></script>
+		<script src="../../js/home.js" type="text/javascript"></script>
+		<?php
+			require_once('weixin/jssdk.php');
+			$jssdk = new JSSDK("wx1d7118856baf94c5", "67a7586f1701e8734c2bd2886e1bc075");
+			$signPackage = $jssdk->GetSignPackage();
+		?>
+		<script type="text/javascript">
+		var url = window.location.href;
+			url = url.substring(0,url.indexOf("&"));
+			var dataForWeixin = {
+				title: $("#headerTitle").html(), // 分享标题
+        		desc: $("#matchtime").html(), // 分享描述
+        		link: url, // 分享链接
+        		imgUrl: 'http://www.xishuma.com/fb55/imgs/55.jpg', // 分享图标
+        		type: '', // 分享类型，默认为链接
+        		dataUrl: ''
+			};
+		</script>
 		<!-- main wrap end-->
-		
 		<script>
 		var openId = '<?php echo $openId;?>';
 
@@ -200,9 +218,11 @@ $(function() {
 				var detailObj = data.data;
 				//处理时间
 				var matchtime = detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime)+"</p>";
+				var wxdesc = detailObj.zDate + "(" + getWeek(detailObj.zDate)+")"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime);
 				if(detailObj.activityStatus == 0){
 					//计划中的球赛活动
 					matchtime = detailObj.activityWantedTime;
+					wxdesc = detailObj.activityWantedTime;
 				}
 				//当前登录人的电话号码
 				$("#userTelNum").val(detailObj.curTelNum);
@@ -210,8 +230,22 @@ $(function() {
 				if(openId == null || detailObj.userOpenId == openId){
 					$("#joinPanel").hide();
 				}
+				var wxheader = detailObj.activityName;
+				//获取是否要对手,1允许对手报名，0不允许
+				if(detailObj.oppWanted == "1"){
+					wxheader += "【约对手】";
+				}
+				//是否要约单飞，0不约，1要约
+				if(detailObj.soloWanted == "1"){
+					wxheader += "【约单飞】";
+				}
+				dataForWeixin.title = wxheader;
+        		dataForWeixin.desc = wxdesc +","+detailObj.capacity + "人制,"+detailObj.pitchCode;
+        		dataForWeixin.imgUrl = detailObj.headerImgUrl;
+
 				//头部
-				$("#headerTitle").html(detailObj.activityName + "-" + detailObj.nickName);
+				$("#headerTitle").html(detailObj.activityName);
+				$("#headerCreator").html("-" + detailObj.nickName);
 				//比赛时间
 				$("#matchtime").html(matchtime);
 				
@@ -377,5 +411,22 @@ function max(a, b) {
 }
 
 </script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//微信配置
+		wx.config({
+		    debug: false,
+		    appId: '<?php echo $signPackage["appId"];?>',
+		    timestamp: <?php echo $signPackage["timestamp"];?>,
+		    nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+		    signature: '<?php echo $signPackage["signature"];?>',
+		    jsApiList: ['onMenuShareTimeline',
+		                'onMenuShareAppMessage',
+		                'onMenuShareQQ',
+		                'onMenuShareWeibo',
+		                'hideMenuItems'] 
+		});
+	</script>
+	<script src="../../js/share.js" type="text/javascript"></script>
 	</body>
 </html>

@@ -12,7 +12,7 @@
 	$openId = $_POST['openId'];//当前登录人的openId，查询当前登录人的手机号码
 
 	$connect = Db::getInstance()->connect();
-	$sql = "select a.*,b.*,c.zDate,c.startTime,c.endTime from `zqq_activities` a,`zqq_users_info` b,`zqq_pitchs_order_info` c where a.activityCreatorOpenId = b.userOpenId and a.pitchOrderInfoID = c.id and a.id_activities = ".$matchId;//查询活动
+	$sql = "select a.*,b.*,c.zDate,c.startTime,c.endTime,d.capacity,d.pitchCode from `zqq_activities` a,`zqq_users_info` b,`zqq_pitchs_order_info` c,`zqq_pitchs_info` d where a.activityCreatorOpenId = b.userOpenId and a.pitchOrderInfoID = c.id and c.pitchInfoID = d.id and a.id_activities = ".$matchId;//查询活动
 	//查询球赛活动信息
 	$rsts = mysql_query($sql, $connect);
 	$result = array();

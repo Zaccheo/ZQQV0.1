@@ -27,10 +27,14 @@
 		<header class="header">
 			<h2><span>开放球赛列表</span></h2>
 		</header>
-		<nav>
-			<input type="text" placeholder="请输入活动名/创建者" id="searchKey"/>
-			<input type="button" class="search-btn">
-		</nav>
+		<div class="tabul-box">
+            <div class="tabul-div">
+                <ul class="tab-ul">
+                    <li><a id="chooseTimeFilter" href="javascript:;" class="current">全部时间</a></li>
+                    <li><a id="zczd" href="javascript:;">未满员</a></li>
+                </ul>
+            </div>
+        </div>
 		<!--<div class="eromsg-box">
 			<div class="eromsg-txt alinetxt" id="scrollSpan"><span>您是代表一个队伍参赛，所带人数大于等于队伍人数，请选择一个比赛！</span><span>如果您是一个人，或者不足一支队伍，请选择单飞席，我们将给您匹配队伍！</span>
 			</div>
@@ -52,7 +56,7 @@
 			<!-- 加载页脚版权 -->
 			<?php include "../footer.php"; ?>
 		</div>
-		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
+		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : 'o5896s_Gge1x6UA_3bCsj9AK7kOI';?>
 		<script>
 			
 			//滚动消息控件
@@ -65,6 +69,22 @@
 				//loadWaiteMatch(openId);
 				//异步加载公开比赛信息列表
 				loadSyncOpenList(openId);
+
+
+				
+				//定位导航栏目
+			    //var $navHolder = $("#navHolder");
+			    var navShow = false;
+			    $(window).scroll(function () {
+			        //$navHolder.css("height", 0);
+			        var scroTop = $(window).scrollTop();
+			         var tabulTop = $(".tabul-box").offset().top;
+			        if (tabulTop - scroTop <= 5) {
+			            $(".tabul-div").addClass("tabul-fixed");
+			        } else {
+			            $(".tabul-div").removeClass("tabul-fixed");
+			        }
+			    });
 				
 			});
 
