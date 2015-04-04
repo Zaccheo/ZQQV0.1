@@ -55,6 +55,7 @@
 		<script src="../../js/fastclick.js" type="text/javascript"></script>
 		<script src="../../js/proTools.js" type="text/javascript"></script>
 		<!--组件依赖js end-->
+		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
 		<script type="text/javascript">
 
 			$(function() {
@@ -142,7 +143,7 @@
 					});
 					window.localStorage.setItem("pitchOrderId",pIDS);
 					window.localStorage.setItem("selpitch",dateStr);
-					window.history.go(-1);
+					window.location = "../match/organMatch.php?openId=<?php echo $openId;?>";
 				});
 			}
 
