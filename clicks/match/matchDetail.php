@@ -320,6 +320,8 @@ function buildComments(comments){
 function joinMatch(type) {
 	if($("#userTelNum").val() == ""){
 		alertWarning("请输入电话号码！","top");
+	}else if(!isMobile($('#userTelNum').val()) && !isTel($('#userTelNum').val())){
+		alertWarning("请填写正确的电话号码!","top");
 	}else{
 		$.post("../../servers/match/JoinMatch.php",{
 				"openId":openId,

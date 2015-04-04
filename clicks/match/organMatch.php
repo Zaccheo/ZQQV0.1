@@ -22,6 +22,7 @@
 			}
 		</style>
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : "o5896s_Gge1x6UA_3bCsj9AK7kOI";?>
+		<script type="text/javascript" src="../../js/xback.js"></script>
 		<script type="text/javascript" src="../../js/wxcheck.js" ></script>
 		<script type="text/javascript" src="../../js/zepto.js"></script>
 		<script type="text/javascript" src="../../js/fastclick.js"></script>
@@ -189,18 +190,27 @@
 						return false;
 					})
 					
+					//手机回退按钮，进行一次清理处理
+					XBack.listen(function(){
+						if(!window.localStorage.getItem("selpitch")){
+							$("#selectPitch").val("");
+							$("#selectPitchId").val("");
+							$("#scaleByHand").val("");
+						}
+					});
+
 					//预约场地回传数据
 					if(window.localStorage && window.localStorage.getItem("selpitch")){
 						for (var i=0,len=sessionStorage.length;i<len;i++){     
 							var key = sessionStorage.key(i);       
 							var value = sessionStorage.getItem(key);
-							document.getElementById(key).value = value;
+							$("#"+key).val(value);
 						}
+						sessionStorage.clear();
 						$("#selectPitch").val(window.localStorage.getItem("selpitch"));
 						$("#selectPitchId").val(window.localStorage.getItem("pitchOrderId"));
 						window.localStorage.removeItem("selpitch");
 						window.localStorage.removeItem("pitchOrderId");
-						sessionStorage.clear();
 					}
 					
 					//加减控件
