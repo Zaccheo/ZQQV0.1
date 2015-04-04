@@ -31,14 +31,13 @@
 						<a href="javascript:;" id="fansManage" class="admin-menu-a category2"><span>粉丝管理</span></a>
 						</li>
 						<li>
-						<a href="javascript:;" id="matchManage" class="admin-menu-a category2">
-						<span>球赛管理</span></a>
-						</li>
-						<li>
 						<a href="javascript:;" id="soloManage" class="admin-menu-a category2">
 						<span>单飞管理</span></a>
 						</li>
-						
+						<li>
+						<a href="javascript:;" id="teamInManage" class="admin-menu-a category2">
+						<span>球赛管理</span></a>
+						</li>
 					</ul>			
 				</div>
 			</div>
@@ -72,10 +71,17 @@
 			 	$("#fansManage").on("click",function(){
 			 		window.location = "fansManage.php";
 			 	});
-
 			 	//单飞席管理
 			 	$("#soloManage").on("click",function(){
 			 		window.location = "soloManage.php?openId='<?php echo $openId;?>'";
+			 	});
+			 	//球队进场的时候需要记录球赛活动状态，转向待确认进场的列表页面
+			 	$("#teamInManage").on("click",function(){
+			 		window.location = "teamInList.php";
+			 	});
+			 	//球队比赛完成结算的时候需要记录状态和更新相关表
+			 	$("#matchSettlement").on("click",function(){
+			 		window.location = "settlement.php";
 			 	});
 			 });
 	
