@@ -198,21 +198,23 @@ $(function() {
 			},function(data) {
 			if (data.code == 200) {
 				var detailObj = data.data;
-
 				//处理时间
 				var matchtime = detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime)+"</p>";
 				if(detailObj.activityStatus == 0){
 					//计划中的球赛活动
 					matchtime = detailObj.activityWantedTime;
 				}
-				if(detailObj.userOpenId == openId){
+				//当前登录人的电话号码
+				$("#userTelNum").val(detailObj.curTelNum);
+				//判断当前访问人openID为空或者是创建人本人，则隐藏加入窗口
+				if(openId == null || detailObj.userOpenId == openId){
 					$("#joinPanel").hide();
 				}
 				//头部
 				$("#headerTitle").html(detailObj.activityName + "-" + detailObj.nickName);
 				//比赛时间
 				$("#matchtime").html(matchtime);
-
+				
 				//参赛成员数据处理，将主客队分拆
 				buildActiveMember(detailObj.member);
 
@@ -269,6 +271,10 @@ function buildActiveMember(member){
 	var hostTeamHtml = '';
 	$("#currentHostNum").html(hostsmember.length);
 	$.each(hostsmember, function(index, item) {
+		//成员中有当前登录人的，则隐藏加入窗口，防止多次参加
+		if(item.activitymemberOpenId == openId){
+			$("#joinPanel").hide();
+		}
 		hostTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
 	});
 	$("#hostTeamList").html(hostTeamHtml);
@@ -276,6 +282,10 @@ function buildActiveMember(member){
 	var visitTeamHtml = "";
 	$("#currentVisitNum").html(visitsmember.length);
 	$.each(visitsmember, function(index, item) {
+		//成员中有当前登录人的，则隐藏加入窗口，防止多次参加
+		if(item.activitymemberOpenId == openId){
+			$("#joinPanel").hide();
+		}
 		visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
 	});
 	$("#visitTeamList").html(visitTeamHtml);
@@ -309,7 +319,7 @@ function buildComments(comments){
 //加入比赛
 function joinMatch(type) {
 	if($("#userTelNum").val() == ""){
-		alert("请输入电话号码！");
+		alertWarning("请输入电话号码！","top");
 	}else{
 		$.post("../../servers/match/JoinMatch.php",{
 				"openId":openId,
@@ -319,9 +329,12 @@ function joinMatch(type) {
 				"activeId":<?php echo $_GET['matchId'];?>
 			},function(data){
 				if(data.code == 200){
-					location.reload();
+					alertSuccess('加入成功', 'top');
+					setTimeout(function() {
+						location.reload();
+					}, 200);
 				}else{
-					alert(data.message);
+					alertWarning(data.message,"top");
 				}
 		},"json");
 	}
