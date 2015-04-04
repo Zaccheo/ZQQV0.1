@@ -199,93 +199,111 @@ $(function() {
 			if (data.code == 200) {
 				var detailObj = data.data;
 
+				//处理时间
+				var matchtime = detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime)+"</p>";
+				if(detailObj.activityStatus == 0){
+					//计划中的球赛活动
+					matchtime = detailObj.activityWantedTime;
+				}
 				if(detailObj.userOpenId == openId){
 					$("#joinPanel").hide();
 				}
 				//头部
 				$("#headerTitle").html(detailObj.activityName + "-" + detailObj.nickName);
 				//比赛时间
-				$("#matchtime").html(detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime))+"</p>";
+				$("#matchtime").html(matchtime);
 
-				//填充当前登录人的电话号码
-				$("#userTelNum").val(detailObj.curTelNum);
-				//处理成员数据，分装为主队和客队
-				var hostsmember = new Array();
-				var visitsmember = new Array();
-				var hostforceTotal = 0;//主队战力
-				var visitforceTotal = 0;//客队战力
-				var hostcount = 0;
-				var visitcount = 0;
-				$.each(detailObj.member,function(index,item){
-					if (item.host_or_guest==1){
-						hostsmember.push(item);
-						hostforceTotal += parseInt(item.personalLevel);
-						hostcount++;
-					}else{
-						visitsmember.push(item);
-						visitforceTotal += parseInt(item.personalLevel);
-						visitcount++;
-					}
-				});
-				if(hostcount > 0){
-					$("#forcesHostStar").html(buildStar(hostforceTotal/hostcount));//主队
-				}
-				if(visitcount > 0){
-					$("#forcesVisitStar").html(buildStar(visitforceTotal/visitcount));//客队
-				}
-				//战力自评星型图,四舍五入
-				//调节高度
-				$("#teamDivHeight").css("line-height", max(hostsmember.length, visitsmember.length) * 65 + "px");
-				//主队
-				var hostTeamHtml = '';
-				$("#currentHostNum").html(hostsmember.length);
-				$.each(hostsmember, function(index, item) {
-					hostTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
-				});
-				$("#hostTeamList").html(hostTeamHtml);
-				//客队
-				var visitTeamHtml = "";
-				$("#currentVisitNum").html(visitsmember.length);
-				$.each(visitsmember, function(index, item) {
-					visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
-				});
-				$("#visitTeamList").html(visitTeamHtml);
-				
-				//留言评论
-				var commentHtml = "";
-				$.each(detailObj.comments, function(index,item) {    
-					commentHtml+= '<li>'
-					+'<div class="tpc-headbox">'
-						+'<img src="'+item.headerImgUrl+'">'
-					+'</div>'
-					+'<div class="tpc-main">'
-						+'<h5 class="h5-title">'+item.nickName+'</h5>'
-						+'<p class="tp-time">'
-							+item.msgDateTime
-						+'</p>'
-						+'<p id="topicContent">'
-							+item.msgContent
-						+'</p>'
-					+'</div>'
-				+'</li>';                                                  
-				});
-				$("#comments-listboard").html(commentHtml);
+				//参赛成员数据处理，将主客队分拆
+				buildActiveMember(detailObj.member);
+
+				//加载留言板数据
+				buildComments(detailObj.comments);
 			}
 		},"json");
-	//点击增减参加人数
-	$(".pitchRowBtn").on("click", function() {
-		var n = $("#num").val();
-		var num = parseInt(n);
-		if (this.value == "-") {
-			if (num - 1 < 0) {
-				return
+
+		//点击增减参加人数
+		$(".pitchRowBtn").on("click", function() {
+			var n = $("#num").val();
+			var num = parseInt(n);
+			if (this.value == "-") {
+				if (num - 1 < 0) {
+					return
+				}
+				$("#num").val(num - 1);
+			} else {
+				$("#num").val(num + 1);
 			}
-			$("#num").val(num - 1);
-		} else {
-			$("#num").val(num + 1);
+		});
+});
+
+//处理参赛成员数据，拆分
+function buildActiveMember(member){
+	//处理成员数据，分装为主队和客队
+	var hostsmember = new Array();
+	var visitsmember = new Array();
+	var hostforceTotal = 0;//主队战力
+	var visitforceTotal = 0;//客队战力
+	var hostcount = 0;
+	var visitcount = 0;
+	$.each(member,function(index,item){
+		if (item.host_or_guest==1){
+			hostsmember.push(item);
+			hostforceTotal += parseInt(item.personalLevel);
+			hostcount++;
+		}else{
+			visitsmember.push(item);
+			visitforceTotal += parseInt(item.personalLevel);
+			visitcount++;
 		}
 	});
-})
+	if(hostcount > 0){
+		$("#forcesHostStar").html(buildStar(hostforceTotal/hostcount));//主队
+	}
+	if(visitcount > 0){
+		$("#forcesVisitStar").html(buildStar(visitforceTotal/visitcount));//客队
+	}
+	//战力自评星型图,四舍五入
+	//调节高度
+	$("#teamDivHeight").css("line-height", max(hostsmember.length, visitsmember.length) * 65 + "px");
+	//主队
+	var hostTeamHtml = '';
+	$("#currentHostNum").html(hostsmember.length);
+	$.each(hostsmember, function(index, item) {
+		hostTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
+	});
+	$("#hostTeamList").html(hostTeamHtml);
+	//客队
+	var visitTeamHtml = "";
+	$("#currentVisitNum").html(visitsmember.length);
+	$.each(visitsmember, function(index, item) {
+		visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
+	});
+	$("#visitTeamList").html(visitTeamHtml);
+}
+
+
+//加载留言板数据
+function buildComments(comments){
+	//留言评论
+	var commentHtml = "";
+	$.each(comments, function(index,item) {    
+		commentHtml+= '<li>'
+		+'<div class="tpc-headbox">'
+			+'<img src="'+item.headerImgUrl+'">'
+		+'</div>'
+		+'<div class="tpc-main">'
+			+'<h5 class="h5-title">'+item.nickName+'</h5>'
+			+'<p class="tp-time">'
+				+item.msgDateTime
+			+'</p>'
+			+'<p id="topicContent">'
+				+item.msgContent
+			+'</p>'
+		+'</div>'
+	+'</li>';                                                  
+	});
+	$("#comments-listboard").html(commentHtml);
+}
 
 
 //加入比赛

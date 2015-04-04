@@ -38,17 +38,7 @@
 		<div class="wrapbox">
 			<div class="tabul-div">
 				<ul id="soloList" class="orders-list myzc-ul">
-						<li><a href="waiteMatch.php?wmid='+item.id_solo_list+'&openId='+openId+'" class="gridbox">
-							<div class="orders-pic">
-								<img src="" alt="">
-							</div>
-							<div class="grid-1">
-								<h2 class="h2-title">单飞席</h2>
-								<p>'+item.soloDate+'('+getWeek(item.soloDate)+') 15:00</p>
-								<p>如果大哥想单飞，小弟带你飞。人数：5人</p>
-							</div>
-						</a>
-						</li>
+						
 					<!--单飞席-->
 					
 				</ul>
@@ -64,16 +54,10 @@
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : "";?>
 		<script>
 			var openId = '<?php echo $openId;?>';
-			//滚动消息控件
-			var msgScroll = new MarqueeBox({
-				obj: $("#scrollSpan")
-			});
-			
+
 			$(function(){
-				var openId = '<?php echo $openId;?>';
 				//加载单飞席信息表
 				loadSoloList(openId);
-
 				//添加单飞信息
 				$("#soloAdd").on("click",function(){
 					window.location = "soloAdd.php?openId="+openId;
@@ -82,18 +66,19 @@
 
 			//加载单飞席
 			function loadSoloList(openId){
-				$.getJSON("../../servers/solo/soloList.php",function(data){
+				$.post("../../servers/solo/soloList.php",{},
+					function(data){
 					var matchHtml = '';
 				 	if(data && data.code==200){
 				 		$.each(data.data, function(index,item) { 
-				 			matchHtml += '<li><a href="waiteMatch.php?wmid='+item.id_solo_list+'&openId='+openId+'" class="gridbox">'
+				 			matchHtml += '<li><a href="soloMatch.php?soloid='+item.id_solo_list+'&openId='+openId+'" class="gridbox">'
 							+'<div class="orders-pic">'
 								+'<img src="'+item.headerImgUrl+'" alt="">'
 							+'</div>'
 							+'<div class="grid-1">'
-								+'<h2 class="h2-title">单飞席</h2>'
-								+'<p>'+item.soloDate+'('+getWeek(item.soloDate)+') 15:00</p>'
-								+'<p>如果大哥想单飞，小弟带你飞。人数：5人</p>'
+								+'<h2 class="h2-title">单飞席 '+item.nickName+'</h2>'
+								+'<p>'+item.soloDate+'('+getWeek(item.soloDate)+') '+shortTime(item.soloStartTime)+'-'+shortTime(item.soloEndTime)+'</p>'
+								+'<p>助您解决找队难题。需求人数：'+item.numberWanted+'人</p>'
 							+'</div>'
 						+'</a>'
 						+'</li>';
@@ -101,7 +86,7 @@
 				 	}
 				 	matchHtml += '';
 				 	$('#soloList').html(matchHtml);
-				 });
+				 },"json");
 			}
 
 			function buildStar(forces) {

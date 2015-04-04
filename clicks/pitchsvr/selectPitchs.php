@@ -23,24 +23,9 @@
 		<div class="qu">
 			<div class="page page-submitOrder">
 				<div class="order-bd">
-					<div class="tbl-wrap clearfix">
-						<div class="time-wrap">
-							<ul class="J_timeSlice">
-								<!--处理左边时间菜单-->
-							</ul>
-						</div>
-						<div class="court-wrap clearfix J_courts" id="wrapper">
-							<div class="inner" id="scroller">
-								<!--处理单元格和表头-->
-								<div class="col">
-									<div class="court-name" ></div>
-								</div>
-								<div class="col">
-									<div class="court-name" ></div>
-								</div>
-								<!--空白div两个保留，预加载样式-->
-							</div>
-						</div>
+					<div id="pitchBlockContainer" class="tbl-wrap clearfix">
+						<!--处理左边时间菜单-->
+						<!--处理单元格和表头-->
 					</div>
 					<div class="tips-wrap">
 						<div class="color-tips">
@@ -50,9 +35,12 @@
 						</div>
 					</div>
 					<div class="order-detail clearfix">
-						<div class="left" style="height: 35px;line-height: 35px;">
-							<p class="total"><em style="font-size: 14px;"></em>&nbsp;&nbsp;共计：<span>0</span>元</p>
-							<p class="coupon"></p>
+						<div class="left">
+							<p class="total" style="line-height:19px">
+								<em style="font-size: 14px;">已选：<?php echo $_GET['pdate'];?>(<?php echo $_GET['pweek'];?>)</em>
+								<!--&nbsp;&nbsp;共计：<span>0</span>元-->
+							</p>
+							<p class="coupon" style="font-weight: bold;line-height:19px"></p>
 						</div>
 						<div class="right">
 							<a href="javascript:;" class="btn-orange btn-orange-l pitch_submit">确定选场</a>
@@ -61,27 +49,24 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="mypanel f-text2">
-			<a href="about_5plus5.php">5+5</a>
-			<a href="javascript:;" class="fr" id="goTop">回到顶部</a>
-		</div>
 		<!--加载页面底部版权信息-->
 		<?php include "../footer.php";?>
 		<script src="../../js/zepto.min.js" type="text/javascript"></script>
+		<script src="../../js/fastclick.js" type="text/javascript"></script>
 		<script src="../../js/proTools.js" type="text/javascript"></script>
 		<!--组件依赖js end-->
 		<script type="text/javascript">
 
 			$(function() {
+				new FastClick(document.body);
+
 				goToTop($("#goTop"));
-				
 				//加载可选场地数据	
 				$.post("../../servers/pitch/selectPitchs.php",{
 					"pid":<?php echo $_GET['pid'];?>
 					},function(data){
 						if(data.code == 200){
-							var court = "";
+							var court = '<div class="court-wrap clearfix J_courts" id="wrapper"><div class="inner" id="scroller">';
 							$.each(data.data.pitch,function(index,item){
 								court+='<div class="col"><div class="court-name" >'+index+'</div>';
 								$.each(item,function(idx,itm){
@@ -91,32 +76,33 @@
 									}else{
 										status = "disable";
 									}
-									court+='<div id="pitch_'+itm.id+'" zDate="'+itm.zDate+'" startTime="'+itm.startTime+'" endTime="'+itm.endTime+'" pitchid="'+itm.id+'" class="court-detail '+status+'">'+itm.charge+'</div>';
+									court+='<div id="pitch_'+itm.id+'" courtName='+index+' zDate="'+itm.zDate+'" startTime="'+itm.startTime+'" endTime="'+itm.endTime+'" pitchid="'+itm.id+'" class="court-detail '+status+'">'+itm.charge+'</div>';
 								});
 								court += '</div>';
 							});
-							$("#scroller").html(court);
-							var timeSlice = "";
+							court += '</div></div>';
+							
+							var timeSlice = '<div class="time-wrap"><ul class="J_timeSlice">';
 							$.each(data.data.time,function(idx,itm){
-								timeSlice += "<li>"+itm+"</li>";
+								timeSlice += '<li>'+shortTime(itm)+'</li>';
 							});
-							$(".J_timeSlice").html(timeSlice);
-							//生成html元素后，再进行事件绑定
-							loadEvent();
-						}
+						timeSlice +='</ul></div>'+court;
+						$("#pitchBlockContainer").html(timeSlice);
+						$("#pitchBlockContainer").trigger("create");
+						//生成html元素后，再进行事件绑定
+						loadEvent();
+						resizeWinSize();
+					}
 				},"json");
 			});
 			
 			function loadEvent(){
 				//已选择的球场编号
-			var selectPitchs = {};
-			//创建触屏事件
-			var touchClick = ('createTouch' in document) ? 'tap':'click';
-			var dateStr = "";
-			//点击场次选择
+				var selectPitchs = {};
+				var dateStr = "";
+				//点击场次选择
 				$('.court-detail').on('click',function(){
 					//已选择的球场编号
-					//var currentPitchs = {};
 					var el = $(this);
 					var curPid = el.attr('pitchid');//当前选择的预订场次
 					if(el.hasClass('disable')){
@@ -126,9 +112,9 @@
 					if(selectPitchs[curPid]){
 						delete selectPitchs[curPid];
 						dateStr = "";
-						//alert("!");
 						el.removeClass('selected');
 						el.addClass('available');
+						$(".coupon").html('');
 					}else{
 						//点击未选中的，则进行选中操作
 						selectPitchs[curPid] = parseInt(el.html());
@@ -139,6 +125,8 @@
 							$(this).addClass('available');
 						});
 						el.addClass('selected');
+						var dateTime = el.attr('courtName')+" "+shortTime(el.attr("starttime"))+"-"+shortTime(el.attr("endtime"));
+						$(".coupon").html(dateTime);
 					}
 				});
 				
@@ -157,20 +145,25 @@
 					window.history.go(-1);
 				});
 			}
+
+			//重新计算选择球场的容器尺寸
+			var resizeWinSize = function(){
+				//处理宽度
+				var wi = (document.body.clientWidth - 45);
+				$('#wrapper').css('width', wi + 'px');
+				
+				//处理内部宽度
+				var innerWi = $("#scroller").children("div").length;
+				$('#scroller').css('width',innerWi*58+18+'px');
+				
+				//外部高度处理
+				$("#wrapper").css('height',10*25+10+"px");
+				$('#scroller').css('height',10*25+10+"px");
+				//单列宽度58px，高度25px，根据此数值计算列表项的容器宽高
+			}
 		</script>		
 		<script>
-			//处理宽度
-			var wi = (document.body.clientWidth - 45);
-			$('#wrapper').css('width', wi + 'px');
 			
-			//处理内部宽度
-			var innerWi = $("#scroller").children("div").length;
-			$('#scroller').css('width',innerWi*58+18+'px');
-			
-			//外部高度处理
-			$("#wrapper").css('height',10*25+10+"px");
-			$('#scroller').css('height',10*25+10+"px");
-			//单列宽度58px，高度25px，根据此数值计算列表项的容器宽高
 		</script>
 	</body>
 </html>

@@ -82,6 +82,8 @@ if (typeof WeixinJSBridge == "undefined"){
 
 	        });
 	});
+
+	var pitchStorage;
 	//添加新记录
 	$(document).ready(function () {
 	    $('#mainForm').isHappy({
@@ -113,7 +115,9 @@ if (typeof WeixinJSBridge == "undefined"){
 	       var trs = $("#resultID tbody tr");
 	       var i=0;
 	       var picInfos = new Array();
+	       var storageArr = new Array();
 	       while(i<trs.length-1){
+	       	   storageArr.push(trs[i].getAttribute('data'));
 	    	   picInfos.push(JSON.parse(trs[i].getAttribute('data')));
 	    	   i++;
 	       }
@@ -126,8 +130,9 @@ if (typeof WeixinJSBridge == "undefined"){
 			    tmpObj.sDate = $('#sDate')[0].value;
 			    tmpObj.eDate = $('#eDate')[0].value;
 			    tmpObj.ptcId = $('#pitchInfo')[0].value;
-			    tmpObj.dates2BeAdded = dates2BeAdded
+			    tmpObj.dates2BeAdded = dates2BeAdded;
 			    tmpObj.pitchInfo = picInfos;
+			    pitchStorage = JSON.stringify(storageArr);
 		        addMutilPictInfos(JSON.stringify(tmpObj));
 			}
 	  }})
@@ -160,6 +165,9 @@ if (typeof WeixinJSBridge == "undefined"){
          dataType:"json",
          success:function(data){
             if(confirm(data.message)){
+            	if(storage){
+        			storage.setItem("pitchCharge",pitchStorage);
+        		}
             	location.reload();
             }else{
             	window.location='pitchManagement.php';
@@ -310,6 +318,8 @@ function delImgClk(item){
 </div>
 <div id="opDIV" style="display:none">
 <script type="text/javascript">
+var storage = window.localStorage;
+
 var TEMPID = 1;
 function reset(){
     $("#st")[0].value="09:00";
@@ -318,7 +328,7 @@ function reset(){
     $("#charge")[0].value="100";
     $("#credit")[0].value="1";
 }
-function add2Table(item){	
+function add2Table(item){
 	$temp = "<tr id=\"id_"+TEMPID+"\" data='"+JSON.stringify(item)+"'>";
 	   $temp +="<td>"+item.startTime+"</td>";
 	   $temp +="<td>"+item.endTime+"</td>";
@@ -330,41 +340,6 @@ function add2Table(item){
 	$("#addBtnID").before($temp);
 	TEMPID++;
 }
-
-// function rebuildPitchInfo(item){
-// 	item.startTime;
-// 	item.endTime;
-// 	item.oneTime;
-// 	item.charge;
-// 	item.credits;
-// 	var obj = new Object();
-//         obj.startTime=$("#st")[0].value;
-//         obj.endTime=$("#et")[0].value;
-//         obj.oneTime=$("#ot")[0].value;
-//         obj.charge=$("#charge")[0].value;
-//         obj.credits=$("#credit")[0].value;
-// }
-
-//动态处理用户输入的时间参数，保证整除场次
-// function dynamicTime(){
-// 	//开始时间
-// 	$("#st").on("change",function(){
-// 		var differ = hourCut($(this).val(),$("et").val());
-// 		if(differ % $("ot").val() === 0){
-
-// 		}
-// 	});
-// 	//结束时间
-// 	$("#et").on("change",function(){
-// 		//alert($(this).val());
-// 		//$(this).val();
-// 	});
-// 	//每场分钟数
-// 	$("#ot").on("change",function(){
-
-// 	});
-// //hourCut(hourtime1,hourtime2);
-// }
 
 //添加新记录
 $(document).ready(function () {
@@ -425,13 +400,18 @@ $(document).ready(function () {
         obj.oneTime=$("#ot")[0].value;
         obj.charge=$("#charge")[0].value;
         obj.credits=$("#credit")[0].value;
-        
     	add2Table(obj);
     	back();
     }
   })
-
-
+  
+  //自动加载记录数据。将之前操作的数据直接赋值
+  if(storage && storage.getItem("pitchCharge")){
+  	var storageJson = JSON.parse(storage.getItem("pitchCharge"));
+  	$.each(storageJson,function(index,item){
+		add2Table(JSON.parse(item));
+  	});
+  }
 	// dynamicTime();
 });
 function back(){

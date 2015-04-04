@@ -15,7 +15,7 @@
 		<meta name="format-detection" content="telephone=no">
 		<link rel="stylesheet" href="../../css/common.css">
 		<link rel="stylesheet" href="../../css/index.css" />
-		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
+		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : "o5896s_Gge1x6UA_3bCsj9AK7kOI";?>
 	</head>
 	<body>
 		<header class="header">
@@ -75,7 +75,7 @@
 
 			 	//单飞席管理
 			 	$("#soloManage").on("click",function(){
-			 		window.location = "soloManage.php?openId='"+<?php echo $openId;?>+"'";
+			 		window.location = "soloManage.php?openId='<?php echo $openId;?>'";
 			 	});
 			 });
 	

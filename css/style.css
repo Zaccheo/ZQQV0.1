@@ -82,7 +82,7 @@
 .createBank{border-top:none;border-bottom:1px solid #c5c5c5}
 .date-board{width:50%;height:100%;position:absolute;background:#fff;left:0;top:0;overflow:hidden}
 .date-input-box{padding:20px;height:40px;overflow:hidden}
-.date-input{height:38px;line-height:38px;border:1px solid #c5c5c5;border-radius:5px;overflow:hidden}
+.date-input{height:38px;line-height:38px;border:1px solid #c5c5c5;padding-left:15px;border-radius:5px;overflow:hidden}
 .date-input input{height:100%;width:100%;border-radius:5px;border:none}
 .date-reduce{width:40px;height:40px;margin-right:25px;background-image:url(sprite/zc-style.png);background-position:-386px -163px}
 .date-reduce.date-btn-gray{background-image:url(sprite/zc-style.png);background-position:-421px -204px}

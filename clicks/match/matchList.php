@@ -69,27 +69,27 @@
 			});
 
 			//加载单飞席
-			function loadWaiteMatch(openId){
-				$.getJSON("../../servers/match/WaiteMatchInfo.php",function(data){
-				 	if(data.code==200){
-				 		var matchHtml = "";
-				 		$.each(data.data, function(index,item) { 
-				 			matchHtml += '<li><a href="waiteMatch.php?wmid='+item.id_solo_list+'&openId='+openId+'" class="gridbox">'
-							+'<div class="orders-pic">'
-								+'<img src="'+item.headerImgUrl+'" alt="">'
-							+'</div>'
-							+'<div class="grid-1">'
-								+'<h2 class="h2-title">单飞席</h2>'
-								+'<p>'+item.soloDate+'('+getWeek(item.soloDate)+') 15:00</p>'
-								+'<p>如果大哥想单飞，小弟带你飞。人数：5人</p>'
-							+'</div>'
-						+'</a>'
-						+'</li>';
-				 		});
-				 		$('#waiteMatchBlock').html(matchHtml);
-				 	}
-				 });
-			}
+			// function loadWaiteMatch(openId){
+			// 	$.getJSON("../../servers/match/WaiteMatchInfo.php",function(data){
+			// 	 	if(data.code==200){
+			// 	 		var matchHtml = "";
+			// 	 		$.each(data.data, function(index,item) { 
+			// 	 			matchHtml += '<li><a href="waiteMatch.php?wmid='+item.id_solo_list+'&openId='+openId+'" class="gridbox">'
+			// 				+'<div class="orders-pic">'
+			// 					+'<img src="'+item.headerImgUrl+'" alt="">'
+			// 				+'</div>'
+			// 				+'<div class="grid-1">'
+			// 					+'<h2 class="h2-title">单飞席</h2>'
+			// 					+'<p>'+item.soloDate+'('+getWeek(item.soloDate)+') 15:00</p>'
+			// 					+'<p>如果大哥想单飞，小弟带你飞。人数：5人</p>'
+			// 				+'</div>'
+			// 			+'</a>'
+			// 			+'</li>';
+			// 	 		});
+			// 	 		$('#waiteMatchBlock').html(matchHtml);
+			// 	 	}
+			// 	 });
+			// }
 
 			function loadSyncOpenList(openId){
  				$.post("../../servers/match/MatchList.php",
@@ -97,10 +97,20 @@
 				 	if(data.code==200){
 				 		var matchHtml = "";
 				 		$.each(data.data, function(index,item) { 
+				 			var oppWanted = '接受队伍挑战';
+				 			if(item.oppWanted == 0){
+				 				//不约对手
+				 				oppWanted = '拒绝队伍挑战';
+				 			}
+				 			var soloWanted = '接受单飞报名';
+				 			if(item.soloWanted == 0){
+				 				//拒绝单飞报名
+				 				soloWanted = '拒绝单飞报名';
+				 			}
 				 			matchHtml += '<li id="li_'+(index+1)+'"><a href="matchDetail.php?matchId='+item.id_activities+'&openId='+openId+'" class="gridbox">'
 							+'<div class="orders-pic"><img class="pitchsavatar" src="'+item.headerImgUrl+'" alt=""></div>'
 							+'<div class="grid-1"><h2 class="h2-title">'+item.activityName+"("+item.nickName+")"+'</h2><p>'+item.zDate+"("+getWeek(item.zDate)+")"+shortTime(item.startTime)+"-"+shortTime(item.endTime)+'开战！</p>'
-							+'<p>赛制：'+item.capacity+'人制</p></div></a></li>';
+							+'<p>赛制：'+item.capacity+'人制</p><p>'+oppWanted+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+soloWanted+'</p></div></a></li>';
 				 		});
 				 		$('#openMatchList').html(matchHtml);
 				 	}

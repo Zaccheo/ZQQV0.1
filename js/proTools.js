@@ -546,24 +546,36 @@ function alertWarning(text, type, maxWidth) {
 				var warningBox = createDiv("warningBox fixMid", text);
 				break;
 			default:
-				var warningBox = createDiv("warningBox fixMid", text);
+				var warningBox = createDiv("warningBox fixBtm", text);
 				break;
 		}
 		if (maxWidth) warningBox.style.maxWidth = maxWidth;
-		$(warningBox).addClass("fadeOut")
+		$(warningBox).addClass("fadeOut");
 		warningBox.addEventListener("webkitAnimationEnd", function() {
 			$(this).remove();
 		})
 	}
-	//加载中
 
-function alertLoading(txt) {
-	var _txt = txt || '加载中...';
-	var loadingHtml = '<div class="abs-mm" style="color:#fff">' + txt + '</div>>'
-	var loadingBox = createDiv('div-mask', loadingHtml);
-
-	return loadingBox;
+function alertSuccess(text,type,maxWidth){
+	$(".successBox").remove();
+	switch (type) {
+		case "top":
+			var successBox = createDiv("successBox fixTop", text);
+			break;
+		case "mid":
+			var successBox = createDiv("successBox fixMid", text);
+			break;
+		default:
+			var successBox = createDiv("successBox fixBtm", text);
+			break;
+	}
+	if (maxWidth) successBox.style.maxWidth = maxWidth;
+	$(successBox).addClass("fadeOut");
+	successBox.addEventListener("webkitAnimationEnd", function() {
+		$(this).remove();
+	})
 }
+
 
 //创建div
 function createDiv(className, innerHTML) {
@@ -955,4 +967,18 @@ function shortTime(dateTime) {
 	}else{
 		return dateTime;
 	}
+}
+
+//是否是电话
+function isTel(phone){
+	var patrn = /^((\+?86)|(\(\+86\)))?\d{3,4}-\d{7,8}(-\d{3,4})?$/
+	if (!patrn.exec(phone)) 
+		return false
+	return true
+}
+
+//是否是移动电话
+function isMobile(phone){
+	var validateReg = /^((\+?86)|(\(\+86\)))?1\d{10}$/;
+	return validateReg.test(phone);
 }

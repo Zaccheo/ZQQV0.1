@@ -13,6 +13,7 @@
 	$selectPitchId = $_POST["selectPitchId"];//所选球场id
 	$scaleByHand =$_POST["scaleByHand"];//手动填写的比赛规模
 	$ifReval =$_POST["ifReval"];//是否约对手
+	$ifNeedSolo =$_POST["ifNeedSolo"];//是否约单飞
 	$mymatenum =$_POST["mymatenum"];//队友人数
 	$creatorTel = $_POST["creatorTel"];//创建人电话
 	$myforces =$_POST["myforces"];//自评战力
@@ -20,6 +21,9 @@
 	//是否约对手
 	if($ifReval){
 
+	}
+	if($ifNeedSolo){
+		
 	}
 	//根据是否选择了球场判断活动是否应该创建还是计划中
 	$activityStatus = 0;
@@ -31,8 +35,8 @@
 
 	date_default_timezone_set('PRC');
 	$connect = Db::getInstance()->connect();
-	$creat = "insert into `zqq_activities` (activityCreatorOpenId,phoneNumber,activityName,activityCreateTime,pitchOrderInfoID,activityWantedTime,oppWanted,activityStatus) values ";
-	$creat .= "('".$openId."','".$creatorTel."','".$matchName."','".date('Y-m-d H:i:s')."','".$selectPitchId."','".$scaleByHand."',".$ifReval.",".$activityStatus.")";
+	$creat = "insert into `zqq_activities` (activityCreatorOpenId,phoneNumber,activityName,activityCreateTime,pitchOrderInfoID,activityWantedTime,oppWanted,soloWanted,activityStatus) values ";
+	$creat .= "('".$openId."','".$creatorTel."','".$matchName."','".date('Y-m-d H:i:s')."','".$selectPitchId."','".$scaleByHand."',".$ifReval.",".$ifNeedSolo.",".$activityStatus.")";
 	//创建比赛活动
 	$rep = array();
 	if(mysql_query($creat, $connect)){

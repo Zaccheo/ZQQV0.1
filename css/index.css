@@ -196,7 +196,7 @@
 .modal-head{position:relative}
 .modal-head .close-btn{width:40px;height:40px;position:absolute;background:url(i/close-btn.png) no-repeat center center;background-size:50% 50%;right:2px;top:50%;margin-top:-20px}
 .modal-foot{font-size:20px;line-height:45px;color:#f05c52;text-align:center;border-radius:0 0 5px 5px;overflow:hidden}
-.btn-disable{background-color:#efefef;color:#aaa;pointer-events:none}
+.btn-disable{background-color:#bbb;color:#fff;pointer-events:none}
 .jb-title{font-size:15px;line-height:45px;text-align:center}
 .reason-body{padding:5px 10px 0 10px;overflow:hidden}
 .reason-title{font-size:14px}
@@ -330,3 +330,8 @@
 .joinmatch-btn{text-align:center;width:45%;color:white;padding: 10px 0;border-radius: 3px;text-shadow: 0 -2px 2px rgba(0, 0, 0, .8);}
 .joinmatch-btn.host-btn{float:left;background-color: #00516E;margin:10px 0;}
 .joinmatch-btn.visit-btn{float: right;background-color: #7F0A0C;margin:10px 10px 10px 0;}
+
+#timeFilter ul{top: 87px;left: 0;list-style: none;margin: 0;width: 100%;background-color: #fff;z-index: 1;}
+#timeFilter ul li{padding: 5px 0;background: #fff;height: 35px;overflow: hidden;border-bottom: 1px solid #d0d6d9;text-align: center;}
+#timeFilter ul li.currsel{background: url(../imgs/currsel.png) no-repeat right center;}
+#timeFilter ul li h4{margin-top: 6px;}

@@ -23,43 +23,38 @@
 		<script src="../../js/zepto.min.js" type="text/javascript"></script>
 		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
 		<script src="../../js/proTools.js" type="text/javascript"></script>
+		<script src="../../js/fastclick.js" type="text/javascript"></script>
 		<script src="../../js/home.js" type="text/javascript"></script>
 	</head>
 	<body>
+		<header class="header">
+		   <h2>加入单飞</h2>
+		</header>
 		<div class="wrapbox">
 			<!-- 比赛基础信息 start -->
 			<div class="order-box">
 				<div class="order-item clearfix">
 					<div class="order-item-key">
-						球赛信息：
-					</div>
-					<div class="order-item-value">
-						世界杯比赛(5)
-					</div>
-				</div>
-				<div class="order-item clearfix">
-					<div class="order-item-key">
 						单飞席信息：
 					</div>
-					<div class="order-item-value red">
-						2015-03-31 (星期二)
+					<div id="soloDateInfo" class="order-item-value red">
+						
 					</div>
 				</div>
 				<div class="order-item clearfix">
 					<div class="order-item-key">
 						活动发起人：
 					</div>
-					<div class="order-item-value red">
-						George(管理员)
+					<div id="soloCreator" class="order-item-value">
+						
 					</div>
 				</div>
-				<div class="pitch-tel-num clearfix">
-					<label class="pitchRowLabel" style="display: block;float: left;">单飞预计需要:</label>
-					<div class="pitchRowDiv" style="float: left;font-size: 15px;">
-						<input type="button" value="-" class="pitchRowBtn" />
-						<input id="num" class="pitchRowNum" value="0">
-						<input type="button" id="btn-plus" value="+" class="pitchRowBtn" />
-						人 
+				<div class="order-item clearfix">
+					<div class="order-item-key">
+						单飞预计要：
+					</div>
+					<div id="soloWantedNum" class="order-item-value red">
+						
 					</div>
 				</div>
 			</div>
@@ -71,17 +66,22 @@
 				</div>
 				<div class="order-item clearfix">
 					<div class="item item-btns">
-						<a id="joinSinglePlace" class="btn-login " href="javascript:;">加入单飞匹配</a>
+						<a id="joinSoloMatch" class="btn-login " href="javascript:;">加入单飞匹配</a>
 					</div>
 				</div>
 			</div>
-			<div class="placeBlock-10 bg-gray"></div>
+			<!--详细信息-->
+			<div class="tab-con" style="background-color: white;">
+				<ul id="soloUserList" class="com-list">
+					
+				</ul>
+			</div>
 			<!-- end 参赛信息栏 -->
 			<!-- 球队信息留言板 start-->
 			<h2 class="h2-title" style="float:left;">
 				留言
 			</h2>
-			<ul id="comments-listboard" class="topic-list" style="float:left;width: 100%;">
+			<ul id="soloComments" class="topic-list" style="float:left;width: 100%;">
 				<!--
                 	留言板
                 -->
@@ -112,7 +112,10 @@
 			</div>
 		</div>
 		<!-- main wrap end-->
-		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
+		<?php 
+			$openId = isset($_GET['openId']) ? $_GET['openId'] : null;
+			$soloid = isset($_GET['soloid']) ? $_GET['soloid'] : null;
+		?>
 		<script>
 		var openId = '<?php echo $openId;?>';
 
@@ -128,7 +131,7 @@
 				} else {
 					$.post("../../servers/common/comment.php",{
 							"openId":openId,
-							"moduleId": <?php echo $_GET['matchId'];?>,
+							"moduleId": <?php echo $soloid;?>,
 							"content": content,
 							"moduleFlag":2 //球赛活动1，单飞营2
 						},function(data){
@@ -155,123 +158,103 @@
 				window.location.href = url;
 			}
 		})
-$(function() {
-	//获取活动比赛信息
-	$.post("../../servers/match/MatchDetail.php",{
-			"matchId":<?php echo $_GET['matchId'];?>,
-			"openId":openId
+
+	$(function() {
+		new FastClick(document.body);
+		//参加
+		$("#joinSoloMatch").on("click",function(){
+			if(confirm("是否加入单飞匹配席？")){
+				joinSoloMatch();
+			}
+		});
+		//获取活动比赛信息
+		$.post("../../servers/solo/soloDetail.php",{
+			"soloid":<?php echo $soloid;?>,
+			"type":1
 			},function(data) {
-			if (data.code == 200) {
-				var detailObj = data.data;
+			if (data && data.code == 200) {
+				var soloDetail = data.data.soloDetail;
+				var soloMember = data.data.soloMember;
+				//加载时间
+				$("#soloDateInfo").html(soloDetail.soloDate+'('+getWeek(soloDetail.soloDate)+')<br>'+shortTime(soloDetail.soloStartTime)+'-'+shortTime(soloDetail.soloEndTime));
+				//活动发起人
+				$("#soloCreator").html(soloDetail.nickName);
+				//单飞需求人数
+				$("#soloWantedNum").html((soloMember?soloMember.length:0)+'/'+soloDetail.numberWanted+'人');
 
-				if(detailObj.userOpenId == openId){
-					$("#joinPanel").hide();
+				if(soloMember){
+					var soloUserHtml = '';
+					$.each(soloMember,function(index,item){
+						soloUserHtml+='<li class="clearfix">'
+						+'<a class="detial-a" href="javascript:;">'
+							+'<div class="li-l-box">'
+								+'<img src="'+item.headerImgUrl+'">'
+							+'</div>'
+							+'<div class="li-r-box">'
+								+'<div class="li-r-con" style="height: 53px;">'
+									+'<div class="li-r-con-left">'
+										+'<h5 class="teamInfo">'+item.nickName+'(100分)</h5>'
+										+'<p>战力'+buildStar(item.personalLevel)+'</p>'
+										+'<p>信用'+buildStar(item.creditLevel)+'</p>'
+									+'</div>'
+									+'<div class="li-r-con-right">'
+										+'<h6 class="h6-title">暂未匹配</h6>'
+										+'<p>规模：无</p>'
+										+'<p>时间：无</p>'
+									+'</div>'
+								+'</div>'
+							+'</div>'
+						+'</a>'
+					+'</li>';
+					});
+					$("#soloUserList").html(soloUserHtml);
 				}
-				//头部
-				$("#headerTitle").html(detailObj.activityName + "-" + detailObj.nickName);
-				//比赛时间
-				$("#matchtime").html(detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime))+"</p>";
-
-				//填充当前登录人的电话号码
-				$("#userTelNum").val(detailObj.curTelNum);
-				//处理成员数据，分装为主队和客队
-				var hostsmember = new Array();
-				var visitsmember = new Array();
-				var hostforceTotal = 0;//主队战力
-				var visitforceTotal = 0;//客队战力
-				var hostcount = 0;
-				var visitcount = 0;
-				$.each(detailObj.member,function(index,item){
-					if (item.host_or_guest==1){
-						hostsmember.push(item);
-						hostforceTotal += parseInt(item.personalLevel);
-						hostcount++;
-					}else{
-						visitsmember.push(item);
-						visitforceTotal += parseInt(item.personalLevel);
-						visitcount++;
-					}
-				});
-				if(hostcount > 0){
-					$("#forcesHostStar").html(buildStar(hostforceTotal/hostcount));//主队
+				var soloComments = data.data.soloComment;
+				//加载评论
+				if(soloComments){
+					var soloCommentHtml = '';
+					$.each(soloComments,function(index,item){
+						soloCommentHtml+= '<li>'
+							+'<div class="tpc-headbox">'
+								+'<img src="'+item.headerImgUrl+'">'
+							+'</div>'
+							+'<div class="tpc-main">'
+								+'<h5 class="h5-title">'+item.nickName+'</h5>'
+								+'<p class="tp-time">'
+									+item.msgDateTime
+								+'</p>'
+								+'<p id="topicContent">'
+									+item.msgContent
+								+'</p>'
+							+'</div>'
+						+'</li>';
+					});
+					$("#soloComments").html(soloCommentHtml);
 				}
-				if(visitcount > 0){
-					$("#forcesVisitStar").html(buildStar(visitforceTotal/visitcount));//客队
-				}
-				//战力自评星型图,四舍五入
-				//调节高度
-				$("#teamDivHeight").css("line-height", max(hostsmember.length, visitsmember.length) * 65 + "px");
-				//主队
-				var hostTeamHtml = '';
-				$("#currentHostNum").html(hostsmember.length);
-				$.each(hostsmember, function(index, item) {
-					hostTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
-				});
-				$("#hostTeamList").html(hostTeamHtml);
-				//客队
-				var visitTeamHtml = "";
-				$("#currentVisitNum").html(visitsmember.length);
-				$.each(visitsmember, function(index, item) {
-					visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
-				});
-				$("#visitTeamList").html(visitTeamHtml);
-				
-				//留言评论
-				var commentHtml = "";
-				$.each(detailObj.comments, function(index,item) {    
-					commentHtml+= '<li>'
-					+'<div class="tpc-headbox">'
-						+'<img src="'+item.headerImgUrl+'">'
-					+'</div>'
-					+'<div class="tpc-main">'
-						+'<h5 class="h5-title">'+item.nickName+'</h5>'
-						+'<p class="tp-time">'
-							+item.msgDateTime
-						+'</p>'
-						+'<p id="topicContent">'
-							+item.msgContent
-						+'</p>'
-					+'</div>'
-				+'</li>';                                                  
-				});
-				$("#comments-listboard").html(commentHtml);
 			}
 		},"json");
-	//点击增减参加人数
-	$(".pitchRowBtn").on("click", function() {
-		var n = $("#num").val();
-		var num = parseInt(n);
-		if (this.value == "-") {
-			if (num - 1 < 0) {
-				return
-			}
-			$("#num").val(num - 1);
-		} else {
-			$("#num").val(num + 1);
-		}
-	});
-})
+	})
 
 
 //加入比赛
-function joinMatch(type) {
-	if($("#userTelNum").val() == ""){
-		alert("请输入电话号码！");
-	}else{
-		$.post("../../servers/match/JoinMatch.php",{
-				"openId":openId,
-				"userTelNum":$("#userTelNum").val(),
-				"type":type,
-				"repreNum":$("#num").val(),
-				"activeId":<?php echo $_GET['matchId'];?>
-			},function(data){
-				if(data.code == 200){
+function joinSoloMatch(type) {
+	$.post("../../servers/solo/soloJoin.php",{
+			"openId":openId,
+			"soloid":<?php echo $soloid;?>,
+			"userTelNum":$("#userTelNum").val()
+		},function(data){
+			if(data.code == 200){
+				alertWarning("加入成功！","mid");
+				setTimeout(function() {
 					location.reload();
-				}else{
-					alert(data.message);
-				}
-		},"json");
-	}
+				}, 200);		
+			}else if(data.code == 201){
+				alertWarning('加入失败，您不能重复加入！', 'top');
+			}else{
+				alertWarning('加入失败，系统忙，请稍后再试！', 'top');
+			}
+	},"json");
+	// }
 }
 
 function quitTeam(hvname) {
