@@ -1,195 +1,81 @@
 <!DOCTYPE HTML>
 <html lang="zh-CN">
 <head>
-<meta
-	http-equiv="Content-Type"
-	content="text/html; charset=UTF-8"
->
-<meta
-	name="viewport"
-	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
->
-<meta
-	content="telephone=no"
-	name="format-detection"
-/>
-<title>个人信息管理</title>
-<script src="../../js/zepto.min.js"></script>
-<script src="../../js/happy.js"></script>
-<script type="text/javascript">
+	<title>球员信息</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css" href="../../css/common.css">
+<link rel="stylesheet" type="text/css" href="../../css/index.css">
+<link rel="stylesheet" type="text/css" href="../../css/user_info.css">
 <?php 
-    $openId = isset($_GET['openId']) ? $_GET['openId'] : null;
+    $openId = isset($_GET['openId']) ? $_GET['openId'] : "o5896s_Gge1x6UA_3bCsj9AK7kOI";
 ?>
-function onBridgeReady(){
-	 WeixinJSBridge.call('hideOptionMenu');
-	}
-
-	if (typeof WeixinJSBridge == "undefined"){
-	    if( document.addEventListener ){
-	        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-	    }else if (document.attachEvent){
-	        document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
-	        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-	    }
-	}else{
-	    onBridgeReady();
-	}
-	$(document).ready(function () {
-		$.ajax({
-	        type:"GET",
-	        url:"../../servers/UserInfo.php",
-	        dataType:"json",
-	        data:{"openId":"<?php echo $openId?>"},
-	        success:function(data){
-	    	  if(data.code==200){
-	    		    $("#cardNumber").html("No."+ data.data.cardID);
-	    		    $("#chargeID")[0].value= data.data.charge;
-	    		    $("#creditsNumID").html("积分："+data.data.credits);
-	    		    $("#regTime")[0].value=data.data.regTime;
-	    		    $("#cardUserName").html("会员："+data.data.username);
-	    		    $("#userName")[0].value=data.data.username;
-	    		    $("#telPhone")[0].value=data.data.phoneNumber;
-	    		    $("#openId")[0].value=data.data.weixinNum;
-	    	  }else if(data.code==201){
-	    		  window.location.href="register.php?openId="+"<?php echo $openId?>";
-	    	  }
-	            },
-	        error:function(xhr,type){
-	            //TODO
-	        }
-
-	        });
-	});
-	
-</script>
-<script type="text/javascript">
-$(document).ready(function () {
-    $('#formID').isHappy({
-       classes:{
-    	   field:'unhappy',
-    	   message:'tip-bubble tip-bubble-top'
-       },
-      fields: {
-        '#userName': {
-        	errorTarget:'#userNameDIV',
-          required: true,
-          message: '该字段为必须！',
-        },
-        '#telPhone': {
-        	errorTarget:'#telPhoneDIV',
-          required: true,
-          message: '请填写您11位手机号码',
-          test:function(e){
-              return /[0-9]{11}/.test(e);
-          }
-      }
-    },
-    submitButton:'#saveBtn',
-    happy:function(){
-        //提交表单
-        $.ajax({
-            type:"GET",
-            url:"../servers/UserEdit.php",
-            data: $("#formID").serialize(),
-            dataType:"json",
-            success:function(data){
-               alert(data.message);
-               if(data.code==200){
-                   //TODO
-            	   location.reload();
-               }
-                                 
-            },
-            error:function(xhr,type){
-                //TODO
-                alert("服务器错误！");
-                
-            }
-            });
-        
-    }
-  })
-    }
-    );
-</script>
-<link
-	rel="stylesheet"
-	type="text/css"
-	href="../../css/wei_bind.css"
->
 </head>
 
 <body>
-	<div class="qb_gap pg_upgrade_content">
-	<!-- 不可以修改的资料 -->
-        <div class="card_preview">
-      		<img id="cardBgImg" src="../../imgs/card_bg.png" width="100%" height="100%"></a>
-            <span class="card_num" id="cardNumber"></span>
-            <span class="card_user_name" id="cardUserName"></span>
-            <span class="card_user_credits" id="creditsNumID"></span>
-            <span class="card_name">成都5+5足球场VIP会员卡</span>
-        </div>
-		<!-- 充值金额 -->
-		<div
-			class="mod_input qb_mb10 qb_flex"
-		>
-			<label>余额(RMB)：</label> <input 
-				value=""
-				class="flex_box"
-				placeholder=""
-				id="chargeID"
-				type="text"
-				readonly="readonly"
-			>
+	<header>
+  		<div>
+  			<span class="logo-com" style="background-image:url(http://wx.qlogo.cn/mmopen/fRcLAzkicIFicexOUYZUxJOsndIqupWx1DiaXDhjHsWGICcQsWH28nlp04IDyJkcSiaLJHIASzFTESBd7AsZ9LUyNXE7Mg5FibgE6/0)">
+  			</span>
+  		</div>
+  		<h1>George</h1>
+  		<h2>胜：70场，败：10场</h2>
+  		<h2>战力：★★★★★，积分：200</h2>
+	</header>
+	<div class="warp1rem">
+		<section>
+	  		<h1>会员卡号：<span id="vipcard"></span></h1>
+	  		<h1>会员余额：<span id="charge"></span>元</h1>
+	  	</section>
+		<section>
+	    	<h3>联系电话：</h3>
+	    	<p>
+	    	<input type="text" class="text-input" style="padding-left:10px" placeholder="您的电话号码" id="userPhoneNUm" value="" />
+	    	</p>
+	  	</section>
+	  	<section>
+	  		<h3>擅长位置：</h3>
+	  		<p><input type="checkbox"/>中场、后卫、前锋</p>
+	  	</section>
+	  	
+	  	<section>
+	  		<h2>注册时间：<span id="regTime"></span></h2>
+	  	</section>
+  	</div>
+  	<div class="order-item clearfix">
+		<div class="item item-btns">
+			<a id="saveUserInfo" class="btn-login " href="javascript:;">保存个人信息</a>
 		</div>
-			<div
-				class="mod_input qb_mb10 qb_flex"
-			>
-				<label>注册时间：</label> <input id="regTime"
-				value=""
-				class="flex_box"
-				type="text"
-				readonly="readonly"
-			>
-			</div>
-			<form id="formID">
-			<input type="hidden" id="openId" name="openId" value="<?php echo $openId?>">
-			<!-- 可以修改的资料 -->
-		 <fieldset>
-            <legend>可修改信息</legend>
-			       <!-- 姓名 -->
-		<div id="userNameDIV"
-			class="mod_input qb_mb10 qb_flex"
-		>
-			<label>姓&nbsp;&nbsp;&nbsp;&nbsp;名：</label> <input 
-				value=""
-				name="userName"
-				class="flex_box"
-				placeholder=""
-				id="userName"
-				type="text"
-				required="required"
-			>
-		</div>
-		<!-- 手机号 -->
-		<div id="telPhoneDIV"
-			class="mod_input qb_mb10 qb_flex"
-		>
-			<label>手机号码：</label> <input 
-				value=""
-				name="telPhone"
-				class="flex_box"
-				placeholder=""
-				id="telPhone"
-				type="tel"
-				required="required"
-			>
-		</div>
-        </fieldset>
-        </form>
-    <div class="qb_flex qb_mb10">
-    	<a href="#" id="saveBtn" class="mod_btn btn_block qb_mb10" style="width:100%">保存</a> 
 	</div>
-	</div>
+	<?php include "../footer.php";?>
+</div>
+<script type="text/javascript" src="../../js/wxcheck.js"></script>
+<script type="text/javascript" src="../../js/zepto.min.js"></script>
+<script type="text/javascript" src="../../js/proTools.js"></script>
+<script type="text/javascript">
+	
+	$(function(){
+		$("#saveUserInfo").on("click",function(){
+			alert("TODO");
+		});
+
+
+		$.post("../../servers/user/userInfo.php",{
+			"openId":'<?php echo $openId;?>'
+		},function(data){
+			if(data.code == 200){
+				var user = data.data;
+				$("#vipcard").html(user.cardID);
+				$("#charge").html(user.charge);
+				$("#userPhoneNUm").val(user.phoneNumber);
+				$("#regTime").html(user.regTime);
+			}else{
+				alertWarning(data.message, 'top');
+			}
+		},"json");
+	});
+</script>
 </body>
 </html>
