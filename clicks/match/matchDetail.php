@@ -22,7 +22,6 @@
 		</style>
 		<?php 
 			$openId = isset($_GET['openId']) ? $_GET['openId'] : null;
-
 		?>
 	</head>
 	<body>
@@ -148,11 +147,7 @@
 		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
 		<script src="../../js/proTools.js" type="text/javascript"></script>
 		<script src="../../js/home.js" type="text/javascript"></script>
-		<?php
-			require_once('weixin/jssdk.php');
-			$jssdk = new JSSDK("wx1d7118856baf94c5", "67a7586f1701e8734c2bd2886e1bc075");
-			$signPackage = $jssdk->GetSignPackage();
-		?>
+		
 		<script type="text/javascript">
 		var url = window.location.href;
 			url = url.substring(0,url.indexOf("&"));
@@ -411,22 +406,10 @@ function max(a, b) {
 }
 
 </script>
-	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript"></script>
 	<script type="text/javascript">
-		//微信配置
-		wx.config({
-		    debug: false,
-		    appId: '<?php echo $signPackage["appId"];?>',
-		    timestamp: <?php echo $signPackage["timestamp"];?>,
-		    nonceStr: '<?php echo $signPackage["nonceStr"];?>',
-		    signature: '<?php echo $signPackage["signature"];?>',
-		    jsApiList: ['onMenuShareTimeline',
-		                'onMenuShareAppMessage',
-		                'onMenuShareQQ',
-		                'onMenuShareWeibo',
-		                'hideMenuItems'] 
-		});
+		var wxconfig = <?php require_once('weixin/wxjsconfig.php'); echo $wxconJson;?>;
 	</script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript"></script>
 	<script src="../../js/share.js" type="text/javascript"></script>
 	</body>
 </html>
