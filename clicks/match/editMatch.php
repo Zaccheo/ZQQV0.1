@@ -46,11 +46,10 @@
 				</div>
 				<div class="order-item clearfix">
 					<div class="order-item-key">
-						平均战力：
+						竞技强度：
 					</div>
-					<div class="order-item-value">
-						主队：<span id="forcesHostStar">无</span>&nbsp;&nbsp;&nbsp;&nbsp;
-						客队：<span id="forcesVisitStar">无</span>
+					<div id="forcesStar" class="order-item-value">
+						
 					</div>
 				</div>
 			</div>
@@ -178,11 +177,18 @@ $(function() {
 				var detailObj = data.data;
 				//头部
 				$("#headerTitle").html(detailObj.activityName + "-" + detailObj.nickName);
+				//处理时间
+				var matchtime = detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime)+"</p>";
+				if(detailObj.activityStatus == 0){
+					//计划中的球赛活动
+					matchtime = detailObj.activityWantedTime;
+				}
 				//比赛时间
-				$("#matchtime").html(detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime))+"</p>";
+				$("#matchtime").html(matchtime);
 
 				//填充当前登录人的电话号码
 				$("#userTelNum").val(detailObj.curTelNum);
+				$("#forcesStar").html(buildStar(detailObj.activityLevel));//主队
 				//处理成员数据，分装为主队和客队
 				var hostsmember = new Array();
 				var visitsmember = new Array();
@@ -201,12 +207,6 @@ $(function() {
 						visitcount++;
 					}
 				});
-				if(hostcount > 0){
-					$("#forcesHostStar").html(buildStar(hostforceTotal/hostcount));//主队
-				}
-				if(visitcount > 0){
-					$("#forcesVisitStar").html(buildStar(visitforceTotal/visitcount));//客队
-				}
 				//战力自评星型图,四舍五入
 				//调节高度
 				$("#teamDivHeight").css("line-height", max(hostsmember.length, visitsmember.length) * 65 + "px");

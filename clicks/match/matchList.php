@@ -30,8 +30,10 @@
 		<div class="tabul-box">
             <div class="tabul-div">
                 <ul class="tab-ul">
-                    <li><a id="chooseTimeFilter" href="javascript:;" class="current">全部时间</a></li>
-                    <li><a id="zczd" href="javascript:;">未满员</a></li>
+                    <li><a id="chooseTimeFilter" href="javascript:;" class="current">全部</a></li>
+                    <li><a id="acceptTeam" href="javascript:;">接受队伍</a></li>
+                    <li><a id="acceptSolo" href="javascript:;">接受单飞</a></li>
+                    <li><a id="unfullUser" href="javascript:;">未满员</a></li>
                 </ul>
             </div>
         </div>
@@ -39,23 +41,22 @@
 			<div class="eromsg-txt alinetxt" id="scrollSpan"><span>您是代表一个队伍参赛，所带人数大于等于队伍人数，请选择一个比赛！</span><span>如果您是一个人，或者不足一支队伍，请选择单飞席，我们将给您匹配队伍！</span>
 			</div>
 		</div>-->
-		<div class="wrapbox">
-			<div class="tabul-div">
-				<ul id="waiteMatchBlock" class="orders-list myzc-ul">
+		<div class="tabul-div">
+			<ul id="waiteMatchBlock" class="orders-list myzc-ul">
 
-					<!--单飞席-->
-				</ul>
-			</div>
-			<div class="tab-con">
-				<ul id="openMatchList" class="orders-list myzc-ul">
-					<!--开放球赛列表-->
-				</ul>
-			</div>
-			<!-- 加载底部菜单 -->
-			<?php include "../bottom.php"; ?>
-			<!-- 加载页脚版权 -->
-			<?php include "../footer.php"; ?>
+				<!--单飞席-->
+			</ul>
 		</div>
+		<div class="tab-con">
+			<ul id="openMatchList" class="orders-list myzc-ul">
+				<!--开放球赛列表-->
+			</ul>
+		</div>
+		<!-- 加载底部菜单 -->
+		<?php include "../bottom.php"; ?>
+		<!-- 加载页脚版权 -->
+		<?php include "../footer.php"; ?>
+
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : 'o5896s_Gge1x6UA_3bCsj9AK7kOI';?>
 		<script>
 			

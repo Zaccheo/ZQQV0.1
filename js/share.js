@@ -19,6 +19,21 @@ var hideMenus = [
     'menuItem:openWithSafari',//safari浏览器打开
     'menuItem:share:email'//邮件打开
 ];
+
+//微信配置
+wx.config({
+    debug: false,
+    appId: wxconfig.appId,
+    timestamp: wxconfig.timestamp,
+    nonceStr: wxconfig.nonceStr,
+    signature: wxconfig.signature,
+    jsApiList: ['onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'hideMenuItems'] 
+});
+
 //调用接口方法
 wx.ready(function () {
     //保护类按钮隐藏
@@ -45,6 +60,7 @@ wx.ready(function () {
     //分享到朋友圈
     wx.onMenuShareTimeline({
         title: dataForWeixin.title,// 分享标题
+        desc: dataForWeixin.desc, // 分享描述
         link: 'http://www.xishuma.com/fb55/lanewechat/oauth/oauthRedirect.php?dispatch='+dataForWeixin.link, // 分享链接
         imgUrl: dataForWeixin.imgUrl, // 分享图标
         success: function () { 

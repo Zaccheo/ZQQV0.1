@@ -42,11 +42,10 @@
 				</div>
 				<div class="order-item clearfix">
 					<div class="order-item-key">
-						平均战力：
+						竞技强度：
 					</div>
-					<div class="order-item-value">
-						主队：<span id="forcesHostStar">无</span>&nbsp;&nbsp;&nbsp;&nbsp;
-						客队：<span id="forcesVisitStar">无</span>
+					<div id="forcesStar" class="order-item-value">
+						
 					</div>
 				</div>
 			</div>
@@ -243,6 +242,7 @@ $(function() {
 				$("#headerCreator").html("-" + detailObj.nickName);
 				//比赛时间
 				$("#matchtime").html(matchtime);
+				$("#forcesStar").html(buildStar(detailObj.activityLevel));//竞技强度
 				
 				//参赛成员数据处理，将主客队分拆
 				buildActiveMember(detailObj.member);
@@ -287,12 +287,10 @@ function buildActiveMember(member){
 			visitcount++;
 		}
 	});
-	if(hostcount > 0){
-		$("#forcesHostStar").html(buildStar(hostforceTotal/hostcount));//主队
-	}
-	if(visitcount > 0){
-		$("#forcesVisitStar").html(buildStar(visitforceTotal/visitcount));//客队
-	}
+	
+	// if(visitcount > 0){
+	// 	$("#forcesVisitStar").html(buildStar(visitforceTotal/visitcount));//客队
+	// }
 	//战力自评星型图,四舍五入
 	//调节高度
 	$("#teamDivHeight").css("line-height", max(hostsmember.length, visitsmember.length) * 65 + "px");
@@ -304,7 +302,15 @@ function buildActiveMember(member){
 		if(item.activitymemberOpenId == openId){
 			$("#joinPanel").hide();
 		}
-		hostTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
+		//非临时用户]
+		hostTeamHtml += '<li>' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">';
+		'</a></div></div></li>';
+		var infoHtml = '<h5 class="teamInfo">' + item.nickName + '</h5><p>战力' + buildStar(item.personalLevel) + '</p><p>信用' + buildStar(item.creditLevel) + '</p>';
+		if(item.memberType && item.memberType == "temp"){
+			hostTeamHtml += infoHtml;
+		}else{
+			hostTeamHtml += '<a href="../ucenter/viewInfo.php?openId='+item.activitymemberOpenId+'">'+infoHtml+'</a>';
+		}
 	});
 	$("#hostTeamList").html(hostTeamHtml);
 	//客队
@@ -315,7 +321,15 @@ function buildActiveMember(member){
 		if(item.activitymemberOpenId == openId){
 			$("#joinPanel").hide();
 		}
-		visitTeamHtml += '<li><a href="#">' + '<div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">' + '<h5 class="teamInfo">' + item.nickName + '</h5><p>' + '战力' + buildStar(item.personalLevel) + '</p><p>' + '信用' + buildStar(item.creditLevel) + '</p>' + '</div>' + '</div>' + '</a>' + '</li>';
+		//非临时用户]
+		visitTeamHtml += '<li><div class="li-l-box"><img src="'+item.headerImgUrl+'">' + '</div><div class="li-r-box">' + '<div class="li-r-con">';
+		'</a></div></div></li>';
+		var infoHtml = '<h5 class="teamInfo">' + item.nickName + '</h5><p>战力' + buildStar(item.personalLevel) + '</p><p>信用' + buildStar(item.creditLevel) + '</p>';
+		if(item.memberType && item.memberType == "temp"){
+			visitTeamHtml += infoHtml;
+		}else{
+			visitTeamHtml += '<a href="../ucenter/viewInfo.php?openId='+item.activitymemberOpenId+'">'+infoHtml+'</a>';
+		}
 	});
 	$("#visitTeamList").html(visitTeamHtml);
 }
