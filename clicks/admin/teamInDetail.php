@@ -112,7 +112,8 @@
 				$("#pitchCodeId").html(detailObj.pitchCode);
 				$("#activityStatusId").html(mapActivityStatus(detailObj.activityStatus));
 				activityCreatorHtml = '<a href="#" class="gridbox">'+'<div class="orders-pic"><img class="pitchsavatar" src="'+detailObj.headerImgUrl+'" alt=""></div>'
-				+'<div class="grid-1"><h2 class="h2-title">'+detailObj.nickName+'</h2><p>电话: '+detailObj.phoneNumber+'</p></div></a>';
+				+'<div class="grid-1"><h2 class="h2-title">'+detailObj.nickName+'</h2><p>电话: '+detailObj.phoneNumber
+				+'</p><p>余额: '+detailObj.userCharge+'</p><p>信用等级: '+detailObj.creditLevel+'</p><p>会员积分: '+detailObj.userCredits+'</p></div></a>';
 
 				$("#activityCreator").html(activityCreatorHtml);
 			}
@@ -133,14 +134,22 @@
 		        }
 		        return retStr;
 		    }
-// 		 //加入比赛
+//确认状态，进场
+		    
 	   function confirm() {
+		  alertLoading("执行操作中，请耐心等待......");
 	   		$.post("../../servers/match/ConfirmMatch.php",{
 	   				"id_activities":<?php echo $_GET['id_activities'];?>
 	   			},function(data){
 	   				if(data.code == 200){
-	   					window.history.go(-1);
+	   					$(".div-mask").remove();
+	   					alertSuccess('确认成功', 'top');
+						setTimeout(function() {
+							window.history.go(-1);
+						}, 1000);
+	   					
 	   				}else{
+	   					$(".div-mask").remove();
 	   					alertWarning(data.message,"top");
 	   				}
 	   		},"json");

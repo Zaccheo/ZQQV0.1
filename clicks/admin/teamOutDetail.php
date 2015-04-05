@@ -53,16 +53,34 @@
 				</div>
 				<div class="order-item clearfix">
 				    <div class="order-item-key">
-						比赛信息：
+						球赛信息：
 					</div>
 					<div class="order-item-value">
 						 &nbsp;<span id="capacityId"></span> 
+						 <input type="hidden" id="capacityInputId" value="">
 						&nbsp;|&nbsp;<span id="pitchCodeId"></span>
 						&nbsp;|&nbsp;<span id="activityStatusId" style="color: red"></span>
 					</div>
+					
+				</div>
+				<div style="display: block;">
+					      <h3> 比赛胜利方:</h3> <br>
+						<select  id="winnerId" class="text-input">
+						<option value="0">请选择胜利的队伍</option>
+						<option value="1">主队胜利</option>
+						<option value="2">客队胜利</option>
+						<option value="3">平局</option>
+                        </select>
+						<br>
+				
+						<h3> 结算金额(RMB):<label  id="pitchChargeId" style="color: red"></label> </h3><br>
+						<input type="number" min="0" class="text-input" id="activityChargeId" /><br>
+				
+						<h3> 积分数目:<label  id="pitchCreditsId"  style="color: red"></label></h3> <br>
+						<input type="number" min="0" class="text-input" id="creditsId" />
 				</div>
 				<div class="item item-btns">
-					<a id ="confirmId" href="javascript:confirm();" style="display: none" class="joinmatch-btn host-btn">
+					<a id ="confirmId" href="javascript:;" style="display: none" class="joinmatch-btn host-btn">
 						结算
 					</a>
 					<a href="javascript:window.history.go(-1);"  class="joinmatch-btn visit-btn">
@@ -108,11 +126,17 @@
 				$("#matchtime").html(matchtime);
 				//规模
 				$("#capacityId").html(detailObj.capacity+" 人制");
+				$("#capacityInputId")[0].value=detailObj.capacity;
+				// 球场预约定价金额
+				$("#pitchChargeId").html(detailObj.charge);
+				//球场默认积分
+				$("#pitchCreditsId").html(detailObj.credits);
 				//规模
 				$("#pitchCodeId").html(detailObj.pitchCode);
 				$("#activityStatusId").html(mapActivityStatus(detailObj.activityStatus));
 				activityCreatorHtml = '<a href="#" class="gridbox">'+'<div class="orders-pic"><img class="pitchsavatar" src="'+detailObj.headerImgUrl+'" alt=""></div>'
-				+'<div class="grid-1"><h2 class="h2-title">'+detailObj.nickName+'</h2><p>电话: '+detailObj.phoneNumber+'</p></div></a>';
+				+'<div class="grid-1"><h2 class="h2-title">'+detailObj.nickName+'</h2><p>电话: '+detailObj.phoneNumber
+				+'</p><p>余额: '+detailObj.userCharge+'</p><p>信用等级: '+detailObj.creditLevel+'</p><p>会员积分: '+detailObj.userCredits+'</p></div></a>';
 
 				$("#activityCreator").html(activityCreatorHtml);
 			}
@@ -133,18 +157,42 @@
 		        }
 		        return retStr;
 		    }
-// 		 //加入比赛
-	   function confirm() {
-	   		$.post("../../servers/match/SettleMatch.php",{
-	   				"id_activities":<?php echo $_GET['id_activities'];?>
-	   			},function(data){
-	   				if(data.code == 200){
-	   					window.history.go(-1);
-	   				}else{
-	   					alertWarning(data.message,"top");
-	   				}
-	   		},"json");
-	   }
+
+	   $('#confirmId').on('click',function(){
+		   if($('#winnerId').val() == "0"){
+				$('#winnerId').css('border-color','brown');
+				alertWarning('请选择胜利队伍!','top');
+		   }else if($('#activityChargeId').val() == ""){
+			   $('#activityChargeId').css('border-color','brown');
+				alertWarning('请输入结算金额!','top');
+		   }else if($('#creditsId').val() == ""){
+			   $('#creditsId').css('border-color','brown');
+				alertWarning('请输入积分数目!','top');
+		   }else{
+			    alertLoading("执行结算中，请耐心等待......");
+		   		$.post("../../servers/match/SettleMatch.php",{
+		   				"id_activities":<?php echo $_GET['id_activities'];?>,
+				   		"winner":$('#winnerId').val(),
+				   		"activityCharge":	$('#activityChargeId').val(),
+				   		"credits":	$('#creditsId').val(),
+				   		"capacity":$("#capacityInputId").val()
+		   			},function(data){
+		   				if(data.code == 200){
+		   					$(".div-mask").remove();
+		   					alertSuccess('结算成功', 'top');
+							setTimeout(function() {
+								window.history.go(-1);
+							}, 1000);
+
+		   				}else{
+		   					$(".div-mask").remove();
+		   					alertWarning(data.message,"top");
+		   				}
+		   		},"json");
+
+			   }
+
+		   });
 </script>
 	</body>
 </html>
