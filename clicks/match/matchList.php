@@ -20,6 +20,7 @@
 		<script src="../../js/wxcheck.js" type="text/javascript"></script>
 		<script src="../../js/zepto.min.js" type="text/javascript"></script>
 		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
+		<script src="../../js/fastclick.js" type="text/javascript"></script>
 		<script src="../../js/proTools.js" type="text/javascript"></script>
 		<script src="../../js/home.js" type="text/javascript"></script>
 	</head>
@@ -30,10 +31,10 @@
 		<div class="tabul-box">
             <div class="tabul-div">
                 <ul class="tab-ul">
-                    <li><a id="chooseTimeFilter" href="javascript:;" class="current">全部</a></li>
-                    <li><a id="acceptTeam" href="javascript:;">接受队伍</a></li>
-                    <li><a id="acceptSolo" href="javascript:;">接受单飞</a></li>
-                    <li><a id="unfullUser" href="javascript:;">未满员</a></li>
+                    <li><a id="typeAll" href="javascript:;" class="filterBtn current">全部</a></li>
+                    <li><a id="typeSolo" href="javascript:;" class="filterBtn">接受单飞</a></li>
+                    <li><a id="typeFive" href="javascript:;" class="filterBtn">5人制</a></li>
+                    <li><a id="typeSeven" href="javascript:;" class="filterBtn">7人制</a></li>
                 </ul>
             </div>
         </div>
@@ -66,11 +67,23 @@
 			});
 			
 			$(function(){
+				new FastClick(document.body);
+
 				var openId = '<?php echo $openId;?>';
 				//loadWaiteMatch(openId);
 				//异步加载公开比赛信息列表
 				loadSyncOpenList(openId);
 
+				//过滤按钮
+				$(".filterBtn").on("click",function(){
+					//全部
+					if(!$(this).hasClass("current")){
+						$(".filterBtn").removeClass("current");
+						$(this).addClass("current");
+						//异步加载公开比赛信息列表
+						loadSyncOpenList(openId);
+					}
+				});
 
 				
 				//定位导航栏目
@@ -113,8 +126,22 @@
 			// }
 
 			function loadSyncOpenList(openId){
+				var $loadType = $(".current");
+				var loadType = "";
+				if($loadType.attr("id") == "typeFive"){
+					loadType = "five";
+				}else if($loadType.attr("id") == "typeSolo"){
+					loadType = "solo";
+				}else if($loadType.attr("id") == "typeSeven"){
+					loadType = "seven";
+				}else{
+					loadType = "";
+				}
  				$.post("../../servers/match/MatchList.php",
-				 	{"zqq_token":"4389c044a602997c5489235fc0fdda65"},function(data){
+				 	{
+				 		"zqq_token":"4389c044a602997c5489235fc0fdda65",
+				 		"loadType":loadType
+				 	},function(data){
 				 	if(data.code==200){
 				 		var matchHtml = "";
 				 		$.each(data.data, function(index,item) { 
