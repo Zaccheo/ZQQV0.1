@@ -22,6 +22,8 @@
 		$connect = Db::getInstance()->connect();
 		//检查openid是否存在
 		$urst = mysql_query("select * from `zqq_users_info` where userOpenId = '".$openId."'", $connect);
+		//查询排名
+		//$rankSql = mysql_query("select * FROM (SELECT A.*,@rank:=@rank+1 as rank FROM (SELECT id,userOpenId,credits FROM `zqq_users_info` ORDER BY credits DESC) A,(SELECT @rank:=0) B) M ORDER BY rank");
 		if($urst){
 			$user = mysql_fetch_assoc($urst);
 			echo Response::show(200,"用户获取成功!",$user,null);

@@ -24,11 +24,13 @@
   		<h1 id="userName"></h1>
   		<h2>排名:29/200</h2>
   		<h2>胜：<span id="winCount"></span>场、平：<span id="leverageCount"></span>场、败：<span id="failCount"></span>场</h2>
-  		<h2>战力：<span id="userForces"></span>，积分：<span id="credits"></span></h2>
+  		<h2>战力：<span id="userForces"></span>&nbsp;&nbsp;&nbsp;&nbsp;积分：<span id="credits"></span></h2>
 	</header>
 	<div class="warp1rem">
 		<section>
 	  		<h1>会员卡号：<span id="vipcard"></span></h1>
+	  	</section>
+	  	<section>
 	  		<h1>会员余额：<span id="charge"></span>元</h1>
 	  	</section>
 		<section>
@@ -61,12 +63,51 @@
 <script type="text/javascript" src="../../js/zepto.min.js"></script>
 <script type="text/javascript" src="../../js/proTools.js"></script>
 <script type="text/javascript">
+	//电话号码，旧号码
+	var oldTel;
 	
 	$(function(){
 		$("#saveUserInfo").on("click",function(){
-			alert("TODO");
+			var phoneNumber = $('#userPhoneNUm').val();
+			if(phoneNumber == ""){
+				alertWarning("电话号码不能为空!","top");
+			}else if(!isMobile(phoneNumber) && !isTel(phoneNumber)){
+				alertWarning("请填写正确的电话号码!","top");
+			}else{
+				//封装选择的擅长位置
+				var skilledPosition = new Array();
+				$('input[name=skilledPosition]').each(function() {
+            		if ($(this).attr('checked') ==true) {
+            			skilledPosition.push($(this).val());
+            		}
+        		});
+        		$(".btn-login").addClass("btn-disable");
+				$.post("../../servers/user/updateUserInfo.php",{
+					 "openId":'<?php echo $openId;?>',
+					 "phoneNumber":phoneNumber,
+					 "skilledPosition":skilledPosition
+					},function(data){
+						if(data.code == 200){
+							alertSuccess(data.message,"top");
+							setTimeout(function() {
+								location.reload();
+							},200);
+						}else{
+							alertWarning(data.message,"top");
+							$(".btn-login").removeClass("btn-disable");
+						}
+				},"json");
+			}
 		});
 
+		//加载用户数据
+		loadUserInfo();
+
+		
+	});
+
+
+	function loadUserInfo(){
 		$.post("../../servers/user/userInfo.php",{
 			"openId":'<?php echo $openId;?>'
 		},function(data){
@@ -82,12 +123,20 @@
 				$("#credits").html(user.credits);
 				$("#charge").html(user.charge);
 				$("#userPhoneNUm").val(user.phoneNumber);
+				oldTel = user.phoneNumber;
 				$("#regTime").html(user.regTime);
+				//设置用户的擅长位置
+				if(user.skilledPosition != ""){
+					var skills = user.skilledPosition.split(",");
+					$.each(skills,function(index,item){
+						$("input[name=skilledPosition][value='"+item+"']").attr('checked','true');
+					});
+				}
 			}else{
 				alertWarning(data.message, 'top');
 			}
 		},"json");
-	});
+	}
 
 	function buildStar(forces) {
 		var starHtml = "";

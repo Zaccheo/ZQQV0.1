@@ -14,7 +14,6 @@
 		    $openId = isset($_GET['openId']) ? $_GET['openId'] : "o5896s_Gge1x6UA_3bCsj9AK7kOI";
 		?>
 </head>
-
 <body>
 	<header>
   		<div>
@@ -47,10 +46,17 @@
 <script type="text/javascript" src="../../js/proTools.js"></script>
 <script type="text/javascript">
 	$(function(){
+
+		//加载用户数据
+		loadUserInfo();
+	});
+
+	function loadUserInfo(){
 		$.post("../../servers/user/userInfo.php",{
 			"openId":'<?php echo $openId;?>'
 		},function(data){
 			if(data.code == 200){
+				var user = data.data;
 				var user = data.data;
 				$("#userName").html(user.nickName);
 				$(".logo-com").css("background-image","url("+user.headerImgUrl+")");
@@ -63,11 +69,19 @@
 				$("#charge").html(user.charge);
 				$("#userPhoneNUm").val(user.phoneNumber);
 				$("#regTime").html(user.regTime);
+				//设置用户的擅长位置
+				if(user.skilledPosition != ""){
+					var skills = user.skilledPosition.split(",");
+					$.each(skills,function(index,item){
+						$("input[name=skilledPosition][value='"+item+"']").attr('checked','true');
+					});
+				}
 			}else{
 				alertWarning(data.message, 'top');
 			}
 		},"json");
-	});
+	}
+
 
 	function buildStar(forces) {
 		var starHtml = "";
