@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html lang="zh-CN">
 <head>
-	<title>球员信息</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>球员信息</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -17,7 +18,7 @@
 <body>
 	<header>
   		<div>
-  			<span class="logo-com" style="background-image:url(http://wx.qlogo.cn/mmopen/fRcLAzkicIFicexOUYZUxJOsndIqupWx1DiaXDhjHsWGICcQsWH28nlp04IDyJkcSiaLJHIASzFTESBd7AsZ9LUyNXE7Mg5FibgE6/0)">
+  			<span class="logo-com" style="background-image:url(../../imgs/teamAvatar.jpg)">
   			</span>
   		</div>
   		<h1 id="userName"></h1>

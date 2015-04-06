@@ -21,17 +21,12 @@
 			}
 		</style>
 		
-		<script src="../../js/wxcheck.js" type="text/javascript" ></script>
-		<script src="../../js/zepto.min.js" type="text/javascript"></script>
-		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
-		<script src="../../js/proTools.js" type="text/javascript"></script>
-		<script src="../../js/home.js" type="text/javascript"></script>
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
 	</head>
 	<body>
 		<header class="header">
 			<h2>
-				<span id="headerTitle"></span>
+				<span id="headerTitle"></span><span id="headerCreator"></span>
 			</h2>
 		</header>
 		<div class="wrapbox">
@@ -124,7 +119,24 @@
 			</div>
 		</div>
 		<!-- main wrap end-->
-		
+		<script src="../../js/wxcheck.js" type="text/javascript" ></script>
+		<script src="../../js/zepto.min.js" type="text/javascript"></script>
+		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
+		<script src="../../js/proTools.js" type="text/javascript"></script>
+		<script src="../../js/home.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			var url = window.location.href;
+				url = url.substring(0,url.indexOf("&"));
+				url = url.replace("editMatch","matchDetail");
+				var dataForWeixin = {
+					title: $("#headerTitle").html(), // 分享标题
+	        		desc: $("#matchtime").html(), // 分享描述
+	        		link: url, // 分享链接
+	        		imgUrl: 'http://www.xishuma.com/fb55/imgs/55.jpg', // 分享图标
+	        		type: '', // 分享类型，默认为链接
+	        		dataUrl: ''
+				};
+		</script>
 		<script>
 		var openId = '<?php echo $openId;?>';
 
@@ -176,9 +188,14 @@ $(function() {
 			if (data.code == 200) {
 				var detailObj = data.data;
 				//头部
-				$("#headerTitle").html(detailObj.activityName + "-" + detailObj.nickName);
+				$("#headerTitle").html(detailObj.activityName);
+				$("#headerCreator").html("-"+detailObj.nickName);
 				//处理时间
 				var matchtime = detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime)+"</p>";
+				
+				//拼装微信分享数据
+				assemblyWxShare(detailObj);
+
 				if(detailObj.activityStatus == 0){
 					//计划中的球赛活动
 					matchtime = detailObj.activityWantedTime;
@@ -187,8 +204,8 @@ $(function() {
 				$("#matchtime").html(matchtime);
 
 				//填充当前登录人的电话号码
-				$("#userTelNum").val(detailObj.curTelNum);
-				$("#forcesStar").html(buildStar(detailObj.activityLevel));//主队
+				//$("#userTelNum").val(detailObj.curTelNum);
+				$("#forcesStar").html(buildStar(detailObj.activityLevel));//竞技强度
 				//处理成员数据，分装为主队和客队
 				var hostsmember = new Array();
 				var visitsmember = new Array();
@@ -265,25 +282,25 @@ $(function() {
 })
 
 
-//加入比赛
-function joinMatch(type) {
-	if($("#userTelNum").val() == ""){
-		alertWarning("请输入电话号码！","top");
-	}else{
-		$.post("../../servers/match/JoinMatch.php",{
-				"openId":openId,
-				"userTelNum":$("#userTelNum").val(),
-				"type":type,
-				"repreNum":$("#num").val(),
-				"activeId":<?php echo $_GET['matchId'];?>
-			},function(data){
-				if(data.code == 200){
-					location.reload();
-				}else{
-					alertWarning(data.message,"top");
-				}
-		},"json");
-	}
+//微信拼装方法
+function assemblyWxShare(detailObj){
+	var wxdesc = detailObj.zDate + "(" + getWeekShort(detailObj.zDate)+")  "+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime);
+		if(detailObj.activityStatus == 0){
+			//计划中的球赛活动
+			wxdesc = detailObj.activityWantedTime;
+		}
+		var wxheader = detailObj.activityName;
+		//获取是否要对手,1允许对手报名，0不允许
+		if(detailObj.oppWanted == "1"){
+			wxheader += "【约对手】";
+		}
+		//是否要约单飞，0不约，1要约
+		if(detailObj.soloWanted == "1"){
+			wxheader += "【约单飞】";
+		}
+		dataForWeixin.title = wxheader;
+		dataForWeixin.desc = "竞技强度：" + buildBlackStar(detailObj.activityLevel) +"  "+ wxdesc +"， ●"+detailObj.capacity + "人制， ●"+detailObj.pitchCode;
+		dataForWeixin.imgUrl = detailObj.headerImgUrl;
 }
 
 //退出队伍
@@ -336,5 +353,10 @@ function max(a, b) {
 }
 
 </script>
+	<script type="text/javascript">
+		var wxconfig = <?php require_once('weixin/wxjsconfig.php'); echo $wxconJson;?>;
+	</script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript"></script>
+	<script src="../../js/share.js" type="text/javascript"></script>
 	</body>
 </html>

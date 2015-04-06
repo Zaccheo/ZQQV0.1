@@ -9,14 +9,14 @@
 	require_once('../DB.php');
 
 	date_default_timezone_set('PRC');
-	$pid = isset($_POST['pid']) ? $_POST['pid'] : null;//球场编号
+	$pdate = isset($_POST['pdate']) ? $_POST['pdate'] : null;//球场编号
     //echo $pdate;
 	$connect = Db::getInstance()->connect();
 
 	$querySql = "select a.*,b.capacity,b.pitchCode,b.pitchDesc,b.pitchAddr
 				 from `zqq_pitchs_order_info` a,`zqq_pitchs_info` b where pitchInfoID = b.id"; 
-	if(!empty($pid)){
-	 	$querySql.=" and zDate = (select zDate from `zqq_pitchs_order_info` where id = ".$pid.")";
+	if(!empty($pdate)){
+	 	$querySql.=" and zDate = '".$pdate."'";
 	}
 	// if(!empty($queryId)){
 	// 	$querySql.=" and b.id = ".$queryId;
@@ -39,7 +39,7 @@
 		$time[] = $row['endTime'];
    		// }
 		
-		$results['pitch'][$row['pitchCode']][] = $row;//内容放到标题下面
+		$results['pitch'][$row['pitchCode'].$row['capacity'].'人'][] = $row;//内容放到标题下面
    		//组装查询到的列
 		//$results[] = $row;
 		//$cont++;

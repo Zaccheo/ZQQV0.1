@@ -212,7 +212,7 @@ $(function() {
 				var detailObj = data.data;
 				//处理时间
 				var matchtime = detailObj.zDate + "(" + getWeek(detailObj.zDate)+")<p style='font-size:18px;color:red;'>"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime)+"</p>";
-				var wxdesc = detailObj.zDate + "(" + getWeek(detailObj.zDate)+")"+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime);
+				var wxdesc = detailObj.zDate + "(" + getWeekShort(detailObj.zDate)+")  "+shortTime(detailObj.startTime)+"-"+shortTime(detailObj.endTime);
 				if(detailObj.activityStatus == 0){
 					//计划中的球赛活动
 					matchtime = detailObj.activityWantedTime;
@@ -234,8 +234,8 @@ $(function() {
 					wxheader += "【约单飞】";
 				}
 				dataForWeixin.title = wxheader;
-        		dataForWeixin.desc = wxdesc +","+detailObj.capacity + "人制,"+detailObj.pitchCode;
-        		dataForWeixin.imgUrl = detailObj.headerImgUrl;
+        		dataForWeixin.desc = "竞技强度："+ buildBlackStar(detailObj.activityLevel) +"  "+ wxdesc +"， ●"+detailObj.capacity + "人制， ●"+detailObj.pitchCode;
+				dataForWeixin.imgUrl = detailObj.headerImgUrl;
 
 				//头部
 				$("#headerTitle").html(detailObj.activityName);
@@ -287,11 +287,6 @@ function buildActiveMember(member){
 			visitcount++;
 		}
 	});
-	
-	// if(visitcount > 0){
-	// 	$("#forcesVisitStar").html(buildStar(visitforceTotal/visitcount));//客队
-	// }
-	//战力自评星型图,四舍五入
 	//调节高度
 	$("#teamDivHeight").css("line-height", max(hostsmember.length, visitsmember.length) * 65 + "px");
 	//主队
@@ -366,6 +361,7 @@ function joinMatch(type) {
 	}else if(!isMobile($('#userTelNum').val()) && !isTel($('#userTelNum').val())){
 		alertWarning("请填写正确的电话号码!","top");
 	}else{
+		$(".joinmatch-btn").addClass("btn-disable");
 		$.post("../../servers/match/JoinMatch.php",{
 				"openId":openId,
 				"userTelNum":$("#userTelNum").val(),
@@ -380,6 +376,7 @@ function joinMatch(type) {
 					}, 200);
 				}else{
 					alertWarning(data.message,"top");
+					$(".joinmatch-btn").removeClass("btn-disable");
 				}
 		},"json");
 	}

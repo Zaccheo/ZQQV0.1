@@ -938,6 +938,21 @@ function getWeek(dateStr) {
 	return ar[day];
 }
 
+//传入日期，日期格式2015-01-01
+function getWeekShort(dateStr) {
+	var ar = new Array();
+	ar[0] = "周日";
+	ar[1] = "周一";
+	ar[2] = "周二";
+	ar[3] = "周三";
+	ar[4] = "周四";
+	ar[5] = "周五";
+	ar[6] = "周六";
+	var dateDay = new Date(dateStr);
+	var day = dateDay.getDay();
+	return ar[day];
+}
+
 
 /*校验手机号码*/
 function checkTel(phoneNum){
@@ -981,4 +996,19 @@ function isTel(phone){
 function isMobile(phone){
 	var validateReg = /^((\+?86)|(\(\+86\)))?1\d{10}$/;
 	return validateReg.test(phone);
+}
+
+function buildBlackStar(forces) {
+	var starHtml = "";
+	if(forces == ""){
+		return "☆☆☆☆☆";
+	}else{
+		for (var i = 0; i < Math.round(forces); i++) {
+			starHtml += "★";
+		}
+		for(var j = 0; j < (5 - Math.round(forces)); j++){
+			starHtml += "☆";
+		}
+		return starHtml;
+	}
 }

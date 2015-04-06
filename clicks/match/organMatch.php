@@ -151,7 +151,7 @@
 							var selectPitchHtml = "";
 							$.each(data.data, function(index,item) {  
 								var pweek = getWeek(item.zDate);
-								selectPitchHtml+='<li><a href="../pitchsvr/selectPitchs.php?openId=<?php echo $openId;?>&pid='+item.id+'&pdate='+item.zDate+'&pweek='+pweek+'">'+item.zDate+'('+pweek+')</a></li>';
+								selectPitchHtml+='<li><a href="../pitchsvr/selectPitchs.php?openId=<?php echo $openId;?>&pdate='+item.zDate+'">'+item.zDate+'('+pweek+')</a></li>';
 							});
 							$('#avaliablePitchs').html(selectPitchHtml);
 						}

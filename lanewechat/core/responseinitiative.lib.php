@@ -1,5 +1,6 @@
 <?php
 namespace LaneWeChat\Core;
+use LaneWeChat\Servers\Dbutils\ChineseJson;
 /**
  * 发送主动响应
  * Created by Lane.
@@ -34,7 +35,7 @@ class ResponseInitiative{
                 'content'=>$content,
             ),
         );
-        $template = json_encode($template);
+        $template = ChineseJson::JSON($template);
 
         return Curl::callWebServer(self::$queryUrl, $template, self::$action);
     }
@@ -180,7 +181,7 @@ class ResponseInitiative{
                 'articles'=>$item
             ),
         );
-        $template = json_encode($template);
+        $template = ChineseJson::JSON($template);
         return Curl::callWebServer(self::$queryUrl, $template, self::$action);
     }
 

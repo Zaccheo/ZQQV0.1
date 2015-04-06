@@ -21,7 +21,7 @@
 	}
 	if($result){
 		//查询活动队员数据
-		$memeberSql = "select a.id_activity_member,a.activitymemberOpenId,a.host_or_guest,a.delegateNumber,a.personalLevel,b.nickName,b.headerImgUrl,b.creditLevel ";
+		$memeberSql = "select a.id_activity_member,a.activitymemberOpenId,a.host_or_guest,a.delegateNumber,b.personalLevel,b.nickName,b.headerImgUrl,b.creditLevel ";
 		$memeberSql.= " from `zqq_activity_members` a,`zqq_users_info` b ";
 		$memeberSql.= "where a.activitymemberOpenId = b.userOpenId and a.id_activities = ".$matchId;//查询活动的成员信息
 		$memeberRst = mysql_query($memeberSql,$connect);

@@ -18,8 +18,18 @@
 				<a href="javascript:window.history.go(-1);">
 				<i class="icon-back"></i></a>
 			</div>
-			<h2 id="pitchTitleInfo"><?php echo $_GET['pdate'];?>(<?php echo $_GET['pweek'];?>)</h2>
+			<h2>
+			<select id="pitchTitleInfo" class="select-input">
+				
+			</select>
+			</h2>
 		</header>
+		<!--时间条件-->
+		<div id="timeFilter" class="off">
+			<ul id="soloTimeList">
+				
+			</ul>
+		</div>
 		<div class="qu">
 			<div class="page page-submitOrder">
 				<div class="order-bd">
@@ -37,7 +47,7 @@
 					<div class="order-detail clearfix">
 						<div class="left">
 							<p class="total" style="line-height:19px">
-								<em style="font-size: 14px;">已选：<?php echo $_GET['pdate'];?>(<?php echo $_GET['pweek'];?>)</em>
+								<em style="font-size: 14px;" id="selectedTimeInfo">已选：<?php echo $_GET['pdate'];?>(<?php echo $_GET['pdate'];?>)</em>
 								<!--&nbsp;&nbsp;共计：<span>0</span>元-->
 							</p>
 							<p class="coupon" style="font-weight: bold;line-height:19px"></p>
@@ -57,14 +67,58 @@
 		<!--组件依赖js end-->
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
 		<script type="text/javascript">
-
+			//已选择的球场编号
+			var selectPitchs = {};
+			var dateStr = "";
+			
 			$(function() {
 				new FastClick(document.body);
 
 				goToTop($("#goTop"));
+
+				//加载title位置的时间下拉框
+				loadSelPitchTimer();
+
+				//加载场地信息
+				loadSelPitchsInfo('<?php echo $_GET['pdate'];?>');
+
+				$("#pitchTitleInfo").on("change",function(){
+					//变化一次日期，清空已选择的数据，重新选择
+					selectPitchs = {};
+					dateStr = "";
+					$(".court-detail").removeClass('selected');
+					$(".coupon").html('');
+					//重新根据日期加载
+					loadSelPitchsInfo($(this).val());
+					$("#selectedTimeInfo").html("已选："+$(this).val()+"("+getWeek($(this).val())+")");
+				});
+			});
+
+			//加载时间选择器
+			function loadSelPitchTimer(){
+				$("#selectedTimeInfo").html("已选："+'<?php echo $_GET['pdate'];?>'+"("+getWeek('<?php echo $_GET['pdate'];?>')+")");
+				//获取当前可预约的时间列表信息
+				$.getJSON('../../servers/pitch/pitchTimeSelect.php',function(data){
+					var selectTitleHtml = "";
+					if(data.code == 200){
+						$.each(data.data, function(index,item) {  
+							var pweek = getWeek(item.zDate);
+							var selected = "";
+							if(item.zDate == '<?php echo $_GET['pdate'];?>'){
+								selected = "selected";
+							}
+							selectTitleHtml+='<option '+selected+' value="'+item.zDate+'">'+item.zDate+'('+pweek+')</option>';
+						});
+					}
+					$("#pitchTitleInfo").html(selectTitleHtml);
+				});
+			}
+
+			//加载可选场地
+			function loadSelPitchsInfo(pdate){
 				//加载可选场地数据	
 				$.post("../../servers/pitch/selectPitchs.php",{
-					"pid":<?php echo $_GET['pid'];?>
+					"pdate":pdate
 					},function(data){
 						if(data.code == 200){
 							var court = '<div class="court-wrap clearfix J_courts" id="wrapper"><div class="inner" id="scroller">';
@@ -95,12 +149,9 @@
 						resizeWinSize();
 					}
 				},"json");
-			});
+			}
 			
 			function loadEvent(){
-				//已选择的球场编号
-				var selectPitchs = {};
-				var dateStr = "";
 				//点击场次选择
 				$('.court-detail').on('click',function(){
 					//已选择的球场编号
@@ -134,16 +185,17 @@
 				//提交选中的场次
 				$(".pitch_submit").on('click',function(){
 					if($.isEmptyObject(selectPitchs)){
-						alert("请选择一个场！");
+						alertWarning("请选择一个场！","top");
 						return;
+					}else{
+						var pIDS = new Array();
+						$.each(selectPitchs,function(k,v){
+							pIDS.push(k);
+						});
+						window.localStorage.setItem("pitchOrderId",pIDS);
+						window.localStorage.setItem("selpitch",dateStr);
+						window.location = "../match/organMatch.php?openId=<?php echo $openId;?>";
 					}
-					var pIDS = new Array();
-					$.each(selectPitchs,function(k,v){
-						pIDS.push(k);
-					});
-					window.localStorage.setItem("pitchOrderId",pIDS);
-					window.localStorage.setItem("selpitch",dateStr);
-					window.location = "../match/organMatch.php?openId=<?php echo $openId;?>";
 				});
 			}
 
