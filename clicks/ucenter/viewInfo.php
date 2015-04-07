@@ -28,11 +28,11 @@
 	<div class="warp1rem">
 	  	<section>
 	  		<h3>擅长位置：</h3>
-	  		<p>
-	  		<input type="checkbox" value="MF" name="skilledPosition"/>中场、
-	  		<input type="checkbox" value="GD" name="skilledPosition"/>后卫、
-	  		<input type="checkbox" value="FW" name="skilledPosition"/>前锋、
-	  		<input type="checkbox" value="DK" name="skilledPosition"/>门卫
+	  		<p class="confirm-box left-item">
+	  		<input class="right-checkbox" type="checkbox" disabled="disabled" value="MF" name="skilledPosition"/>中场、
+	  		<input type="checkbox" disabled="disabled" value="GD" name="skilledPosition"/>后卫、
+	  		<input type="checkbox" disabled="disabled" value="FW" name="skilledPosition"/>前锋、
+	  		<input type="checkbox" disabled="disabled" value="DK" name="skilledPosition"/>门卫
 	  		</p>
 	  	</section>
 	  	<section>
@@ -70,7 +70,7 @@
 				$("#userPhoneNUm").val(user.phoneNumber);
 				$("#regTime").html(user.regTime);
 				//设置用户的擅长位置
-				if(user.skilledPosition != ""){
+				if(user.skilledPosition !=null && user.skilledPosition != ""){
 					var skills = user.skilledPosition.split(",");
 					$.each(skills,function(index,item){
 						$("input[name=skilledPosition][value='"+item+"']").attr('checked','true');

@@ -257,8 +257,8 @@ class WechatRequest{
 		$content = array();
 		switch ($eventKey){
            case "COURT_SVRS"://点击[球场服务]
-	   		   $content[] = array("Title"=>"关于我们", "Description"=>"", "PicUrl"=>"http://www.xishuma.com/fb55/imgs/weixinmenu/aboutimg.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/pitchsvr/about.php");
-	           $content[] = array("Title"=>"球场介绍", "Description"=>"", "PicUrl"=>"", "Url" =>"http://www.xishuma.com/fb55/clicks/pitchsvr/courtIntro.php?oid=".$request['fromusername']);
+	   		   $content[] = array("Title"=>"关于我们", "Description"=>"", "PicUrl"=>"http://www.xishuma.com/fb55/imgs/about/5+5.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/pitchsvr/about.php");
+	           $content[] = array("Title"=>"球场介绍", "Description"=>"", "PicUrl"=>"http://www.xishuma.com/fb55/imgs/55.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/pitchsvr/courtIntro.php?oid=".$request['fromusername']);
                break;
            case "COURT_ORDR"://点击[预约比赛]
                $content[] = array("Title"=>"组织比赛", "Description"=>"", "PicUrl"=>"http://www.xishuma.com/fb55/imgs/weixinmenu/organmatch.jpg", "Url" =>"http://www.xishuma.com/fb55/clicks/match/organMatch.php?openId=".$request['fromusername']);

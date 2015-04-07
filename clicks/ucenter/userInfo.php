@@ -126,7 +126,7 @@
 				oldTel = user.phoneNumber;
 				$("#regTime").html(user.regTime);
 				//设置用户的擅长位置
-				if(user.skilledPosition != ""){
+				if(user.skilledPosition !=null && user.skilledPosition != ""){
 					var skills = user.skilledPosition.split(",");
 					$.each(skills,function(index,item){
 						$("input[name=skilledPosition][value='"+item+"']").attr('checked','true');
