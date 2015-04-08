@@ -22,10 +22,17 @@
 	if($result){
 		while ($row = mysql_fetch_assoc($result)) {
 			$acid = $row['id_activities'];
-			$memSql = "select count(*) as memCunt from `zqq_activity_members` where id_activities = ".$acid;
+			$memSql = "select delegateNumber from `zqq_activity_members` where id_activities = ".$acid;
 			//查询球赛活动信息
-			$memRst = mysql_fetch_assoc(mysql_query($memSql, $connect));
-			$row['memCunt'] = $memRst['memCunt'];
+			//查询球赛活动信息
+			$memRst = mysql_query($memSql, $connect);
+			$memCunt = 0;
+			if($memRst){
+				while($memRstRow = mysql_fetch_assoc($memRst)){
+					$memCunt += $memRstRow['delegateNumber']+1;
+				}
+			}
+			$row['memCunt'] = $memCunt;
 			$rep[] = $row;
 		}
 	}
