@@ -80,7 +80,7 @@
 						</div>
 					</div>
 					<div class="pitchListDiv">
-						战力自评：
+						竞技强度：
 						<ul id="forceStar">
 							<li>★</li>
 							<li>★</li>

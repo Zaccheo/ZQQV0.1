@@ -46,7 +46,7 @@
 		</div>
 	</div>
 	<!-- 分类 -->
-	<div class="slide-box category-box" id="category">
+	<!-- <div class="slide-box category-box" id="category">
 		<div class="swiper-wrapper" id="categoryWrap">
 			<div class="swiper-slide">
 				<ul class="category-ul mt15 clearfix">
@@ -61,7 +61,7 @@
 				</ul>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<div class="pb-b50">
 		<h2 class="h2-title bdl">关于我们</h2>
 		<div class="initiater-box">
@@ -76,16 +76,16 @@
                 <p>场馆地址：蜀兴北街与营康西路交界（电子科研十所斜对面）
 					<a style="display:block;float:right;width:40px" href="location.php"><img height="30" width="30" src="../../imgs/pin.png"></a>
                 </p>
-                <p>订场电话：13880141543小李</p>
+                <p>订场电话：<a href="tel:13880141543">13880141543</a>小李</p>
             </div>
         	</div>
 		</div>
 	    <h2 class="h2-title bdl">对足球的热爱</h2>
 	    <div class="detail-box">
-	        <p style = "font-size:14px;">
-	        <blockquote>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为响应国家积极发展足球产业的政策要求，以及对足球满腔的热爱，
-	        著名足球教练员李炯先生<img style="position:fix"  src="../../imgs/about/5v5_03.jpg"/>
-	        联合成都体育学院足球教研室的专业团队一起成立了成都5+5足球俱乐部。俱乐部位于成都西门营康西路与蜀新北街的交界，占地5880平米，
+	        <p>
+	        <img style="position:fix"  src="../../imgs/about/5v5_03.jpg"/>
+	        <blockquote style="font-size:12px;text-indent:2em;word-spacing:1em;line-height:2em;">为响应国家积极发展足球产业的政策要求，以及对足球满腔的热爱，
+	        著名足球教练员李炯先生联合成都体育学院足球教研室的专业团队一起成立了成都5+5足球俱乐部。俱乐部位于成都西门营康西路与蜀新北街的交界，占地5880平米，
 	        人工草坪、灯光设施及硬件设施均引进于国内先进技术。俱乐部由三块五人制球场、一块七人制球场、球员休息室、卫生间、员工工作室及停车场等构成。
 	        成都5+5俱乐部我们致力于促进成都业余足球的发展。我们首先 以社区为单位，推动社区及周边人群对足球的积极性，让更多的人群投入进来，
 	        为“全民健身”做出我们应有的贡献。其次我们以俱乐部为中心，建立一支人员齐整、装备统一的足球队，以备参加成都范围内的各类业余足球比赛，
@@ -101,24 +101,21 @@
 	    </div>
 	    <h2 class="h2-title bdl">寻找我们</h2>
 			<div class="detail-box">
-			<p style = "font-size:14px;">
-				<blockquote>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;球场介绍俱乐部位于成都西门营康西路与蜀新北街的交界，占地5880平米，
+			<p>
+				<blockquote style="font-size:12px;text-indent:2em;word-spacing:1em;line-height:2em;">球场介绍俱乐部位于成都西门营康西路与蜀新北街的交界，占地5880平米，
 				人工草坪、灯光设施及硬件设施均引进于国内先进技术。俱乐部由三块五人制球场、一块七人制球场、球员休息室、卫生间、员工工作室及停车场等构成。
 				营业时间为周一至周五的18:30到23:30，休息日全天。
 				</blockquote>
 			</p>
 			</div>
 		</div>
-		<div>
-			<div class="mypanel f-text2">
-				<a  href="javascript:;">我们</a>
-				<a  href="javascript:;" class="fr" id="goTop">回到顶部</a>
-			</div>
-			<div class="footer">
-				<p class="f-text1">Copyright © 2014－2015四川誉合誉科技版权所有</p>
-				<p class="f-text2">
-				</p>
-			</div>
+		<div class="mypanel f-text2 align-r">
+			<a  href="javascript:;" id="goTop">回到顶部</a>
+		</div>
+		<div class="footer">
+			<p class="f-text1">Copyright © 2014－2015四川誉合誉科技版权所有</p>
+			<p class="f-text2">
+			</p>
 		</div>
 		<script src="../../js/zepto.min.js" type="text/javascript"></script>
 		<script src="../../js/zepto.picLazyLoad.min.js" type="text/javascript"></script>
@@ -136,16 +133,6 @@
 				loop: true,
 				autoPlay: true,
 				currentClass: "swiper-active-switch"
-			});
-			 //分类滚动
-			var $slideHolder = $("#category");
-			var $scrollHolder = $("#categoryWrap");
-			var $pagination = $("#categoryCircle");
-			var myWebSlider = new WebSlider({
-				slideHolder: $slideHolder,
-				scrollHolder: $scrollHolder,
-				pagination: $pagination,
-				currentClass: "swiper-active"
 			});
 		</script>
 	</body>

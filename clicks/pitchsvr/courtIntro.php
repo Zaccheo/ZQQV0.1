@@ -27,7 +27,7 @@
 	                <p>场馆地址：蜀兴北街与营康西路交界（电子科研十所斜对面）
 						<a style="display:block;float:right;width:40px" href="location.php"><img height="30" width="30" src="../../imgs/pin.png"></a>
 	                </p>
-	                <p>订场电话：13880141543小李</p>
+	                <p>订场电话：<a href="tel:13880141543">13880141543</a></p>
 	            </div>
 	        	</div>
 			</div>
