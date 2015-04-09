@@ -54,7 +54,7 @@
 			}
 			//默认期望时间比赛
 			$descrStr = $crtActs['activityWantedTime'];
-			if($crtActs['pitchOrderInfoID'] > 0  && empty($crtActs['activityWantedTime'])){
+			if($crtActs['pitchOrderInfoID'] > 0){
 				$crtPitshInfo = mysql_fetch_assoc(mysql_query("select a.zDate,a.startTime,a.endTime,a.charge,a.credits,b.capacity,b.pitchCode,b.pitchDesc,b.pitchAddr from `zqq_pitchs_order_info` a,`zqq_pitchs_info` b where a.pitchInfoID  = b.id and a.id = ".$crtActs['pitchOrderInfoID']));
 				$descrStr = $crtPitshInfo['pitchAddr'].$crtPitshInfo['pitchDesc']."，".$crtPitshInfo['pitchCode']."    ●参赛时间：".$crtPitshInfo['zDate']."  ".$crtPitshInfo['startTime']."-".$crtPitshInfo['endTime'];
 			}

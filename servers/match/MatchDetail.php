@@ -12,12 +12,22 @@
 	$openId = $_POST['openId'];//当前登录人的openId，查询当前登录人的手机号码
 
 	$connect = Db::getInstance()->connect();
-	$sql = "select a.*,b.*,c.zDate,c.startTime,c.endTime,d.capacity,d.pitchCode from `zqq_activities` a,`zqq_users_info` b,`zqq_pitchs_order_info` c,`zqq_pitchs_info` d where a.activityCreatorOpenId = b.userOpenId and a.pitchOrderInfoID = c.id and c.pitchInfoID = d.id and a.id_activities = ".$matchId;//查询活动
+	$sql = "select a.*,b.*";
+	//",c.zDate,c.startTime,c.endTime,d.capacity,d.pitchCode";
+	$sql .= " from `zqq_activities` a,`zqq_users_info` b ";
+	//" `zqq_pitchs_order_info` c,`zqq_pitchs_info` d ";
+	$sql .= " where a.activityCreatorOpenId = b.userOpenId and a.id_activities = ".$matchId;//查询活动
 	//查询球赛活动信息
 	$rsts = mysql_query($sql, $connect);
 	$result = array();
 	if($rsts){
 		$result = mysql_fetch_assoc($rsts);
+		if(empty($result['activityWantedTime'])){
+			//若活动期望时间为空，则查询球场信息
+			$queryTimeSql = "select c.zDate,c.startTime,c.endTime,d.capacity,d.pitchCode from `zqq_activities` a,`zqq_pitchs_order_info` c,`zqq_pitchs_info` d where a.pitchOrderInfoID = c.id and c.pitchInfoID = d.id and a.id_activities = ".$matchId;
+			$qtRst = mysql_fetch_assoc(mysql_query($queryTimeSql,$connect));
+			$result = array_merge_recursive($result,$qtRst);
+		}
 	}
 	if($result){
 		//查询活动队员数据

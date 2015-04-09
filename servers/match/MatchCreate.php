@@ -11,7 +11,7 @@
 	$openId = $_POST["openId"];//创建人的openid
 	$matchName =$_POST["matchName"];//比赛名称
 	$selectPitch =$_POST["selectPitch"];//所选球场名称
-	$selectPitchId = $_POST["selectPitchId"];//所选球场id
+	$selectPitchId = isset($_POST["selectPitchId"])?$_POST["selectPitchId"]:0;//所选球场id
 	$scaleByHand =$_POST["scaleByHand"];//手动填写的比赛规模
 	$ifReval =$_POST["ifReval"];//是否约对手
 	$ifNeedSolo =$_POST["ifNeedSolo"];//是否约单飞
@@ -28,7 +28,7 @@
 	}
 	//根据是否选择了球场判断活动是否应该创建还是计划中
 	$activityStatus = 0;
-	if($selectPitchId == null || $selectPitchId == ""){
+	if(empty($selectPitch) || $selectPitchId == 0){
 		$activityStatus = 0;//球赛计划
 	}else{
 		$activityStatus = 1;//球赛创建
