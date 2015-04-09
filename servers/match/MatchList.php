@@ -11,7 +11,7 @@
 	$loadType = $_POST['loadType'];
 
 	$sql = "select a.*,b.zDate,b.startTime,b.endTime,c.capacity,d.nickName,d.headerImgUrl from `zqq_activities` a,`zqq_pitchs_order_info` b,`zqq_pitchs_info` c,`zqq_users_info` d";
-	$sql .= " where a.pitchOrderInfoID = b.id and b.pitchInfoID = c.id and a.activityCreatorOpenId = d.userOpenId and a.activityStatus = 1 and a.oppWanted = 1 ";
+	$sql .= " where a.pitchOrderInfoID = b.id and b.pitchInfoID = c.id and a.activityCreatorOpenId = d.userOpenId and a.activityStatus = 1 and a.oppWanted = 1 and b.zDate > NOW()";
 	
 	if($loadType == 'five'){
 		$sql .= " and c.capacity = 5";
@@ -20,7 +20,7 @@
 	}else if($loadType == 'seven'){
 		$sql .= " and c.capacity = 7";
 	}
-	$sql .= " order by a.activityCreateTime desc limit 10";//查询活动已创建完成
+	$sql .= " order by a.activityCreateTime";//查询活动已创建完成
 	//查询到活动信息主体
 	$connect = Db::getInstance()->connect();
 	$result = mysql_query($sql, $connect);
