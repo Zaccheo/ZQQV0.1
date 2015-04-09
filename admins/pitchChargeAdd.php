@@ -284,31 +284,35 @@ function delImgClk(item){
             <input type="checkbox" checked="checked" data-value="0"><label>周日</label>
 		</div>
 		  <!-- 规模 -->
-        <div id="pitchInfoDIV"
-			class="mod_input qb_mb10 qb_flex"
-		>
+        <div id="pitchInfoDIV" class="mod_input qb_mb10 qb_flex">
 			<label>球场信息：</label>
             <select class="flex_box" name="ptcId" id="pitchInfo" 
-            style="border:none; background:white"
-            >
+            style="border:none; background:white">
             </select>
 		</div>
 
     <table id="resultID" border="1" style="width: 100%">
 	<thead>
 		<tr>
-			<th>开始时间</th>
-			<th>结束时间</th>
-			<th>单场时间</th>
+			<th>开始</th>
+			<th>结束</th>
+			<th>单场</th>
 			<th>金额</th>
-			<th>默认积分</th>
+			<th>积分</th>
 			<th>+/-</th>
 		</tr>
 	</thead>
 	<tbody>
-	<tr id="addBtnID">
-	<td colspan="5" align="center">点击右边的+添加新信息！</td>
-	<td align="center"><a href="javascript:addImgClk()"><img style="width:25px" src="../imgs/add2.png"></a></td></tr>
+		<tr id="addBtnID">
+			<td colspan="5" align="center">
+				<a href="javascript:copyTimes()">点击复制场次时间！</a>
+			</td>
+			<td align="center">
+				<a href="javascript:addImgClk()">
+					<img style="width:25px" src="../imgs/add2.png">
+				</a>
+			</td>
+		</tr>
 	</tbody>
 </table>
 <div class="qb_flex qb_mb10">
@@ -323,16 +327,16 @@ var storage = window.localStorage;
 var TEMPID = 1;
 function reset(){
     $("#st")[0].value="09:00";
-    $("#et")[0].value="22:30";
-    $("#ot")[0].value="90";
+    $("#et")[0].value="10:30";
+    $("#ot")[0].value="90\"";
     $("#charge")[0].value="100";
     $("#credit")[0].value="1";
 }
 function add2Table(item){
-	$temp = "<tr id=\"id_"+TEMPID+"\" data='"+JSON.stringify(item)+"'>";
+	$temp = "<tr style='text-align:center' id=\"id_"+TEMPID+"\" data='"+JSON.stringify(item)+"'>";
 	   $temp +="<td>"+item.startTime+"</td>";
 	   $temp +="<td>"+item.endTime+"</td>";
-	   $temp +="<td>"+item.oneTime+"</td>";
+	   $temp +="<td>"+item.oneTime+"\"</td>";
 	   $temp +="<td>"+item.charge+"</td>";
 	   $temp +="<td>"+item.credits+"</td>";
 	   $temp +="<td align=\"center\"><a href=\"javascript:delImgClk('id_"+TEMPID+"')\"><img style=\"width:25px\" src=\"../imgs/del4.png\"></a></td>";
@@ -419,15 +423,52 @@ function back(){
 	$("#opDIV")[0].style.display="none";
 }
 
-//计算时间差，输入小时，输出分钟
-function hourCut(hourtime1,hourtime2){
-	var hour1 = hourtime1.split(":")[0];
-	var min1 = hourtime1.split(":")[1];
-	var hour2 = hourtime2.split(":")[0];
-	var min2 = hourtime2.split(":")[1];
-	var differHour = Math.abs(parseInt(hour1)-parseInt(hour2));
-	var differMin = Math.abs(parseInt(min1)-parseInt(min2));
-	return differHour*60+differMin;
+//复制时间
+function copyTimes(){
+	var lastNode = $("#addBtnID").prev();
+	var preJson = JSON.parse(lastNode.attr("data"));
+	preJson.startTime = preJson.endTime;
+	preJson.endTime = evaluEndTime(preJson.endTime,preJson.oneTime);
+	if(preJson.endTime > "24:00"){
+		//超过一天的最大时间
+		alert("对不起，添加时间不能超过当天的时间！");
+	}else{
+		add2Table(preJson);
+	}
+}
+
+function listenEndTime(){
+	var st = $("#st").val();
+	var ot = $("#ot").val();
+	$("#et").val(evaluEndTime(st,ot));
+}
+/*
+*计算结束时间
+*/
+function evaluEndTime(st,ot){
+	if(st != null && st != "" && ot != null && ot != ""){
+		var sHour = st.split(":")[0];
+		var sMin = parseInt(st.split(":")[1]);
+		var oTime = ot.split(":")[0];
+		var ore = oTime%60;
+		var eHour = parseInt(oTime/60) + parseInt(sHour);
+		var eMin = 0;
+		if(sMin + ore >= 60){
+			eMin = Math.abs(sMin+ore-60);
+			eHour++;
+		}else{
+			eMin = sMin+ore;
+		}
+		return Appendzero(eHour) +":"+ Appendzero(eMin);
+	}
+}
+
+//日期不足两位补足零
+function Appendzero(obj){
+ if(obj<10) 
+ 	return "0" +""+ obj;
+ else 
+ 	return obj; 
 }
 
 </script>
@@ -442,24 +483,12 @@ function hourCut(hourtime1,hourtime2){
 				id="st"
 				type="time"
 				required="required"
+				onchange="listenEndTime()" 
 				placeholder="请输入场次结束时间"
 				value="09:00" 
 			>
 		</div>
-  <!-- 结束时间-->
-  
-        <div id="etDIV"
-			class="mod_input qb_mb10 qb_flex"
-		>
-			<label>结束时间：</label> <input name="et"
-				class="flex_box"
-				id="et"
-				type="time"
-				required="required"
-				placeholder="请输入场次结束时间"
-				value="22:30" 
-			>
-		</div>
+
 		<!--单场时间设置-->
 		<div id="otDIV" 
 		class="mod_input qb_mb10 qb_flex">
@@ -469,9 +498,26 @@ function hourCut(hourtime1,hourtime2){
 				id="ot" 
 				type="number" 
 				required="required" 
+				onchange="listenEndTime()" 
 			 	placeholder="请输入单场比赛时间"
 			 	value="90">分钟
 		</div>
+
+  		<!-- 结束时间-->
+  
+        <div id="etDIV"
+			class="mod_input qb_mb10 qb_flex"
+		>
+			<label>结束时间：</label> <input name="et"
+				class="flex_box"
+				id="et" disabled="disabled" 
+				type="time"
+				required="required"
+				placeholder="请输入场次结束时间"
+				value="10:30" 
+			>
+		</div>
+		
 		
 		  <!-- 预约金额-->
         <div id="chargeDIV"
