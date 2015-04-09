@@ -133,6 +133,7 @@ if (typeof WeixinJSBridge == "undefined"){
 			    tmpObj.dates2BeAdded = dates2BeAdded;
 			    tmpObj.pitchInfo = picInfos;
 			    pitchStorage = JSON.stringify(storageArr);
+			    
 		        addMutilPictInfos(JSON.stringify(tmpObj));
 			}
 	  }})
@@ -161,7 +162,7 @@ if (typeof WeixinJSBridge == "undefined"){
    	 $.ajax({
          type:"POST",
          url:"../servers/AddMutilPtcOrder.php",
-         data: {"param":pics},
+         data: {"param":pics,"f":Date.now()},
          dataType:"json",
          success:function(data){
             if(confirm(data.message)){

@@ -11,24 +11,33 @@
 
 	require_once('./Response.php');
 	require_once('./DB.php');
-// $param='{"sDate":"2015-01-26","eDate":"2015-04-05","ptcId":"1",
-//     "dates2BeAdded":["2015-01-26","2015-01-27","2015-01-28","2015-01-29",
-//     "2015-01-30","2015-02-02","2015-02-03","2015-02-04",
-//     "2015-02-05","2015-02-06","2015-02-09","2015-02-10","2015-02-11",
-//     "2015-02-12","2015-02-13","2015-02-16","2015-02-17","2015-02-18","2015-02-19",
-//     "2015-02-20","2015-02-23","2015-02-24","2015-02-25","2015-02-26","2015-02-27",
-//     "2015-03-02","2015-03-03","2015-03-04","2015-03-05","2015-03-06","2015-03-09",
-//     "2015-03-10","2015-03-11","2015-03-12","2015-03-13","2015-03-16","2015-03-17",
-//     "2015-03-18","2015-03-19","2015-03-20","2015-03-23","2015-03-24","2015-03-25",
-//     "2015-03-26","2015-03-27","2015-03-30","2015-03-31","2015-04-01","2015-04-02","2015-04-03"],"pitchInfo":[{"startTime":"18:00","endTime":"19:30","charge":"360","credits":"360"},{"startTime":"20:00","endTime":"21:30","charge":"360","credits":"360"}]}';
+    
 	$param = isset($_POST['param']) ? $_POST['param'] : null;//
+	/*Start testing
+	$connect = Db::getInstance()->connect();
+	date_default_timezone_set('PRC');
+	$s1 = "insert into test(username,sex) values('username1',1)";
+	$s2 = "insert into test(username,sex) values('username2',null)";
+	$s3 = "insert into test(username,sex) values('username3',3)";
+	
+	mysql_query("START TRANSACTION;",$connect);
+	
+	$r1 = mysql_query($s1,$connect);
+	$r2 = mysql_query($s2,$connect);
+	$r3 = mysql_query($s3,$connect);
+	
+	if($r1 && $r2 && $r3){
+	    mysql_query("COMMIT;",$connect);
+	}else{
+	    mysql_query("ROLLBACK;",$connect);
+	}
+	//*///End testing
+	//*
 	if (empty($param)){
 	    echo Response::show(300,"参数为空！",array(),null);
 	}
 	
-//{"sDate":"2015-01-26","eDate":"2015-04-05","ptcId":"1",
-//"dates2BeAdded":["2015-1-26","2015-1-27","2015-1-28","2015-1-29","2015-1-30","2015-2-2","2015-2-3","2015-2-4","2015-2-5","2015-2-6","2015-2-9","2015-2-10","2015-2-11","2015-2-12","2015-2-13","2015-2-16","2015-2-17","2015-2-18","2015-2-19","2015-2-20","2015-2-23","2015-2-24","2015-2-25","2015-2-26","2015-2-27","2015-3-2","2015-3-3","2015-3-4","2015-3-5","2015-3-6","2015-3-9","2015-3-10","2015-3-11","2015-3-12","2015-3-13","2015-3-16","2015-3-17","2015-3-18","2015-3-19","2015-3-20","2015-3-23","2015-3-24","2015-3-25","2015-3-26","2015-3-27","2015-3-30","2015-3-31","2015-4-1","2015-4-2","2015-4-3"],
-//"pitchInfo":[{"startTime":"18:00","endTime":"19:30","charge":"360","credits":"360"}]}
+
 	$json = json_decode($param);
 	
 	$sDate = $json->sDate;
@@ -39,21 +48,26 @@
 	
     $connect = Db::getInstance()->connect();
 	date_default_timezone_set('PRC');
+	
 	$temp = getDates2BeOperated($connect,$dates2BeAdded,$ptcId);//筛选出需要操作的日期
 	//echo convert($temp);
 	//删除原有的数据
-	$flag = false;
-	if (delete($connect,$temp,$ptcId)==true){
-        //重组传入的数据参数，将开始时间和结束时间按照场分数数拆开
-        $pitchInfoProcess = rebuildPitchInfo($pitchInfo);
-		$flag = insert($connect,$temp,$ptcId,$pitchInfoProcess);
+	$error = null;
+	$deleteResult = delete($connect,$temp,$ptcId);
+	
+	$insertResult = false;
+	if ($deleteResult==true){
+	    $insertResult = insert($connect,$temp,$ptcId,$pitchInfo);
+	}else{
+	    $error = mysql_error($connect);
 	}
-	if ($flag==true){
+	if ($insertResult==true){
 		echo Response::show(200,"添加成功！",array(),null);
 	}else{
-		echo Response::show(201,"添加失败",array(),null);
+	    $error = mysql_error($connect);
+		echo Response::show(201,"添加失败:".$error,array(),null);
 	}
-		
+	//*/	
 function delete($connect,$dates2BeAdded,$ptcId){
     $tmp = convert($dates2BeAdded);
     $query = "delete from `zqq_pitchs_order_info` where pitchInfoID=".$ptcId." and orderStatus=0 and zDate in(".$tmp.")";
@@ -62,7 +76,7 @@ function delete($connect,$dates2BeAdded,$ptcId){
 
 //创建球场定价信息
 function insert($connect,$dates2BeAdded,$ptcId,$pitchInfo){
-    $addptch = "insert into `zqq_pitchs_order_info` (zDate,startTime,endTime,charge,credits,pitchInfoID) values ";
+    $addptch = "insert into `zqq_pitchs_order_info` (zDate,startTime,endTime,charge,credits,pitchInfoID,oneTime) values ";
     // $count1 = ;
     // $count2 = 
     //echo Response::show(200,"测试！",$pitchInfo,null);;
@@ -72,7 +86,8 @@ function insert($connect,$dates2BeAdded,$ptcId,$pitchInfo){
             if($i > 0 || $j > 0){
                 $addptch .= ",";
             }
-            $addptch .= '("'.$dates2BeAdded[$i].'","'.$pitchInfo[$j]['startTime'].'","'.$pitchInfo[$j]['endTime'].'",'.$pitchInfo[$j]['charge'].','.$pitchInfo[$j]['credits'].','.$ptcId.')';
+            $addptch .= "('".$dates2BeAdded[$i]."','".$pitchInfo[$j]->startTime."','".$pitchInfo[$j]->endTime."',"
+                .$pitchInfo[$j]->charge.",".$pitchInfo[$j]->credits.",".$ptcId.",".$pitchInfo[$j]->oneTime.")";
         }
     }
     if(mysql_query($addptch,$connect)==false){
