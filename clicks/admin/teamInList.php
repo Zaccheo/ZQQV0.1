@@ -42,23 +42,21 @@
             </div>
         </div>
 	
-		<div class="wrapbox">
 			
-			<div class="tab-con">
-				<ul id="openMatchList" class="orders-list myzc-ul">
-					<!--开放球赛列表-->
-				</ul>
-			</div>
-			<!-- 加载底部菜单 -->
-			<?php include "../bottom.php"; ?>
-			<!-- 加载页脚版权 -->
-			<?php include "../footer.php"; ?>
+		<div class="tab-con">
+			<ul id="openMatchList" class="orders-list myzc-ul">
+				<!--开放球赛列表-->
+			</ul>
 		</div>
+		<!-- 加载底部菜单 -->
+		<?php include "../bottom.php"; ?>
+		<!-- 加载页脚版权 -->
+		<?php include "../footer.php"; ?>
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
 		<script>
 			
 			$(function(){
-				
+				goToTop($("#goTop"));
 				//loadWaiteMatch(openId);
 				//异步加载公开比赛信息列表
 				loadSyncOpenList();
@@ -74,6 +72,20 @@
 						loadSyncOpenList();
 					}
 				});
+
+				//定位导航栏目
+			    //var $navHolder = $("#navHolder");
+			    var navShow = false;
+			    $(window).scroll(function () {
+			        //$navHolder.css("height", 0);
+			        var scroTop = $(window).scrollTop();
+			         var tabulTop = $(".tabul-box").offset().top;
+			        if (tabulTop - scroTop <= 5) {
+			            $(".tabul-div").addClass("tabul-fixed");
+			        } else {
+			            $(".tabul-div").removeClass("tabul-fixed");
+			        }
+			    });
 				
 			});
 			function loadSyncOpenList(){
