@@ -31,6 +31,16 @@
 <!-- 			<input type="text" placeholder="请输入活动名/创建者" id="searchKey"/> -->
 <!-- 			<input type="button" class="search-btn"> -->
 <!-- 		</nav> -->
+		<div class="tabul-box">
+            <div class="tabul-div">
+                <ul class="tab-ul">
+                    <li><a id="typeNoIn" href="javascript:;" class="filterBtn current">待入场</a></li>
+                    <li><a id="typeNoSt" href="javascript:;" class="filterBtn">待结算</a></li>
+                    <li><a id="typeSttd" href="javascript:;" class="filterBtn">已完结</a></li>
+                    <li><a id="typeAll" href="javascript:;" class="filterBtn">全部</a></li>
+                </ul>
+            </div>
+        </div>
 	
 		<div class="wrapbox">
 			
@@ -46,20 +56,40 @@
 		</div>
 		<?php $openId = isset($_GET['openId']) ? $_GET['openId'] : null;?>
 		<script>
-			//滚动消息控件
-			var msgScroll = new MarqueeBox({
-				obj: $("#scrollSpan")
-			});
 			
 			$(function(){
 				
 				//loadWaiteMatch(openId);
 				//异步加载公开比赛信息列表
 				loadSyncOpenList();
+
+
+				//过滤按钮
+				$(".filterBtn").on("click",function(){
+					//全部
+					if(!$(this).hasClass("current")){
+						$(".filterBtn").removeClass("current");
+						$(this).addClass("current");
+						//异步加载公开比赛信息列表
+						loadSyncOpenList();
+					}
+				});
 				
 			});
 			function loadSyncOpenList(){
- 				$.post("../../servers/match/MatchManageList.php",null,function(data){
+				var $loadType = $(".current");
+				var loadType = "";
+				if($loadType.attr("id") == "typeNoIn"){
+					loadType = "noin";//待入场
+				}else if($loadType.attr("id") == "typeNoSt"){
+					loadType = "nost";//待结算
+				}else if($loadType.attr("id") == "typeSttd"){
+					loadType = "sttd";//已完结
+				}else{
+					loadType = "";
+				}
+ 				$.post("../../servers/match/MatchManageList.php",
+ 					{"loadType":loadType},function(data){
 				 	if(data.code==200){
 				 		var matchHtml = "";
 				 		$.each(data.data, function(index,item) { 
