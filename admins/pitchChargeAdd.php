@@ -294,11 +294,11 @@ function delImgClk(item){
     <table id="resultID" border="1" style="width: 100%">
 	<thead>
 		<tr>
-			<th>开始</th>
-			<th>结束</th>
+			<th>起始</th>
 			<th>单场</th>
 			<th>金额</th>
 			<th>积分</th>
+			<th>编辑</th>
 			<th>+/-</th>
 		</tr>
 	</thead>
@@ -332,17 +332,31 @@ function reset(){
     $("#charge")[0].value="100";
     $("#credit")[0].value="1";
 }
+//新增加球场预订信息
 function add2Table(item){
 	$temp = "<tr style='text-align:center' id=\"id_"+TEMPID+"\" data='"+JSON.stringify(item)+"'>";
-	   $temp +="<td>"+item.startTime+"</td>";
-	   $temp +="<td>"+item.endTime+"</td>";
+	   $temp +="<td>"+item.startTime +"-"+item.endTime+"</td>";
 	   $temp +="<td>"+item.oneTime+"\"</td>";
 	   $temp +="<td>"+item.charge+"</td>";
 	   $temp +="<td>"+item.credits+"</td>";
+	   $temp +="<td><a href=\"javascript:editPitchInfo('id_"+TEMPID+"')\"><img style=\"width:25px;\" src=\"../imgs/editBtn.png\"/></a></td>";
 	   $temp +="<td align=\"center\"><a href=\"javascript:delImgClk('id_"+TEMPID+"')\"><img style=\"width:25px\" src=\"../imgs/del4.png\"></a></td>";
 	$temp +="</tr>";
 	$("#addBtnID").before($temp);
 	TEMPID++;
+}
+
+
+//编辑更新球场预订信息行数据
+function edit2Table(tempId,item){
+	$("#"+tempId).attr("data",JSON.stringify(item));
+	$newTem = "<td>"+item.startTime +"-"+item.endTime+"</td>";
+	$newTem +="<td>"+item.oneTime+"\"</td>";
+	$newTem +="<td>"+item.charge+"</td>";
+	$newTem +="<td>"+item.credits+"</td>";
+	$newTem +="<td><a href=\"javascript:editPitchInfo('"+tempId+"')\"><img style=\"width:25px;\" src=\"../imgs/editBtn.png\"/></a></td>";
+	$newTem +="<td align=\"center\"><a href=\"javascript:delImgClk('"+tempId+"')\"><img style=\"width:25px\" src=\"../imgs/del4.png\"></a></td>";
+	$("#"+tempId).html($newTem);
 }
 
 //添加新记录
@@ -404,7 +418,12 @@ $(document).ready(function () {
         obj.oneTime=$("#ot")[0].value;
         obj.charge=$("#charge")[0].value;
         obj.credits=$("#credit")[0].value;
-    	add2Table(obj);
+    	if($("#editPitchInfoId").val() != null && $("#editPitchInfoId").val() != ""){
+    		//编辑保存操作
+    		edit2Table($("#editPitchInfoId").val(),obj);
+    	}else{
+    		add2Table(obj);
+    	}
     	back();
     }
   })
@@ -421,6 +440,19 @@ $(document).ready(function () {
 function back(){
 	$("#mainDIV")[0].style.display="";
 	$("#opDIV")[0].style.display="none";
+}
+
+//编辑信息
+function editPitchInfo(tempId){
+	var editJson = JSON.parse($("#"+tempId).attr("data"));
+	$("#mainDIV")[0].style.display="none";
+	$("#opDIV")[0].style.display="";
+	$("#editPitchInfoId").val(tempId);
+	$("#st").val(editJson.startTime);
+	$("#ot").val(editJson.oneTime);
+	$("#et").val(editJson.endTime);
+	$("#charge").val(editJson.charge);
+	$("#credit").val(editJson.credit);
 }
 
 //复制时间
@@ -474,6 +506,7 @@ function Appendzero(obj){
 </script>
   <!-- 起始时间-->
   <form id="opForm">
+  		<input id="editPitchInfoId" name="editPitchInfoId" type="hidden"/>
         <div id="stDIV"
 			class="mod_input qb_mb10 qb_flex"
 		>
