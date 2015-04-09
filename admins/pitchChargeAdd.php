@@ -421,6 +421,7 @@ $(document).ready(function () {
     	if($("#editPitchInfoId").val() != null && $("#editPitchInfoId").val() != ""){
     		//编辑保存操作
     		edit2Table($("#editPitchInfoId").val(),obj);
+    		$("#editPitchInfoId").val(null);
     	}else{
     		add2Table(obj);
     	}
@@ -452,7 +453,7 @@ function editPitchInfo(tempId){
 	$("#ot").val(editJson.oneTime);
 	$("#et").val(editJson.endTime);
 	$("#charge").val(editJson.charge);
-	$("#credit").val(editJson.credit);
+	$("#credit").val(editJson.credits);
 }
 
 //复制时间
