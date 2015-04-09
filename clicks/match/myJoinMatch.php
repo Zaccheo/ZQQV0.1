@@ -79,6 +79,18 @@
 										break;
 									default:
 								}
+								var timeHtml = "";
+								var locationHtml = "";
+								var statusHtml = "";
+								if(item.pitchOrderInfoID == 0){
+									timeHtml = item.activityWantedTime;
+									locationHtml = "未创建赛事！";
+									statusHtml = item.memCunt;
+								}else{
+									timeHtml = item.zDate+'('+getWeek(item.zDate)+') '+shortTime(item.startTime)+'-'+shortTime(item.endTime);
+									locationHtml = item.pitchAddr+item.pitchCode;
+									statusHtml = item.memCunt+'/'+item.capacity*2;
+								}
 								matchList += '<li id="li'+index+'">'
 								+'<a href="editMatch.php?matchId='+item.id_activities+'&openId=<?php echo $openId;?>" class="gridbox">'
 								+'<div class="orders-pic">'
@@ -86,9 +98,9 @@
 								+'</div>'
 								+'<div class="grid-1">'
 								+'<h5 class="h5-title font-bold">'+item.activityName+'</h5>'
-								+'<p>约球时间：'+item.zDate+'('+getWeek(item.zDate)+') '+shortTime(item.startTime)+'-'+shortTime(item.endTime)+'</p>'
-								+'<p>约球地点：'+item.pitchAddr+item.pitchCode+'</p>'
-								+'<p>球赛状态：<span class="bd-b">'+item.memCunt+'/'+item.capacity*2+'人</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-bold">'+status+'</span></p>'
+								+'<p>约球时间：'+timeHtml+'</p>'
+								+'<p>约球地点：'+locationHtml+'</p>'
+								+'<p>球赛状态：<span class="bd-b">'+statusHtml+'人</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-bold">'+status+'</span></p>'
 								+'</div>'
 								+'</a>'
 							// 	+'<div class="goods-btnbox clearfix">'
