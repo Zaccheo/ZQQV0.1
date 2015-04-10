@@ -44,7 +44,64 @@
 		//$results[] = $row;
 		//$cont++;
   	}
-  	$results['time'] = array_unique($time);
+
+  	foreach (array_unique($time) as $value) {
+  		$results['time'][] = $value;
+  	}
+  	// //var_dump($results['pitch'][0]);
+  	// foreach ($results['time'] as $tk => $tv) {
+  	// 	$newPitchs = array();
+  	// 	$pitchsCount = 0;//球赛的行索引
+  	// 	foreach ($results['pitch'] as $key => $value) {
+  	// 		foreach ($value as $k => $v) {
+  	// 			if($tv != $v['startTime']){
+  	// 				$newOnePitch = array(
+			// 				'id'=>'tmp'.$v['id'],
+			// 				'orderStatus'=>'1',
+			// 				'pitchCode'=>$v['pitchCode'],
+			// 				'pitchDesc'=>$v['pitchDesc'],
+			// 				'pitchInfoID'=>$v['pitchInfoID'],
+			// 				'startTime'=>$tv,
+			// 				'zDate'=>$v['zDate'],
+			// 			);
+  	// 				array_push($newPitchs, $newOnePitch);
+  	// 			}
+  	// 				array_push($newPitchs, $value);
+  	// 		}
+
+
+
+
+  	// 		if(array_key_exists($pitchsCount,$value) && $tv != $value[$pitchsCount]['startTime']){
+	  // 			$newOnePitch = array(
+			// 				'id'=>'tmp'.$value[$pitchsCount]['id'],
+			// 				'orderStatus'=>'1',
+			// 				'pitchCode'=>$value[$pitchsCount]['pitchCode'],
+			// 				'pitchDesc'=>$value[$pitchsCount]['pitchDesc'],
+			// 				'pitchInfoID'=>$value[$pitchsCount]['pitchInfoID'],
+			// 				'startTime'=>$tv,
+			// 				'zDate'=>$value[$pitchsCount]['zDate'],
+			// 				);
+	  // 			//$value[] = $newOnePitch;
+	  // 			array_push($value, $newOnePitch);
+	  // 			//var_dump($value);
+	  // 		}
+	  // 		$pitchsCount++;
+	  // 		continue;
+  	// 	}
+  	// 	//$newPitchs[] = $value;
+  	// }
+  	// foreach ($results['pitch'] as $key => $value) {
+  	// 	$newPitchs = array();
+  	// 	foreach ($value as $k => $v) {
+	  		
+  	// 	}
+  	// 	$results['pitch'][$key] = $newPitchs;
+  	// 		// if(in_array($v['startTime'], $results['time'])){
+  	// 		// 	//var_dump($v);
+  	// 		// 	//$results['pitch'][$key][] = $results['pitch'][$key][$k];
+  	// 		// }
+  	// }
  	echo Response::show(200,"获取成功",$results,null);
 
 ?>

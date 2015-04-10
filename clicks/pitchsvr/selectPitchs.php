@@ -121,18 +121,61 @@
 					"pdate":pdate
 					},function(data){
 						if(data.code == 200){
+							var timeSlices = data.data.time;
 							var court = '<div class="court-wrap clearfix J_courts" id="wrapper"><div class="inner" id="scroller">';
 							$.each(data.data.pitch,function(index,item){
 								court+='<div class="col"><div class="court-name" >'+index+'</div>';
+								var container = "";
 								$.each(item,function(idx,itm){
-									var status = "";
-									if(itm.orderStatus == 0){
-										status = "available";
-									}else{
-										status = "disable";
-									}
-									court+='<div id="pitch_'+itm.id+'" courtName='+index+' zDate="'+itm.zDate+'" startTime="'+itm.startTime+'" endTime="'+itm.endTime+'" pitchid="'+itm.id+'" class="court-detail '+status+'">'+itm.charge+'</div>';
+									container += itm.startTime;
 								});
+								//根据时间建立遍历条件
+								for(var i=0;i<timeSlices.length-1;i++){
+									if(container.indexOf(timeSlices[i])>-1){
+										$.each(item,function(idx,itm){
+											var status = "";
+											if(itm.orderStatus == 0){
+												status = "available";
+											}else{
+												status = "disable";
+											}
+											if(itm.startTime == timeSlices[i]){
+												court+='<div id="pitch_'+itm.id+'" courtName='+index+' zDate="'+itm.zDate+'" startTime="'+itm.startTime+'" endTime="'+itm.endTime+'" pitchid="'+itm.id+'" class="court-detail '+status+'">'+itm.charge+'</div>';
+											}
+										});
+									}else{
+										court+=disabedCourtPitch();
+									}
+								}
+								// $.each(timeSlices,function(tdx,tda){
+									
+										// var status = "";
+										// if(itm.orderStatus == 0){
+										// 	status = "available";
+										// }else{
+										// 	status = "disable";
+										// }
+										// //如果时间线等于开始时间，则数据绑定
+										// if(tda == itm.startTime){
+										// 	court+='<div id="pitch_'+itm.id+'" courtName='+index+' zDate="'+itm.zDate+'" startTime="'+itm.startTime+'" endTime="'+itm.endTime+'" pitchid="'+itm.id+'" class="court-detail '+status+'">'+itm.charge+'</div>';
+										// }else{
+											
+								// 	// 	}
+								// 	// });
+								// });
+								// $.each(item,function(idx,itm){
+								// 	//填充
+								// 	//court += fillCourtPitchs(index,itm,timeSlices);
+								// 	// //判断是否包含在对应的时间菜单里
+								// 	// $.each(timeSlices,function(k,v){
+								// 	// 	//判断是否有开始时间
+								// 	// 	if(v == itm.startTime){
+
+								// 	// 	}
+								// 	// });
+									
+									
+								// });
 								court += '</div>';
 							});
 							court += '</div></div>';
@@ -150,6 +193,53 @@
 					}
 				},"json");
 			}
+
+			//填充球场内容块
+			function fillCourtPitchs(index,itm,times){
+				//首先遍历时间列表长度
+				var status = "";
+				if(itm.orderStatus == 0){
+					status = "available";
+				}else{
+					status = "disable";
+				}
+				var html = "";
+				$.each(times,function(dk,dv){
+					//dv;//时间
+					if(itm.startTime == dv){
+						html += '<div id="pitch_'+itm.id+'" courtName='+index+' zDate="'+itm.zDate+'" startTime="'+itm.startTime+'" endTime="'+itm.endTime+'" pitchid="'+itm.id+'" class="court-detail '+status+'">'+itm.charge+'</div>';
+					}else{
+						html += disabedCourtPitch();
+					}
+				});
+				
+				return html;
+			}
+
+			//补充模块
+			function disabedCourtPitch(){
+				return '<div class="court-detail disable"></div>';
+			}
+
+			// function obj2str(o){   
+	  //           var r = [];   
+	  //           if(typeof o =="string") return o.replace(/(['"\])/g,"\$1").replace(/(n)/g,"\n").replace(/(r)/g,"\r").replace(/(t)/g,"\t");   
+	  //           if(typeof o =="undefined") return "";   
+	  //           if(typeof o == "object"){   
+	  //               if(o===null) return "null";   
+	  //               else if(!o.sort){   
+	  //                   for(var i in o)   
+	  //                       r.push(i+":"+obj2str(o[i]))   
+	  //                   r="{"+r.join()+"}"  
+	  //               }else{   
+	  //                   for(var i =0;i<o.length;i++)   
+	  //                       r.push(obj2str(o[i]))   
+	  //                   r="["+r.join()+"]"  
+	  //               }   
+	  //               return r;   
+	  //           }   
+	  //           return o.toString();   
+	  //       }  
 			
 			function loadEvent(){
 				//点击场次选择
